@@ -6,6 +6,7 @@ import os
 import sqlite3
 import datetime
 import uuid
+import threading
 from app.core import config
 from app.core.data_loader import get_store
 
@@ -29,15 +30,17 @@ CREATE TABLE IF NOT EXISTS content_records (
 """
 
 _conn = None
+_lock = threading.Lock()
 
 
 def _get_conn() -> sqlite3.Connection:
     global _conn
-    if _conn is None:
-        os.makedirs(os.path.dirname(str(config.DB_PATH)), exist_ok=True)
-        _conn = sqlite3.connect(str(config.DB_PATH))
-        _conn.row_factory = sqlite3.Row
-    return _conn
+    with _lock:
+        if _conn is None:
+            os.makedirs(os.path.dirname(str(config.DB_PATH)), exist_ok=True)
+            _conn = sqlite3.connect(str(config.DB_PATH), check_same_thread=False)
+            _conn.row_factory = sqlite3.Row
+        return _conn
 
 
 def init_db():

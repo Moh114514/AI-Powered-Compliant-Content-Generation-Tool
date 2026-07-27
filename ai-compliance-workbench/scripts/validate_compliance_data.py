@@ -4,8 +4,8 @@
 import os
 import sys
 
-# 允许从 backend 目录运行
-BACKEND = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 允许从项目根目录或 scripts 目录运行；app 包位于 backend/
+BACKEND = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend")
 if BACKEND not in sys.path:
     sys.path.insert(0, BACKEND)
 

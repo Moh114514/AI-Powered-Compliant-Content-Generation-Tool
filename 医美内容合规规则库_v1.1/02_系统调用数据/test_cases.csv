@@ -1,22 +1,22 @@
 ﻿test_id,input_text,content_context,platform,platform_product_line,business_domain,publisher_identity,expected_content_legal_nature,expected_rule_ids,expected_risk_level,expected_legal_conclusion,expected_system_action,expected_reason,actual_rule_ids,actual_risk_level,actual_system_action,test_result,error_type,reviewer,test_date,notes
-T0001,本机构是全国最好的整形医院，成功率百分之百,机构首页,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A01-001"", ""R-A07-001""]",critical,explicitly_prohibited,block,最高级表达+无法验证数据,,,,pending,,,2026-07-27,明确违规
+T0001,本机构是全国最好的整形医院，成功率百分之百,机构首页,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A01-001"",""R-A07-001""]",critical,explicitly_prohibited,block,最高级表达+无法验证数据,,,,pending,,,2026-07-27,明确违规
 T0002,我们的医生都是持证上岗的执业医师，欢迎来院了解,机构介绍,微信,微信朋友圈个人内容,医疗美容,机构员工个人号,medical_advertisement,[],low,not_applicable,pass,客观事实陈述,,,,pending,,,2026-07-27,合规
-T0003,热玛吉一次治疗终身紧致不松弛,项目推广,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A02-002"", ""R-A04-001""]",critical,explicitly_prohibited,block,终身效果+时间承诺,,,,pending,,,2026-07-27,明确违规
+T0003,热玛吉一次治疗终身紧致不松弛,项目推广,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A02-002"",""R-A04-001""]",critical,explicitly_prohibited,block,终身效果+时间承诺,,,,pending,,,2026-07-27,明确违规
 T0004,治疗后的反应因人而异，有些人会轻微红肿，通常几天就会消退,术后护理说明,微信,微信社群,医疗美容,机构客服,service_information,[],low,not_applicable,pass,客观风险说明+个体差异,,,,pending,,,2026-07-27,合规
 T0005,错过今天，这辈子都等不到这个价格了,活动推广,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A08-001""]",high,conditionally_prohibited,mandatory_human_review,紧迫性诱导,,,,pending,,,2026-07-27,违规
 T0006,本院热玛吉项目12月特惠价6800元/次(原价8800元)，活动截止12月31日,活动推广,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,[],low,not_applicable,pass,标明原价及期限，真实价格信息,,,,pending,,,2026-07-27,合规(需验证原价真实性)
 T0007,女人不保养就是对自己的不负责,社群文案,微信,微信社群,医疗美容,机构社群运营,medical_advertisement,"[""R-A09-002""]",critical,explicitly_prohibited,block,暗示不治疗的负面后果,,,,pending,,,2026-07-27,语义风险
 T0008,保持良好的作息和护肤习惯，是维持皮肤健康的基础,科普文章,微信,微信公众号自然内容,医疗美容,机构企业号,health_education,[],low,not_applicable,pass,健康建议，未制造焦虑,,,,pending,,,2026-07-27,合规
 T0009,zheng形手术 找我就对了,标题,抖音,抖音普通内容,医疗美容,个人号,medical_advertisement,"[""SR0005""]",high,platform_prohibited,mandatory_human_review,拼音规避整形,,,,pending,,,2026-07-27,谐音对抗
-T0010,做完热·玛·吉效果超好！私信了解,笔记,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A14-001"", ""R-A02-001""]",critical,platform_prohibited,block,小红书平台限制+功效暗示+符号规避,,,,pending,,,2026-07-27,平台差异+符号对抗
+T0010,做完热·玛·吉效果超好！私信了解,笔记,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A14-001"",""R-A02-001""]",critical,platform_prohibited,block,小红书平台限制+功效暗示+符号规避,,,,pending,,,2026-07-27,平台差异+符号对抗
 T0011,我们用的是正规的进口玻尿酸，效果特别好,朋友圈,微信,微信朋友圈个人内容,医疗美容,机构员工个人号,medical_advertisement,"[""R-A02-001""]",critical,explicitly_prohibited,block,效果暗示+药品宣传,,,,pending,,,2026-07-27,"边界:多了\""效果特别好\""即违规"
 T0012,我们使用的是国家药监局批准注册的透明质酸钠凝胶(注册证编号:国械注准XXXXXXX),产品介绍,微信,微信公众号自然内容,医疗美容,机构企业号,service_information,[],low,not_applicable,pass,列明注册证编号的客观介绍,,,,pending,,,2026-07-27,合规
-T0013,我做了三次光子嫩肤，皮肤真的比以前好太多了，强烈推荐！,用户分享,小红书,小红书自然笔记,医疗美容,个人号,user_generated_content,"[""R-A05-002a"", ""R-A14-001""]",critical,platform_prohibited,block,患者效果证明+小红书平台限制,,,,pending,,,2026-07-27,违规
+T0013,我做了三次光子嫩肤，皮肤真的比以前好太多了，强烈推荐！,用户分享,小红书,小红书自然笔记,医疗美容,个人号,user_generated_content,"[""R-A05-002a"",""R-A14-001""]",critical,platform_prohibited,block,患者效果证明+小红书平台限制,,,,pending,,,2026-07-27,违规
 T0014,作为医美行业从业者，我建议大家选择正规医疗机构，不要轻信低价宣传,科普,抖音,抖音普通内容,医疗美容,认证医生号,health_education,[],low,not_applicable,pass,消费者教育，未涉及推广,,,,pending,,,2026-07-27,合规
-T0015,💉来试试我们的瘦脸针吧,标题,抖音,抖音普通内容,医疗美容,个人号,medical_advertisement,"[""R-A11-001"", ""SR0005""]",critical,explicitly_prohibited,block,药品推广+emoji规避,,,,pending,,,2026-07-27,emoji对抗
+T0015,💉来试试我们的瘦脸针吧,标题,抖音,抖音普通内容,医疗美容,个人号,medical_advertisement,"[""R-A11-001"",""SR0005""]",critical,explicitly_prohibited,block,药品推广+emoji规避,,,,pending,,,2026-07-27,emoji对抗
 T0016,激光脱毛是一种常见的美容方式,科普,微信,微信公众号自然内容,生活美容,机构企业号,health_education,[],low,not_applicable,pass,激光脱毛属医疗美容但内容为科普,,,,pending,,,2026-07-27,边界:医美vs生活美容
-T0017,来我们美容院做激光脱毛吧，一次就能去掉大半,美容院推广,微信,微信朋友圈个人内容,生活美容,美容院个人号,medical_advertisement,"[""R-A11-001"", ""R-A02-001""]",critical,explicitly_prohibited,block,非医疗机构发布医疗广告+功效承诺,,,,pending,,,2026-07-27,边界:生活美容机构发布医疗广告
-T0018,全国排名前十的整形医院，技术实力行业公认,机构宣传,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A06-002"", ""R-A07-001""]",critical,explicitly_prohibited,block,夸大机构+无法验证排名,,,,pending,,,2026-07-27,违规
+T0017,来我们美容院做激光脱毛吧，一次就能去掉大半,美容院推广,微信,微信朋友圈个人内容,生活美容,美容院个人号,medical_advertisement,"[""R-A11-001"",""R-A02-001""]",critical,explicitly_prohibited,block,非医疗机构发布医疗广告+功效承诺,,,,pending,,,2026-07-27,边界:生活美容机构发布医疗广告
+T0018,全国排名前十的整形医院，技术实力行业公认,机构宣传,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A06-002"",""R-A07-001""]",critical,explicitly_prohibited,block,夸大机构+无法验证排名,,,,pending,,,2026-07-27,违规
 T0019,【广审文号:XXXXXX】本院超声刀面部提升项目，由拥有15年临床经验的张主任主理,广告,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,[],low,not_applicable,pass,有审查证明+客观从业年限,,,,pending,,,2026-07-27,合规
 T0020,面部各项问题，实际上都反映了你体内的毒素堆积,社群文案,微信,微信社群,医疗美容,机构客服,medical_advertisement,"[""R-A10-001""]",critical,explicitly_prohibited,block,伪科学诊断+变相诱导,,,,pending,,,2026-07-27,语义风险:伪科学概念
 T0021,本院的鼻综合是全国最好的整形项目，效果最佳,项目推广,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A01-001""]",critical,explicitly_prohibited,block,'最好'修饰医美项目，属于绝对化用语指向具体服务,,,,pending,,,2026-07-27,明确违规
@@ -24,7 +24,7 @@ T0022,我们是行业第一、全网唯一的三级整形医院,机构介绍,抖
 T0023,做完整张脸的效果简直绝了，改善逆天,术后分享,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A01-003""]",critical,explicitly_prohibited,block,'逆天''绝了'修饰医美效果，语义等价最高级,,,,pending,,,2026-07-27,明确违规
 T0024,任何肤质都适合这款水光针，无一例外,项目推广,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A01-005""]",critical,explicitly_prohibited,block,'任何''无一例外'覆盖适用对象，为全称量化功效暗示,,,,pending,,,2026-07-27,明确违规
 T0025,我院的技术独一无二、独步天下，无人能及,技术宣传,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A01-006""]",critical,explicitly_prohibited,block,'独一无二''独步天下'完全排斥竞争对手,,,,pending,,,2026-07-27,明确违规
-T0026,一次注射，永远年轻，效果恒久不变,项目推广,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A01-007"", ""R-A02-002""]",critical,explicitly_prohibited,block,'永远''恒久'时间绝对化修饰效果，同时构成终身有效性断言,,,,pending,,,2026-07-27,明确违规
+T0026,一次注射，永远年轻，效果恒久不变,项目推广,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A01-007"",""R-A02-002""]",critical,explicitly_prohibited,block,'永远''恒久'时间绝对化修饰效果，同时构成终身有效性断言,,,,pending,,,2026-07-27,明确违规
 T0027,做完鼻子完美无瑕、天衣无缝，毫无瑕疵,术后分享,抖音,抖音短视频,医疗美容,个人号,medical_advertisement,"[""R-A01-008""]",critical,explicitly_prohibited,block,'完美无瑕''天衣无缝'暗示效果绝对完美,,,,pending,,,2026-07-27,明确违规
 T0028,我们的隆鼻效果比任何医院都好、都自然,项目推广,微信,微信朋友圈个人内容,医疗美容,机构员工个人号,medical_advertisement,"[""R-A01-012""]",critical,explicitly_prohibited,block,'比任何XX都好'为最高级比较结构,,,,pending,,,2026-07-27,明确违规
 T0029,保证一次见效，无效全额退款,项目推广,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A02-001""]",critical,explicitly_prohibited,block,'保证见效''无效退款'为明示功效保证,,,,pending,,,2026-07-27,明确违规
@@ -51,7 +51,7 @@ T0049,Day1红肿→Day7消肿→Day30定型，完整恢复记录,恢复日记,�
 T0050,法令纹深的姐妹直接做线雕，错不了,社群推荐,微信,微信社群,医疗美容,机构社群运营,medical_advertisement,"[""R-A10-003""]",critical,explicitly_prohibited,block,社群中对群体进行诊断推荐,,,,pending,,,2026-07-27,明确违规
 T0051,本院主刀医生是全国最权威的整形第一刀,医生宣传,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A06-001""]",critical,explicitly_prohibited,block,'最权威''第一刀'夸大医生资质,,,,pending,,,2026-07-27,明确违规
 T0052,我们是亚洲最大、全国最强的医美机构,机构宣传,抖音,抖音机构账号,医疗美容,机构企业号,medical_advertisement,"[""R-A06-002""]",critical,explicitly_prohibited,block,'亚洲最大''全国最强'夸大机构资质,,,,pending,,,2026-07-27,明确违规
-T0053,本院的咨询师有十年临床经验，你这种情况适合做填充,客服咨询,微信,微信社群,医疗美容,机构客服,diagnosis_communication,"[""R-A06-005"", ""R-A10-001""]",critical,explicitly_prohibited,block,非执业医师以专家身份给出诊断建议,,,,pending,,,2026-07-27,明确违规
+T0053,本院的咨询师有十年临床经验，你这种情况适合做填充,客服咨询,微信,微信社群,医疗美容,机构客服,diagnosis_communication,"[""R-A06-005"",""R-A10-001""]",critical,explicitly_prohibited,block,非执业医师以专家身份给出诊断建议,,,,pending,,,2026-07-27,明确违规
 T0054,本院隆鼻成功率99%，满意度100%,数据宣传,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A07-001""]",critical,explicitly_prohibited,block,无法验证的成功率/满意度数据,,,,pending,,,2026-07-27,明确违规
 T0055,已累计完成10万例双眼皮手术，经验丰富,规模宣传,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A07-002""]",high,conditionally_prohibited,request_evidence,无法验证的手术量数据,,,,pending,,,2026-07-27,明确违规
 T0056,我们是本市排名第一的整形医院,排名宣传,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A07-004""]",high,conditionally_prohibited,request_evidence,无法验证的地域排名,,,,pending,,,2026-07-27,明确违规
@@ -65,7 +65,7 @@ T0063,这款进口肉毒素可以除皱、瘦脸、瘦肩、瘦腿，效果全�
 T0064,A型肉毒毒素，除皱效果明显，欢迎咨询购买,产品宣传,微信,微信朋友圈付费广告,医疗美容,机构企业号,medical_advertisement,"[""R-A11-002""]",critical,explicitly_prohibited,block,宣传处方药但未标明'须凭处方购买和使用'警示语,,,,pending,,,2026-07-27,明确违规
 T0065,XX明星同款鼻综合，做完就是明星脸,项目推广,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A12-001a""]",critical,explicitly_prohibited,block,公众人物为医疗项目效果背书,,,,pending,,,2026-07-27,明确违规
 T0066,本院李主任强烈推荐这款抗衰项目,医生代言,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A12-002""]",critical,explicitly_prohibited,block,医务人员以专业身份为机构代言,,,,pending,,,2026-07-27,明确违规
-T0067,量子级抗衰技术，从DNA层面逆转衰老,技术宣传,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A13-001"", ""R-A13-003""]",critical,explicitly_prohibited,block,滥用科学概念+虚构机理,,,,pending,,,2026-07-27,明确违规
+T0067,量子级抗衰技术，从DNA层面逆转衰老,技术宣传,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A13-001"",""R-A13-003""]",critical,explicitly_prohibited,block,滥用科学概念+虚构机理,,,,pending,,,2026-07-27,明确违规
 T0068,祖传宫廷秘方，独家配制美白针,秘方宣传,微信,微信朋友圈个人内容,医疗美容,机构员工个人号,medical_advertisement,"[""R-A13-006""]",critical,explicitly_prohibited,block,偏方/秘方型医美宣传,,,,pending,,,2026-07-27,明确违规
 T0069,姐妹们快冲！这家医院的热玛吉现在有团购,种草笔记,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A14-001""]",high,platform_prohibited,mandatory_human_review,小红书平台推广医美项目,,,,pending,,,2026-07-27,明确违规
 T0070,医美科普：法令纹深怎么办？我院线雕项目限时优惠，点击预约,科普文章,微信,微信公众号自然内容,医疗美容,机构企业号,uncertain,"[""R-A16-001""]",high,uncertain,mandatory_human_review,以科普名义嵌入项目推荐和预约链接，未标广告,,,,pending,,,2026-07-27,明确违规
@@ -81,7 +81,7 @@ T0079,坚持下来，皮肤状态能回到十年前,抗衰文案,抖音,抖音�
 T0080,做完就像天生的双眼皮，妈生感满满,术后分享,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A02-010""]",critical,explicitly_prohibited,block,'妈生感''就像天生'为完美功效类比,,,,pending,,,2026-07-27,隐含语义风险
 T0081,不仅提拉紧致，还能美白嫩肤祛皱甚至重塑轮廓,功效堆叠,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A02-011""]",high,conditionally_prohibited,mandatory_human_review,多重功效堆砌形成综合全能效果印象,,,,pending,,,2026-07-27,隐含语义风险
 T0082,老客户普遍反映效果比想象中好太多了,用户反馈,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A02-012""]",critical,explicitly_prohibited,block,'比想象中好太多'为超预期型功效暗示,,,,pending,,,2026-07-27,隐含语义风险
-T0083,这个项目我们做了上万例，从来没出过问题,安全背书,微信,微信社群,医疗美容,机构客服,medical_advertisement,"[""R-A03-001"", ""R-A07-002""]",critical,explicitly_prohibited,block,'从来没出过问题'暗示零风险,,,,pending,,,2026-07-27,隐含语义风险
+T0083,这个项目我们做了上万例，从来没出过问题,安全背书,微信,微信社群,医疗美容,机构客服,medical_advertisement,"[""R-A03-001"",""R-A07-002""]",critical,explicitly_prohibited,block,'从来没出过问题'暗示零风险,,,,pending,,,2026-07-27,隐含语义风险
 T0084,放心把脸交给我们，不用有任何心理负担,信任话术,小红书,小红书自然笔记,医疗美容,机构企业号,medical_advertisement,"[""R-A03-005""]",critical,explicitly_prohibited,block,'放心''不用有负担'暗示无需担忧安全,,,,pending,,,2026-07-27,隐含语义风险
 T0085,第二天正常上班完全没问题，不影响工作,恢复承诺,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A03-006""]",high,conditionally_prohibited,mandatory_human_review,暗示治疗对日常生活完全无影响,,,,pending,,,2026-07-27,隐含语义风险
 T0086,这款设备通过了欧盟CE认证，安全性有保障,设备背书,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A03-007""]",high,conditionally_prohibited,request_evidence,以认证为据进行安全承诺,,,,pending,,,2026-07-27,隐含语义风险
@@ -113,7 +113,7 @@ T0111,这款设备在欧美已经上市，国内很快就能用到,设备预告,
 T0112,鼻部精雕护理，不开刀就能重塑鼻型,项目包装,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A11-006""]",high,explicitly_prohibited,mandatory_human_review,将手术项目包装为非手术名称,,,,pending,,,2026-07-27,隐含语义风险
 T0113,某当红小花同款项目，懂的都懂,种草文案,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A12-001a""]",critical,explicitly_prohibited,block,暗示公众人物为医疗项目效果背书,,,,pending,,,2026-07-27,隐含语义风险
 T0114,博主亲测分享：这个项目真心推荐,KOL分享,抖音,抖音短视频,医疗美容,KOL,medical_advertisement,"[""R-A12-003""]",high,conditionally_prohibited,mandatory_human_review,KOL体验推荐未标注广告关系,,,,pending,,,2026-07-27,隐含语义风险
-T0115,通过光波能量激活面部休眠细胞，重启年轻状态,技术解释,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A13-003"", ""R-A13-004""]",critical,explicitly_prohibited,block,虚构机理+伪科学因素归因,,,,pending,,,2026-07-27,隐含语义风险
+T0115,通过光波能量激活面部休眠细胞，重启年轻状态,技术解释,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A13-003"",""R-A13-004""]",critical,explicitly_prohibited,block,虚构机理+伪科学因素归因,,,,pending,,,2026-07-27,隐含语义风险
 T0116,XX大学最新研究证实，我们的抗衰因子能修复DNA断裂,学术背书,抖音,抖音短视频,医疗美容,机构企业号,medical_advertisement,"[""R-A13-005""]",critical,explicitly_prohibited,block,虚假/伪学术引用,,,,pending,,,2026-07-27,隐含语义风险
 T0117,中医穴位注射塑形，疏通经络就能瘦脸,伪中医,小红书,小红书自然笔记,医疗美容,个人号,medical_advertisement,"[""R-A13-002""]",high,conditionally_prohibited,mandatory_human_review,歪曲中医理论为医美效果背书,,,,pending,,,2026-07-27,隐含语义风险
 T0118,专家介绍：陈主任，中华医学会会员，多次受邀参加行业峰会,资质包装,微信,微信公众号自然内容,医疗美容,机构企业号,medical_advertisement,"[""R-A06-004""]",high,conditionally_prohibited,request_evidence,学术头衔未明确可验证信息，有夸大包装风险,,,,pending,,,2026-07-27,隐含语义风险
@@ -199,3 +199,123 @@ T0197,本品为处方药，须凭执业医师处方购买和使用，禁忌及�
 T0198,本院使用的玻尿酸产品已在中国NMPA注册，注册证号：XXXX,产品说明,抖音,抖音机构账号,医疗美容,机构企业号,service_information,[],low,not_applicable,pass,客观标注进口产品中国注册证号,,,,pending,,,2026-07-27,边界误报
 T0199,这种鼻型属于'驼峰鼻'审美风格，适合轮廓立体的人,审美科普,小红书,小红书自然笔记,医疗美容,个人号,health_education,[],low,not_applicable,pass,审美风格科普，不涉及具体医疗项目,,,,pending,,,2026-07-27,边界误报
 T0200,我喜欢这种自然感，不追求夸张的效果,审美表达,抖音,抖音短视频,医疗美容,个人号,commercial_recommendation,[],low,not_applicable,pass,个人审美偏好，无医疗效果背书,,,,pending,,,2026-07-27,边界误报
+T1001,宣传文案：原价，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-101""]",high,conditionally_prohibited,request_evidence,宣传原价、门市价、划线价或折扣，但该比较价格无真实成交记录、适用条件不一致或无法验证。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1002,真实可验证的比较价格，明确统计时间、交易条件和适用范围。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-101
+T1003,宣传文案：低至，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-102""]",critical,explicitly_prohibited,block,用低价项目吸引到店，但结算时提高价格、强制加购耗材或收取未预先标明的麻醉、材料、护理等费用。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1004,完整列明项目内容、必要耗材、附加服务、计价方式及不包含项目。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-102
+T1005,宣传文案：免费体验，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-103""]",high,conditionally_prohibited,request_evidence,宣传免费体验、免费治疗、免费设计等，但未清晰披露名额、适用项目、附加购买、到店条件或其他限制。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1006,真实免费且显著说明范围、数量、时限、适用人群和附加条件。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-103
+T1007,宣传文案：最后一天，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-104""]",high,conditionally_prohibited,request_evidence,使用最后一天、仅剩若干名额、错过不再等紧迫性表达，但活动反复延长、库存或名额无法证明。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1008,真实活动期限和名额，可提供内部活动记录并按期结束。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-104
+T1009,宣传文案：交定金，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A08-105""]",high,conditionally_prohibited,request_evidence,诱导支付定金、预约金或锁价款，却未显著说明用途、抵扣方式、退款条件、有效期和违约责任。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1010,以显著方式披露金额、用途、退款规则、有效期和双方责任。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-105
+T1011,宣传文案：医美贷，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-106""]",high,conditionally_prohibited,mandatory_human_review,用零首付、月供很低、轻松变美等方式诱导融资，却弱化利率、服务费、逾期责任、征信影响或贷款主体。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1012,完整披露年化成本、费用、期限、贷款主体、逾期和征信影响，并不得夸大可负担性。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-106
+T1013,宣传文案：价值999元，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-107""]",medium,conditionally_prohibited,request_evidence,宣称赠品价值、免费加赠或买一送一，但赠品价值不真实、数量不明确或领取条件被弱化。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1014,标明赠品名称、数量、真实当前售价、适用条件和有效期。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-107
+T1015,宣传文案：必须搭配，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A08-108""]",critical,explicitly_prohibited,block,通过套餐、到店评估、耗材差异等方式迫使消费者购买额外项目或升级版本。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1016,消费者可以自主选择单项或套餐，显著说明差异且不施加不当压力。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-108
+T1017,宣传文案：比别家便宜，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A08-109""]",high,conditionally_prohibited,request_evidence,将不同机构、不同耗材、不同规格、不同服务范围的价格直接比较，制造本机构更便宜的印象。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1018,明确比较对象、规格、服务范围、数据来源和统计时间，保证同等条件。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-109
+T1019,宣传文案：概不退款，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A08-110""]",high,conditionally_prohibited,mandatory_human_review,使用一经售出概不退款、最终解释权归本店、任何情况不退不换等格式化表达排除消费者法定权利。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1020,依法、清晰约定取消和退款条件，不排除法定权利。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A08-110
+T1021,宣传文案：到店就能做，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-101""]",critical,explicitly_prohibited,block,客服或运营承诺到院即可做项目、无需面诊或人人适合，绕过执业医师评估和禁忌症筛查。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1022,仅提供预约服务并说明是否适合须由执业医师面诊评估。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-101
+T1023,宣传文案：没有禁忌，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-102""]",critical,explicitly_prohibited,block,客服根据文字、照片或简单问答判断不存在禁忌症、可以安全治疗或排除疾病风险。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1024,收集基础信息后转交执业医师评估，不作确定性结论。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-102
+T1025,宣传文案：先停药，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-103""]",critical,explicitly_prohibited,block,客服、咨询师或运营人员建议用户停止处方药、调整剂量、购买药物或自行处理症状。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1026,提示用户咨询开药医生或到正规医疗机构就诊。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-103
+T1027,宣传文案：都是正常的，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-104""]",critical,explicitly_prohibited,block,对红肿、感染、疼痛、过敏等不良反应一概称正常，要求等待或阻止用户及时就医。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1028,说明无法在线判断；出现持续、加重或紧急症状应及时联系医生或就医。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-104
+T1029,宣传文案：三天恢复，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-105""]",critical,explicitly_prohibited,block,客服承诺几天恢复、一定不影响工作、周末做周一正常上班等个体化恢复安排。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1030,可介绍一般流程并明确恢复存在个体差异，最终以医生评估为准。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-105
+T1031,宣传文案：最适合你的是，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-106""]",high,conditionally_prohibited,mandatory_human_review,在未了解病史、过敏史、用药史、妊娠哺乳等信息时，直接推荐具体医美项目或套餐。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1032,提供一般项目科普，建议由执业医师结合完整健康情况评估。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-106
+T1033,宣传文案：给你看案例，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-107""]",critical,explicitly_prohibited,block,客服在私信、群聊或一对一咨询中发送患者术前术后照片、病例或效果反馈作为说服材料。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1034,仅介绍客观流程、资质与风险；不得以患者案例证明效果。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-107
+T1035,宣传文案：转群里看看，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,internal_material,"[""R-A10-108""]",critical,explicitly_prohibited,block,将用户照片、病史、诊断、用药或咨询记录转发到无关群聊、朋友圈或非必要人员。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1036,仅在最小必要范围内由授权人员处理，并进行脱敏和权限控制。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-108
+T1037,宣传文案：我是医生，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-109""]",critical,explicitly_prohibited,block,客服、咨询师、美容师以医生、专家、老师等身份回复，或故意让用户误以为其具备医疗执业资格。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1038,明确表明客服或咨询岗位，不作医疗判断，必要时转接执业医师。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-109
+T1039,宣传文案：孕妇也能做，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A10-110""]",critical,explicitly_prohibited,block,对孕妇、哺乳期、备孕者、未成年人、严重过敏史等特殊人群直接推荐或保证项目安全。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1040,提示特殊人群需由执业医师审慎评估，未成年人需依法取得监护人同意。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A10-110
+T1041,宣传文案：小红书医美种草，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A14-101""]",high,platform_prohibited,mandatory_human_review,在小红书自然笔记中直接推广具体医美机构、项目、药械或效果，并出现预约、价格、联系方式等转化信息。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1042,符合平台规则的非商业健康科普，且不出现项目推介、效果证明或交易路径。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-101
+T1043,宣传文案：受邀体验，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A14-102""]",high,platform_prohibited,mandatory_human_review,达人或素人接受费用、免费服务、置换或其他利益后发布体验内容，却未按平台要求披露商业合作关系。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1044,按平台要求完成商业合作报备和广告可识别性披露，且内容本身合法。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-102
+T1045,宣传文案：加V，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A14-103""]",high,platform_prohibited,block,通过微信号、手机号、二维码、谐音、拆字、图片水印或评论暗号等方式引导用户站外预约医美服务。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1046,使用平台允许的合规留资和交易能力，并满足行业准入要求。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-103
+T1047,宣传文案：XX医生，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,service_information,"[""R-A14-104""]",medium,platform_prohibited,request_qualification,医疗健康、医疗美容机构专业号使用医生个人姓名、医生身份或个人化人设命名，超出平台认证命名规则。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1048,按认证主体、商标和平台命名规则使用机构或品牌名称。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-104
+T1049,宣传文案：医美项目团购，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A14-105""]",critical,platform_prohibited,block,账号未完成相应行业认证或不具备医疗机构、药械等资质，却营销具体医美项目、药品或医疗器械。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1050,完成平台和法定资质核验，并严格在获准范围内发布。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-105
+T1051,宣传文案：直播看脸，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A14-106""]",critical,platform_prohibited,block,直播中根据观众评论、照片或连麦情况判断皮肤问题，推荐具体项目并承诺效果或恢复期。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1052,进行一般健康科普，不针对个体作诊断或项目推荐。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-106
+T1053,宣传文案：评论扣1，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A14-107""]",high,platform_prohibited,block,在评论、私信、口播或画面中通过暗号、谐音、主页信息等方式引导站外咨询、支付或预约。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1054,使用平台允许的企业经营和留资能力，满足准入要求。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-107
+T1055,宣传文案：瘦脸真，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A14-108""]",high,platform_prohibited,block,将医美项目、药械、注射、整形等词语改为拼音、谐音、首字母、符号或图片文字以规避审核。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1056,使用规范名称并按资质和平台规则发布合法内容。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-108
+T1057,宣传文案：朋友们来找我，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A14-109""]",high,uncertain,mandatory_human_review,机构员工、咨询师或合作人员通过个人朋友圈持续发布项目、价格、效果、预约等商业内容，实际为机构营销。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1058,纯个人生活表达且无商业关系、转化信息和效果证明。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-109
+T1059,宣传文案：科普福利，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A14-110""]",high,uncertain,mandatory_human_review,公众号以科普为标题或主体，但嵌入机构、项目、优惠、二维码、电话或预约入口，可能构成变相医疗广告。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1060,纯科普且无商业推广要素，或依法审查并标识的广告。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-110
+T1061,宣传文案：视频号医美直播，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A14-111""]",critical,platform_prohibited,block,视频号或直播中推广医美项目、挂载交易或预约路径，使用患者案例、诊断建议、效果承诺等医疗营销内容。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1062,符合平台认证和法律要求的客观服务信息或一般科普。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-111
+T1063,宣传文案：群里发案例，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A14-112""]",critical,explicitly_prohibited,block,在微信群或私信中批量传播患者案例、前后对比、具体诊断、项目推荐和限时付款话术。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1064,仅提供客观流程、一般科普和预约执业医师面诊服务。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A14-112
+T1065,宣传文案：患者照片，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-101""]",critical,explicitly_prohibited,block,将患者面部、身体部位、治疗过程照片或视频用于朋友圈、公众号、短视频、海报等宣传，但未取得针对公开传播和营销用途的单独同意。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1066,取得明确、具体、可撤回的单独同意，且使用不超出授权目的、平台、期限和范围。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-101
+T1067,宣传文案：术前术后，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-102""]",critical,explicitly_prohibited,block,发布同一患者术前术后对比，不仅可能构成患者证明和效果对比，也涉及敏感健康信息与肖像公开。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1068,院内诊疗资料在必要范围内使用，或依法用于脱敏学术交流，不作为营销。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-102
+T1069,宣传文案：聊天截图，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-103""]",high,conditionally_prohibited,mandatory_human_review,在宣传内容中展示微信、钉钉、短信、私信等咨询或评价截图，包含头像、昵称、账号、病情、价格或联系方式。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1070,取得单独同意并进行充分脱敏，且不得用患者评价证明疗效。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-103
+T1071,宣传文案：病例分享，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-104""]",critical,explicitly_prohibited,block,公开患者病历、诊断名称、检查报告、处方、用药史、过敏史或手术记录等医疗健康信息。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1072,仅在诊疗必要范围内处理；用于科研教学需依法脱敏并符合相关要求。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-104
+T1073,宣传文案：AI测脸，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,diagnosis_communication,"[""R-A15-105""]",critical,conditionally_prohibited,mandatory_human_review,采集或公开高清面部、面部特征分析、声纹、指纹、私密部位影像等生物识别或高度私密信息用于营销、AI分析或案例展示。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1074,确有特定目的和充分必要性，取得单独同意并采取严格保护措施。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-105
+T1075,宣传文案：二次使用，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-106""]",critical,explicitly_prohibited,block,患者仅同意用于诊疗、内部记录或某一平台，但机构随后用于广告、其他平台、长期素材库或第三方合作。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1076,重新取得覆盖当前用途、平台、期限和接收方的单独同意。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-106
+T1077,宣传文案：撤回授权，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-107""]",high,explicitly_prohibited,block,患者撤回肖像或个人信息使用同意后，仍继续发布、投放或保留公开素材，或设置不合理撤回障碍。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1078,停止后续处理并在合理范围内删除或下架，法律另有保存义务的除外。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-107
+T1079,宣传文案：未成年案例，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-108""]",critical,explicitly_prohibited,block,处理或公开不满十四周岁未成年人的照片、健康信息或案例，未取得监护人同意或缺乏专门规则；其他未成年人内容也需审慎评估。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1080,依法取得监护人同意并遵循最有利于未成年人的原则；营销用途通常应避免。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-108
+T1081,宣传文案：打码案例，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-109""]",high,conditionally_prohibited,mandatory_human_review,虽然遮挡姓名或眼睛，但通过面部轮廓、纹身、昵称、地区、时间、病情、聊天内容等仍可识别特定患者。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1082,进行不可逆匿名化或删除非必要身份线索；营销案例仍需同时满足广告规则。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-109
+T1083,宣传文案：医生头像，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-110""]",high,conditionally_prohibited,request_evidence,在账号头像、海报、直播封面或推广素材中使用医生、员工、明星、达人或其他第三方形象，缺少明确授权或超出授权范围。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1084,取得有效肖像和商业使用授权，且不得以禁止主体为医疗广告代言。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-110
+T1085,宣传文案：发给代运营，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,internal_material,"[""R-A15-111""]",critical,conditionally_prohibited,mandatory_human_review,将客户线索、咨询记录、照片、健康信息提供给广告平台、代运营、摄影、模型服务或其他合作方，未充分告知和取得必要同意。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1086,明确处理目的、接收方、类型和方式，取得单独同意并签署数据保护协议。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-111
+T1087,宣传文案：转发顾客笔记，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A15-112""]",high,conditionally_prohibited,mandatory_human_review,从用户公开笔记、朋友圈、评论或社交媒体抓取照片和评价，直接转载为机构广告或案例。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1088,取得针对机构转载和营销用途的明确授权，且不得作疗效证明。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-112
+T1089,宣传文案：上传AI，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,internal_material,"[""R-A15-113""]",critical,conditionally_prohibited,mandatory_human_review,将患者照片、病历、聊天记录、检查报告等上传到外部AI、图像生成、文案或识别服务，未评估接收方、跨境、留存和再利用风险。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1090,使用脱敏或本地化方案，完成必要性、安全和供应商评估并取得单独同意。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-113
+T1091,宣传文案：永久保存案例，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,internal_material,"[""R-A15-114""]",medium,conditionally_prohibited,mandatory_human_review,患者素材、咨询记录和健康信息在营销用途结束、授权到期或不再必要后仍长期保存，缺少期限和删除机制。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1092,制定明确保存期限和删除机制；法律要求留存的诊疗资料与营销素材分别管理。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A15-114
+T1093,宣传文案：员工朋友圈，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A16-101""]",high,uncertain,mandatory_human_review,机构员工、咨询师、医生或合作人员在个人账号发布机构、项目、价格、效果和预约信息，可能因商业目的和身份关系被认定为广告。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1094,无机构关系、无对价、无转化路径且属于真实个人表达的内容，仍需检查其他广告风险。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-101
+T1095,宣传文案：免费体验换笔记，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A16-102""]",high,uncertain,mandatory_human_review,发布者接受免费治疗、折扣、赠品、佣金、流量或其他利益后发布医美体验、探店或推荐内容。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1096,依法、依平台披露商业关系，并删除法律禁止的疗效证明、患者背书等内容。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-102
+T1097,宣传文案：官号转发顾客笔记，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A16-103""]",high,uncertain,mandatory_human_review,用户原始内容可能是个人表达，但机构账号转发、剪辑、加品牌和预约信息后，可能转化为机构商业广告或患者证明。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1098,仅处理与投诉、售后或合法互动相关的内容；营销转载需授权且不得违反患者证明禁令。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-103
+T1099,宣传文案：科普文末二维码，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A16-104""]",high,uncertain,mandatory_human_review,内容以科普、知识、答疑为主，但同页出现机构信息、预约二维码、电话、购买链接、优惠或私信导流。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1100,纯公益科普无商业要素；或依法取得审查证明并按广告发布。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-104
+T1101,宣传文案：医生推荐本院项目，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A16-105""]",critical,conditionally_prohibited,block,医生以科普、个人观点或病例讨论形式，持续推广所在机构、具体项目、预约方式或优惠，可能构成机构广告并涉及医务人员推荐证明。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1102,一般医学科普，不推荐具体机构、项目或效果；合法服务信息按规定公开。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-105
+T1103,宣传文案：广告二剪，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A16-106""]",critical,explicitly_prohibited,block,对已经审查通过的医疗广告进行剪辑、拼接、改标题、加效果字幕、换平台或改优惠，导致内容与审查证明不一致。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1104,严格按审查通过内容发布；需要修改时重新申请审查。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-106
+T1105,宣传文案：直播挂团购，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,medical_advertisement,"[""R-A16-107""]",high,uncertain,mandatory_human_review,直播以科普、答疑、聊天为名，但同时挂载团购、商品、预约、电话或私信转化路径，并推介具体医疗服务。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1106,纯科普无交易路径；或依法、依平台资质发布审查通过的广告。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-107
+T1107,宣传文案：医美测评，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,commercial_recommendation,"[""R-A16-108""]",high,uncertain,mandatory_human_review,以测评、探店、清单、攻略、榜单、日记等原生内容形式推销机构或服务，存在商业关系但未显著标识广告或合作。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1108,按法律和平台要求显著标识广告/合作，并确保内容本身合法。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-108
+T1109,宣传文案：主页有联系方式，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A16-109""]",medium,uncertain,mandatory_human_review,单条内容看似科普或中性，但与主页简介、置顶笔记、评论、私信自动回复、二维码或连续帖子组合后形成完整推广链路。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1110,各页面均不包含商业推广，或整体依法完成广告审查与标识。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-109
+T1111,宣传文案：医生科普其实推广，现在就来咨询预约。,新增规则回归测试,微信,微信公众号/朋友圈/社群,医疗美容,机构运营,uncertain,"[""R-A16-110""]",high,uncertain,mandatory_human_review,使用科普、知识、医生解答等标题，但正文主要展示机构优势、项目效果、价格优惠和预约信息。,[],,,pending,none,,2026-07-27,v1.2新增明确风险样本
+T1112,标题和正文均为纯科普且无商业要素，或按广告规则发布。,新增规则误报测试,微信,微信公众号自然内容,医疗美容,机构运营,service_information,[],low,not_applicable,pass,客观、条件化或已明确证据要求的表达，不应仅因相关主题自动判违规。,[],,,pending,none,,2026-07-27,v1.2新增合规/边界样本；相关规则R-A16-110
+T1113,把患者正脸和病历上传到AI，让它帮我做案例海报。,语义和组合风险,微信,,医疗美容,机构运营/个人号,uncertain,"[""R-A15-113""]",critical,uncertain,mandatory_human_review,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1114,【科普】皮肤抗衰知识，文末扫码预约本院项目，今天立减2000。,语义和组合风险,微信,,医疗美容,机构运营/个人号,uncertain,"[""R-A16-104""]",high,uncertain,mandatory_human_review,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1115,29.9元全脸体验，材料费和麻醉费到店另收。,语义和组合风险,小红书,,医疗美容,机构运营/个人号,uncertain,"[""R-A08-102""]",critical,uncertain,block,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1116,这是我自费真实分享（其实机构免费置换），想做的私信我。,语义和组合风险,小红书,,医疗美容,机构运营/个人号,uncertain,"[""R-A16-102""]",high,uncertain,mandatory_human_review,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1117,你的肿痛都是正常的，不用去医院，等几天就好。,语义和组合风险,微信,,医疗美容,机构运营/个人号,uncertain,"[""R-A10-104""]",critical,uncertain,block,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1118,热·玛·吉想了解扣1，主页有V。,语义和组合风险,抖音,,医疗美容,机构运营/个人号,uncertain,"[""R-A14-108""]",high,uncertain,block,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1119,聊天截图已经遮住姓名，但保留头像、城市和激素脸诊断。,语义和组合风险,小红书,,医疗美容,机构运营/个人号,uncertain,"[""R-A15-109""]",high,uncertain,mandatory_human_review,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本
+T1120,直播间挂了医美团购券，同时给观众连麦看脸推荐项目。,语义和组合风险,微信,,医疗美容,机构运营/个人号,uncertain,"[""R-A14-111""]",critical,uncertain,block,语义、平台或组合风险测试。,[],,,pending,none,,2026-07-27,v1.2对抗样本

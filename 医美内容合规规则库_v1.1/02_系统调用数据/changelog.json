@@ -178,5 +178,33 @@
     "reviewed_by": "pending",
     "change_date": "2026-07-27",
     "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG-V1.2-COVERAGE",
+    "version": "v1.2-dev",
+    "change_type": "added",
+    "object_type": "coverage_supplement",
+    "object_id": "A08/A10/A14/A15/A16/SR/AC/VC",
+    "previous_value": null,
+    "new_value": {
+      "sources.json": 3,
+      "rules.json": 56,
+      "rule_variants.json": 448,
+      "rule_sources.json": 115,
+      "rule_platforms.json": 155,
+      "rule_examples.json": 224,
+      "semantic_rules.json": 25,
+      "semantic_rule_sources.json": 25,
+      "semantic_rule_examples.json": 75,
+      "ad_classification_rules.json": 10,
+      "test_cases.json": 120,
+      "visual_manual_checks.json": 15
+    },
+    "change_reason": "补齐价格促销、客服、平台专项、隐私肖像、广告认定、视觉复核与语义检测覆盖",
+    "related_source_id": "S0015;S0016;S0029;S0030;S0031",
+    "changed_by": "AI-assisted draft",
+    "reviewed_by": null,
+    "change_date": "2026-07-27",
+    "effective_date": null
   }
 ]

@@ -1,4 +1,13 @@
-import type { ApiResponse } from "../types";
+import type {
+  ApiResponse,
+  Brand,
+  GenerateResult,
+  ComplianceResult,
+  RuleDetail,
+  SourceDetail,
+  HistoryRecord,
+  Settings,
+} from "../types";
 
 const BASE = "/api";
 
@@ -15,7 +24,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<ApiResponse
   }
   if (!res.ok) {
     const msg = body?.message || `请求失败（HTTP ${res.status}）`;
-    return { success: false, data: null, message: msg, request_id: "", error_code: body?.error_code };
+    return { success: false, data: null as any, message: msg, request_id: "", error_code: body?.error_code } as ApiResponse<T>;
   }
   return body as ApiResponse<T>;
 }
