@@ -1,12 +1,8 @@
 // 与后端响应结构对应的类型定义
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T | null;
-  message: string | null;
-  request_id: string;
-  error_code?: string;
-}
+export type ApiResponse<T> =
+  | { success: true; data: T; message: string | null; request_id: string; error_code?: never }
+  | { success: false; data: null; message: string; request_id: string; error_code?: string };
 
 export interface Brand {
   brand_id: string;
