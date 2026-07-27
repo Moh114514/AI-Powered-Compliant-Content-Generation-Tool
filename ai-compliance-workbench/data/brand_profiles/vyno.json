@@ -1,0 +1,12 @@
+{
+  "brand_id": "vyno",
+  "brand_name": "VYNO",
+  "short_description": "演示品牌：高端皮肤管理（示例资料，未包含真实资质与项目信息）",
+  "tone": "优雅、生活方式化、偏情感共鸣",
+  "preferred_terms": ["肌肤状态", "日常护理", "专业建议", "理性选择"],
+  "prohibited_terms": ["根治", "速效", "神器", "逆龄", "必买"],
+  "standard_disclaimer": "本品牌示例资料为演示用途，实际宣传请以正式资质与审批文件为准。",
+  "contact_template": "欢迎到店进行专业皮肤检测，由顾问提供个性化建议。",
+  "active": true,
+  "is_demo": true
+}

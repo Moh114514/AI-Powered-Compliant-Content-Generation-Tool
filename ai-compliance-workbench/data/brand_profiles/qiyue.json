@@ -1,0 +1,12 @@
+{
+  "brand_id": "qiyue",
+  "brand_name": "启月文化",
+  "short_description": "演示品牌：医美科普内容机构（示例资料，未包含真实资质与项目信息）",
+  "tone": "科普、温和、去焦虑",
+  "preferred_terms": ["科普", "个体差异", "正规医疗机构", "知情同意"],
+  "prohibited_terms": ["包治", "必愈", "无副作用", "全网最低", "限时疯抢"],
+  "standard_disclaimer": "本品牌示例资料为演示用途，实际宣传请以正式资质与审批文件为准。",
+  "contact_template": "更多内容请关注正规医疗机构发布的科普信息。",
+  "active": true,
+  "is_demo": true
+}

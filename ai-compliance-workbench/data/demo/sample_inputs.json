@@ -1,0 +1,36 @@
+{
+  "demo_generation": {
+    "brand": "guangnian18",
+    "platform": "小红书",
+    "content_type": "项目介绍",
+    "topic": "夏季光电抗衰体验周",
+    "selling_points": "全城效果最好，零风险，7天年轻十岁，限时免费体验",
+    "target_audience": "25-40岁关注抗初老的都市女性",
+    "campaign_info": "7月限时，前100名免费体验",
+    "tone": "亲切专业",
+    "length": "中",
+    "extra_requirements": "",
+    "use_brand_profile": true,
+    "versions": 3
+  },
+  "demo_check_risky": {
+    "text": "夏季光电抗衰体验周来啦！我们全城效果最好，零风险，7天让你年轻十岁，限时免费体验，名额有限速来！",
+    "platform": "小红书",
+    "content_type": "项目介绍",
+    "brand": "guangnian18",
+    "publisher_identity": "医美机构",
+    "business_domain": "医疗美容",
+    "is_paid_ad": true,
+    "context_note": ""
+  },
+  "demo_check_compliant": {
+    "text": "夏季光电抗衰体验周开启。本文介绍项目流程、适用人群与注意事项，并说明需到店由专业医师评估个人情况，不承诺统一效果及恢复时间。",
+    "platform": "小红书",
+    "content_type": "项目介绍",
+    "brand": "guangnian18",
+    "publisher_identity": "医美机构",
+    "business_domain": "医疗美容",
+    "is_paid_ad": false,
+    "context_note": ""
+  }
+}

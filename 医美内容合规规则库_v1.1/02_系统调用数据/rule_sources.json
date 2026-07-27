@@ -1,0 +1,1822 @@
+[
+  {
+    "relation_id": "RS0001",
+    "rule_id": "R-A01-001",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止使用国家级、最高级、最佳等绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0002",
+    "rule_id": "R-A01-001",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "区分绝对化用语的排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0003",
+    "rule_id": "R-A01-001",
+    "source_id": "S0008",
+    "article_clause": null,
+    "relation_type": "supporting",
+    "supporting_summary": "医美为重点领域，一般不适用不予处罚",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0004",
+    "rule_id": "R-A01-002",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "与绝对化用语同一法律依据",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0005",
+    "rule_id": "R-A02-001",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止表示功效安全性的断言或保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0006",
+    "rule_id": "R-A02-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南明确功效保证为重点打击",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0007",
+    "rule_id": "R-A02-001",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "supporting",
+    "supporting_summary": "不得利用患者名义形象作证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0008",
+    "rule_id": "R-A02-002",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "功效保证禁止",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0009",
+    "rule_id": "R-A03-001",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0010",
+    "rule_id": "R-A03-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "安全性承诺为医美重点打击",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0011",
+    "rule_id": "R-A03-001",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "supporting",
+    "supporting_summary": "监管工作指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0012",
+    "rule_id": "R-A03-002",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "安全性承诺禁止",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0013",
+    "rule_id": "R-A04-001",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "效果时间承诺属于功效保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0014",
+    "rule_id": "R-A04-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0015",
+    "rule_id": "R-A05-001",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法整体规制",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0016",
+    "rule_id": "R-A05-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "使用患者形象作证明为重点打击",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0017",
+    "rule_id": "R-A05-001",
+    "source_id": "S0004",
+    "article_clause": "第7条",
+    "relation_type": "primary",
+    "supporting_summary": "禁止利用患者/医学权威名义形象",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0018",
+    "rule_id": "R-A05-001",
+    "source_id": "S0011",
+    "article_clause": "第八条",
+    "relation_type": "supporting",
+    "supporting_summary": "病例案例推介可能认定广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0019",
+    "rule_id": "R-A05-002a",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法禁止利用患者证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0020",
+    "rule_id": "R-A05-002a",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0021",
+    "rule_id": "R-A05-002a",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用患者名义形象作证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0022",
+    "rule_id": "R-A05-002b",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "clarification",
+    "supporting_summary": "不涉及疗效的服务评价不在禁止范围",
+    "confidence": "中",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0023",
+    "rule_id": "R-A06-001",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "夸大资质可认定为虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0024",
+    "rule_id": "R-A06-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0025",
+    "rule_id": "R-A06-001",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "supporting",
+    "supporting_summary": "不得利用医务人员名义推荐",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0026",
+    "rule_id": "R-A06-002",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0027",
+    "rule_id": "R-A07-001",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确表明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0028",
+    "rule_id": "R-A07-001",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南要求标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0029",
+    "rule_id": "R-A08-001",
+    "source_id": "S0001",
+    "article_clause": "第9条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用虚假价格手段",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0030",
+    "rule_id": "R-A08-001",
+    "source_id": "S0010",
+    "article_clause": "第9条",
+    "relation_type": "supporting",
+    "supporting_summary": "消保条例禁止虚假或引人误解方式诱导",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0031",
+    "rule_id": "R-A08-002",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假宣传",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0032",
+    "rule_id": "R-A08-002",
+    "source_id": "S0010",
+    "article_clause": "第9条",
+    "relation_type": "primary",
+    "supporting_summary": "消保条例",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0033",
+    "rule_id": "R-A09-001",
+    "source_id": "S0001",
+    "article_clause": "第9条第7项",
+    "relation_type": "primary",
+    "supporting_summary": "妨碍社会公共秩序违背良好风尚",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0034",
+    "rule_id": "R-A09-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "制造容貌焦虑为重点打击",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0035",
+    "rule_id": "R-A09-001",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "supporting",
+    "supporting_summary": "监管工作指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0036",
+    "rule_id": "R-A09-002",
+    "source_id": "S0001",
+    "article_clause": "第9条第7项",
+    "relation_type": "primary",
+    "supporting_summary": "良好风尚",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0037",
+    "rule_id": "R-A09-002",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0038",
+    "rule_id": "R-A10-001",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "relation_type": "primary",
+    "supporting_summary": "不得向无资质机构提供导购咨询服务",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0039",
+    "rule_id": "R-A10-001",
+    "source_id": "S0005",
+    "article_clause": "第16条/第17条",
+    "relation_type": "primary",
+    "supporting_summary": "执业医师资质与诊疗规范",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0040",
+    "rule_id": "R-A11-001",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0041",
+    "rule_id": "R-A11-001",
+    "source_id": "S0006",
+    "article_clause": "第5条/第6条",
+    "relation_type": "primary",
+    "supporting_summary": "不得超出注册或备案范围",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0042",
+    "rule_id": "R-A12-001a",
+    "source_id": "S0001",
+    "article_clause": "第16条第4项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止利用广告代言人作推荐证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0043",
+    "rule_id": "R-A12-001a",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0044",
+    "rule_id": "R-A12-001a",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "supporting",
+    "supporting_summary": "不得利用患者/医务人员/专家推荐",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0045",
+    "rule_id": "R-A12-001b",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "clarification",
+    "supporting_summary": "审美参考不构成代言，需确保未暗示使用",
+    "confidence": "中",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0046",
+    "rule_id": "R-A14-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "indirect",
+    "supporting_summary": "平台医美内容推广的合规框架(间接适用)",
+    "confidence": "中",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0047",
+    "rule_id": "R-A16-001",
+    "source_id": "S0011",
+    "article_clause": "第六条/第八条",
+    "relation_type": "primary",
+    "supporting_summary": "广告认定指南明确科普+商业要素可认定广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0048",
+    "rule_id": "R-A16-001",
+    "source_id": "S0002",
+    "article_clause": "第6条",
+    "relation_type": "primary",
+    "supporting_summary": "互联网广告管理办法禁止以科普变相发布广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0050",
+    "rule_id": "R-A01-003",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0051",
+    "rule_id": "R-A01-003",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0052",
+    "rule_id": "R-A01-004",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0053",
+    "rule_id": "R-A01-004",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0054",
+    "rule_id": "R-A01-005",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0055",
+    "rule_id": "R-A01-006",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0056",
+    "rule_id": "R-A01-006",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0057",
+    "rule_id": "R-A01-007",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0058",
+    "rule_id": "R-A01-008",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0059",
+    "rule_id": "R-A01-009",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0060",
+    "rule_id": "R-A01-009",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0061",
+    "rule_id": "R-A01-010",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0062",
+    "rule_id": "R-A01-010",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0063",
+    "rule_id": "R-A01-011",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0064",
+    "rule_id": "R-A01-011",
+    "source_id": "S0007",
+    "article_clause": "第五条/第六条",
+    "relation_type": "clarification",
+    "supporting_summary": "绝对化用语执法指南排除情形",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0065",
+    "rule_id": "R-A01-012",
+    "source_id": "S0001",
+    "article_clause": "第9条第3项",
+    "relation_type": "primary",
+    "supporting_summary": "广告法第九条禁止绝对化用语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0066",
+    "rule_id": "R-A02-003",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0067",
+    "rule_id": "R-A02-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0068",
+    "rule_id": "R-A02-004",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0069",
+    "rule_id": "R-A02-004",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0070",
+    "rule_id": "R-A02-005",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0071",
+    "rule_id": "R-A02-005",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0072",
+    "rule_id": "R-A02-006",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0073",
+    "rule_id": "R-A02-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0074",
+    "rule_id": "R-A02-007",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0075",
+    "rule_id": "R-A02-007",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0076",
+    "rule_id": "R-A02-008",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0077",
+    "rule_id": "R-A02-008",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0078",
+    "rule_id": "R-A02-009",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0079",
+    "rule_id": "R-A02-009",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0080",
+    "rule_id": "R-A02-010",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0081",
+    "rule_id": "R-A02-010",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0082",
+    "rule_id": "R-A02-011",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0083",
+    "rule_id": "R-A02-011",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0084",
+    "rule_id": "R-A02-012",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0085",
+    "rule_id": "R-A02-012",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0086",
+    "rule_id": "R-A03-003",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0087",
+    "rule_id": "R-A03-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0088",
+    "rule_id": "R-A03-004",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0089",
+    "rule_id": "R-A03-004",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0090",
+    "rule_id": "R-A03-005",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0091",
+    "rule_id": "R-A03-005",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0092",
+    "rule_id": "R-A03-006",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0093",
+    "rule_id": "R-A03-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0094",
+    "rule_id": "R-A03-007",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0095",
+    "rule_id": "R-A03-007",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0096",
+    "rule_id": "R-A03-008",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0097",
+    "rule_id": "R-A03-008",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0098",
+    "rule_id": "R-A04-002",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0099",
+    "rule_id": "R-A04-002",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0100",
+    "rule_id": "R-A04-003",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0101",
+    "rule_id": "R-A04-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0102",
+    "rule_id": "R-A04-004",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0103",
+    "rule_id": "R-A04-004",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0104",
+    "rule_id": "R-A04-005",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0105",
+    "rule_id": "R-A04-005",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0106",
+    "rule_id": "R-A04-006",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0107",
+    "rule_id": "R-A04-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0108",
+    "rule_id": "R-A04-007",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0109",
+    "rule_id": "R-A04-007",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0110",
+    "rule_id": "R-A04-008",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止功效/安全性断言保证",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0111",
+    "rule_id": "R-A04-008",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美广告执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0112",
+    "rule_id": "R-A07-002",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0113",
+    "rule_id": "R-A07-002",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0114",
+    "rule_id": "R-A07-003",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0115",
+    "rule_id": "R-A07-003",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0116",
+    "rule_id": "R-A07-004",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0117",
+    "rule_id": "R-A07-004",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0118",
+    "rule_id": "R-A07-005",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0119",
+    "rule_id": "R-A07-005",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0120",
+    "rule_id": "R-A07-006",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0121",
+    "rule_id": "R-A07-006",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0122",
+    "rule_id": "R-A07-007",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0123",
+    "rule_id": "R-A07-007",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0124",
+    "rule_id": "R-A07-008",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0125",
+    "rule_id": "R-A07-008",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0126",
+    "rule_id": "R-A07-009",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0127",
+    "rule_id": "R-A07-009",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0128",
+    "rule_id": "R-A07-010",
+    "source_id": "S0001",
+    "article_clause": "第11条/第28条",
+    "relation_type": "primary",
+    "supporting_summary": "广告使用数据应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0129",
+    "rule_id": "R-A07-010",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0130",
+    "rule_id": "R-A05-003",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法禁止利用患者证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0131",
+    "rule_id": "R-A05-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0132",
+    "rule_id": "R-A05-003",
+    "source_id": "S0004",
+    "article_clause": "第7条",
+    "relation_type": "primary",
+    "supporting_summary": "禁止利用患者名义形象",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0133",
+    "rule_id": "R-A05-004",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法禁止利用患者证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0134",
+    "rule_id": "R-A05-004",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0135",
+    "rule_id": "R-A05-005",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法禁止利用患者证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0136",
+    "rule_id": "R-A05-005",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0137",
+    "rule_id": "R-A05-006",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "clarification",
+    "supporting_summary": "暗示型对比仍属效果证明范畴",
+    "confidence": "中",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0138",
+    "rule_id": "R-A05-007",
+    "source_id": "S0001",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "广告法禁止利用患者证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0139",
+    "rule_id": "R-A05-007",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0140",
+    "rule_id": "R-A05-007",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用患者名义形象作证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0141",
+    "rule_id": "R-A06-003",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚构资质构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0142",
+    "rule_id": "R-A06-003",
+    "source_id": "S0005",
+    "article_clause": "第16条",
+    "relation_type": "primary",
+    "supporting_summary": "医师法禁止非医师行医",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0143",
+    "rule_id": "R-A06-004",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "夸大资质构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0144",
+    "rule_id": "R-A06-005",
+    "source_id": "S0005",
+    "article_clause": "第16条/第17条",
+    "relation_type": "primary",
+    "supporting_summary": "医师法禁止非医师行医和以医师名义推介",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0145",
+    "rule_id": "R-A06-005",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用医务人员名义推荐",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0146",
+    "rule_id": "R-A06-006",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "过期资质宣传等同于虚假宣传",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0147",
+    "rule_id": "R-A06-007",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚构合作关系构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0148",
+    "rule_id": "R-A10-002",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "relation_type": "primary",
+    "supporting_summary": "不得向未取得许可证的机构提供导购咨询",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0149",
+    "rule_id": "R-A10-002",
+    "source_id": "S0005",
+    "article_clause": "第16条/第17条",
+    "relation_type": "supporting",
+    "supporting_summary": "执业医师资质与诊疗规范",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0150",
+    "rule_id": "R-A10-003",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "relation_type": "primary",
+    "supporting_summary": "不得向未取得许可证的机构提供导购咨询",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0151",
+    "rule_id": "R-A10-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0152",
+    "rule_id": "R-A10-004",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "relation_type": "primary",
+    "supporting_summary": "不得向未取得许可证的机构提供导购咨询",
+    "confidence": "中",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0153",
+    "rule_id": "R-A10-005",
+    "source_id": "S0001",
+    "article_clause": "第9条第7项",
+    "relation_type": "primary",
+    "supporting_summary": "妨碍社会公共秩序违背良好风尚",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0154",
+    "rule_id": "R-A10-005",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "制造焦虑为重点打击",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0155",
+    "rule_id": "R-A10-006",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "relation_type": "primary",
+    "supporting_summary": "不得向未取得许可证的机构提供导购咨询",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0156",
+    "rule_id": "R-A11-002",
+    "source_id": "S0001",
+    "article_clause": "第15条",
+    "relation_type": "primary",
+    "supporting_summary": "处方药广告须标明警示语",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0157",
+    "rule_id": "R-A11-003",
+    "source_id": "S0001",
+    "article_clause": "第16条/第17条",
+    "relation_type": "primary",
+    "supporting_summary": "化妆品不得宣称医疗功效",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0158",
+    "rule_id": "R-A11-003",
+    "source_id": "S0006",
+    "article_clause": "第5条",
+    "relation_type": "primary",
+    "supporting_summary": "不得超出注册或备案范围",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0159",
+    "rule_id": "R-A11-004",
+    "source_id": "S0006",
+    "article_clause": "第5条/第6条",
+    "relation_type": "primary",
+    "supporting_summary": "未经审批产品不得在境内使用",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0160",
+    "rule_id": "R-A11-005",
+    "source_id": "S0006",
+    "article_clause": "第5条/第6条",
+    "relation_type": "primary",
+    "supporting_summary": "不得隐瞒或虚假标注成分",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0161",
+    "rule_id": "R-A11-005",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0162",
+    "rule_id": "R-A11-006",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "项目名称混淆规避审查构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0163",
+    "rule_id": "R-A11-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0164",
+    "rule_id": "R-A11-007",
+    "source_id": "S0006",
+    "article_clause": "第5条",
+    "relation_type": "primary",
+    "supporting_summary": "禁用产品不得宣传",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0165",
+    "rule_id": "R-A11-007",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0166",
+    "rule_id": "R-A12-002",
+    "source_id": "S0001",
+    "article_clause": "第16条第4项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止利用广告代言人作推荐证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0167",
+    "rule_id": "R-A12-002",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用医务人员名义推荐",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0168",
+    "rule_id": "R-A12-003",
+    "source_id": "S0001",
+    "article_clause": "第14条",
+    "relation_type": "primary",
+    "supporting_summary": "广告应当显著标明广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0169",
+    "rule_id": "R-A12-003",
+    "source_id": "S0012",
+    "article_clause": "第十一条",
+    "relation_type": "primary",
+    "supporting_summary": "不得利用患者名义形象作证明",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0170",
+    "rule_id": "R-A12-004",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假评价构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0171",
+    "rule_id": "R-A12-005",
+    "source_id": "S0001",
+    "article_clause": "第13条",
+    "relation_type": "primary",
+    "supporting_summary": "不得贬低竞争对手",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0172",
+    "rule_id": "R-A12-006",
+    "source_id": "S0001",
+    "article_clause": "第16条第4项",
+    "relation_type": "primary",
+    "supporting_summary": "禁止代言推荐+价格诱导组合",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0173",
+    "rule_id": "R-A12-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "primary",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0174",
+    "rule_id": "R-A13-001",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "伪科学宣传构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0175",
+    "rule_id": "R-A13-001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0176",
+    "rule_id": "R-A13-002",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "歪曲中医理论为效果背书构成虚假宣传",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0177",
+    "rule_id": "R-A13-003",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚构机理构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0178",
+    "rule_id": "R-A13-003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0179",
+    "rule_id": "R-A13-004",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "伪科学因素归因构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0180",
+    "rule_id": "R-A13-005",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "虚假学术引用构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0181",
+    "rule_id": "R-A13-005",
+    "source_id": "S0013",
+    "article_clause": "第十三条/第十四条",
+    "relation_type": "primary",
+    "supporting_summary": "引证内容应真实准确标明出处",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0182",
+    "rule_id": "R-A13-006",
+    "source_id": "S0001",
+    "article_clause": "第28条",
+    "relation_type": "primary",
+    "supporting_summary": "秘方型宣传构成虚假广告",
+    "confidence": "高",
+    "review_status": "已审核"
+  },
+  {
+    "relation_id": "RS0183",
+    "rule_id": "R-A13-006",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "relation_type": "supporting",
+    "supporting_summary": "医美执法指南",
+    "confidence": "高",
+    "review_status": "已审核"
+  }
+]

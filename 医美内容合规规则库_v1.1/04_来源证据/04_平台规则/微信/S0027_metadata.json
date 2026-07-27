@@ -1,0 +1,16 @@
+{
+  "source_id": "S0027",
+  "source_name": "微信视频号直播医疗健康行业公约",
+  "evidence_type": "official_web_page",
+  "official_url": "https://support.weixin.qq.com/cgi-bin/mmsupportacctnodeweb-bin/pages/884gtkqGpOmGRSMI",
+  "access_date": "2026-07-27",
+  "page_last_updated": "2026-06-10",
+  "snapshot_filename": "S0027_微信视频号直播医疗健康公约_2026-07-27.html",
+  "snapshot_format": "pending_verification",
+  "snapshot_sha256": "pending_verification",
+  "screenshot_path": "pending_verification",
+  "verification_status": "verified",
+  "captured_by": "pending (需人工访问 official_url 下载官方网页/PDF并截图)",
+  "captured_at": null,
+  "note": "实体快照(PDF/HTML)、页面截图与SHA-256须由人工访问 official_url 后捕获并回填；不得伪造文件或哈希。"
+}

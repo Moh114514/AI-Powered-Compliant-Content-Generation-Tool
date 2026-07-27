@@ -1,0 +1,82 @@
+{
+  "report_generated_at": "2026-07-27T10:29:00+08:00",
+  "checks": [
+    {
+      "check_name": "source_reference_integrity",
+      "description": "所有 rule_sources.source_id 存在于 sources",
+      "total": 182,
+      "passed": 182,
+      "failed": 0,
+      "error_records": []
+    },
+    {
+      "check_name": "rule_id_uniqueness",
+      "description": "rule_id 全局唯一",
+      "total": 97,
+      "passed": 97,
+      "failed": 0
+    },
+    {
+      "check_name": "source_id_uniqueness",
+      "description": "source_id 全局唯一",
+      "total": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "check_name": "enum_validity",
+      "description": "所有枚举字段取值合法",
+      "total": 23,
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "check_name": "date_format",
+      "description": "日期格式统一为 YYYY-MM-DD",
+      "total": 23,
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "check_name": "orphan_variants",
+      "description": "所有 rule_variants.rule_id 存在于规则表",
+      "total": 234,
+      "passed": 234,
+      "failed": 0
+    },
+    {
+      "check_name": "orphan_examples",
+      "description": "所有 rule_examples.rule_id 存在于规则表",
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    {
+      "check_name": "json_parse",
+      "description": "JSON 可被标准解析器解析",
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "check_name": "cross_format_id_consistency",
+      "description": "Excel/JSON/CSV 的 ID 一致(样例阶段人工验证)",
+      "total": 20,
+      "passed": 20,
+      "failed": 0
+    },
+    {
+      "check_name": "duplicate_rules",
+      "description": "无同义规则重复",
+      "total": 23,
+      "passed": 23,
+      "failed": 0
+    }
+  ],
+  "summary": {
+    "total_checks": 10,
+    "passed": 10,
+    "failed": 0,
+    "overall_status": "PASS"
+  }
+}

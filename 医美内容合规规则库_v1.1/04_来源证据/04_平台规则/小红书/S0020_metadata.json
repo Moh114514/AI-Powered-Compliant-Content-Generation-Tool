@@ -1,0 +1,16 @@
+{
+  "source_id": "S0020",
+  "source_name": "小红书蒲公英医疗医药内容管控公告",
+  "evidence_type": "official_web_page",
+  "official_url": "https://new.qq.com/rain/a/20260210A05VRN00",
+  "access_date": "2026-07-27",
+  "page_last_updated": "2026-01-30",
+  "snapshot_filename": "S0020_小红书蒲公英医美管控_2026-07-27.html",
+  "snapshot_format": "pending_verification",
+  "snapshot_sha256": "pending_verification",
+  "screenshot_path": "pending_verification",
+  "verification_status": "partially_verified",
+  "captured_by": "pending (需人工访问 official_url 下载官方网页/PDF并截图)",
+  "captured_at": null,
+  "note": "实体快照(PDF/HTML)、页面截图与SHA-256须由人工访问 official_url 后捕获并回填；不得伪造文件或哈希。"
+}

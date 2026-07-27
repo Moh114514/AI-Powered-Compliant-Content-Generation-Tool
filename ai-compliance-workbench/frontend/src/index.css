@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: #1f2937;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fa;
+}
+
+/* 风险高亮标记 */
+mark.risk-hit {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  border-bottom: 2px solid #ef4444;
+}
+mark.risk-hit.semantic {
+  background: #ede9fe;
+  color: #6d28d9;
+  border-bottom-color: #8b5cf6;
+}
+
+/* 通用卡片 */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn:hover {
+  background: #f3f4f6;
+}
+.btn-primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+.btn-danger {
+  background: #fff;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+.btn-danger:hover {
+  background: #fef2f2;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  background: #fff;
+  color: #111827;
+}
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+.textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* 导航链接 */
+.wb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+}
+.wb-nav:hover {
+  background: #f3f4f6;
+}
+.wb-nav-active {
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+/* 窄屏：侧栏变顶部横向导航 */
+@media (max-width: 720px) {
+  .wb-sidebar {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto;
+    border-right: none !important;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 8px !important;
+    align-items: center;
+  }
+  .wb-sidebar > div:first-child {
+    display: none !important;
+  }
+  .wb-sidebar > div:last-child {
+    display: none !important;
+  }
+}
+
+/* 窄屏：生成页与设置页改为上下布局 */
+@media (max-width: 900px) {
+  .gen-grid,
+  .set-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

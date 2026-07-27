@@ -1,0 +1,58 @@
+[
+  {
+    "relation_id": "RC0001",
+    "rule_id": "R-A02-001",
+    "channel": "朋友圈",
+    "content_position": "文案",
+    "applicability": "完全适用",
+    "notes": null
+  },
+  {
+    "relation_id": "RC0002",
+    "rule_id": "R-A02-001",
+    "channel": "社群",
+    "content_position": "群发消息",
+    "applicability": "完全适用",
+    "notes": null
+  },
+  {
+    "relation_id": "RC0003",
+    "rule_id": "R-A02-001",
+    "channel": "公众号",
+    "content_position": "正文",
+    "applicability": "完全适用",
+    "notes": null
+  },
+  {
+    "relation_id": "RC0004",
+    "rule_id": "R-A10-001",
+    "channel": "客服",
+    "content_position": "私信/即时通讯",
+    "applicability": "完全适用",
+    "notes": "客服话术高发场景"
+  },
+  {
+    "relation_id": "RC0005",
+    "rule_id": "R-A10-001",
+    "channel": "社群",
+    "content_position": "群内问答",
+    "applicability": "完全适用",
+    "notes": null
+  },
+  {
+    "relation_id": "RC0006",
+    "rule_id": "R-A09-001",
+    "channel": "朋友圈",
+    "content_position": "文案",
+    "applicability": "完全适用",
+    "notes": null
+  },
+  {
+    "relation_id": "RC0007",
+    "rule_id": "R-A09-001",
+    "channel": "抖音",
+    "content_position": "口播",
+    "applicability": "完全适用",
+    "notes": null
+  }
+]

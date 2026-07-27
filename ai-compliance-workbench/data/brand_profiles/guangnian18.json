@@ -1,0 +1,12 @@
+{
+  "brand_id": "guangnian18",
+  "brand_name": "光年拾捌",
+  "short_description": "演示品牌：都市轻医美连锁（示例资料，未包含真实资质与项目信息）",
+  "tone": "专业、克制、偏科技感",
+  "preferred_terms": ["到店评估", "专业医师面诊", "个体方案", "正规机构"],
+  "prohibited_terms": ["保证", "绝对", "最", "零风险", "永久", "100%"],
+  "standard_disclaimer": "本品牌示例资料为演示用途，实际宣传请以正式资质与审批文件为准。",
+  "contact_template": "如需了解，可前往就近门店由专业医师面诊评估。",
+  "active": true,
+  "is_demo": true
+}

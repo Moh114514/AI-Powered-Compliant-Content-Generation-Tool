@@ -1,0 +1,72 @@
+[
+  {
+    "relation_id": "SRS0001",
+    "semantic_rule_id": "SR0001",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "supporting_summary": "禁止功效断言保证"
+  },
+  {
+    "relation_id": "SRS0002",
+    "semantic_rule_id": "SR0001",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "supporting_summary": "医美执法指南功效保证为重点打击"
+  },
+  {
+    "relation_id": "SRS0003",
+    "semantic_rule_id": "SR0002",
+    "source_id": "S0001",
+    "article_clause": "第16条第1项",
+    "supporting_summary": "禁止安全性断言保证"
+  },
+  {
+    "relation_id": "SRS0004",
+    "semantic_rule_id": "SR0002",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "supporting_summary": "医美执法指南"
+  },
+  {
+    "relation_id": "SRS0005",
+    "semantic_rule_id": "SR0003",
+    "source_id": "S0001",
+    "article_clause": "第9条第7项",
+    "supporting_summary": "良好风尚"
+  },
+  {
+    "relation_id": "SRS0006",
+    "semantic_rule_id": "SR0003",
+    "source_id": "S0003",
+    "article_clause": "第五条",
+    "supporting_summary": "制造容貌焦虑为重点打击"
+  },
+  {
+    "relation_id": "SRS0007",
+    "semantic_rule_id": "SR0004",
+    "source_id": "S0014",
+    "article_clause": "第四条(二)",
+    "supporting_summary": "不得向无资质机构提供导购"
+  },
+  {
+    "relation_id": "SRS0008",
+    "semantic_rule_id": "SR0004",
+    "source_id": "S0005",
+    "article_clause": "第16/17条",
+    "supporting_summary": "执业医师资质要求"
+  },
+  {
+    "relation_id": "SRS0009",
+    "semantic_rule_id": "SR0005",
+    "source_id": "S0002",
+    "article_clause": "第9条",
+    "supporting_summary": "广告可识别性要求"
+  },
+  {
+    "relation_id": "SRS0010",
+    "semantic_rule_id": "SR0005",
+    "source_id": "S0001",
+    "article_clause": "第9条",
+    "supporting_summary": "广告法一般规制"
+  }
+]

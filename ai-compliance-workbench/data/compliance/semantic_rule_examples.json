@@ -1,0 +1,79 @@
+[
+  {
+    "semantic_example_id": "SE0001",
+    "semantic_rule_id": "SR0001",
+    "example_type": "positive",
+    "example_text": "做完这个项目你的皮肤一定会变得像婴儿一样",
+    "explanation": "明示保证治疗效果"
+  },
+  {
+    "semantic_example_id": "SE0002",
+    "semantic_rule_id": "SR0001",
+    "example_type": "positive",
+    "example_text": "只要你按时来做，效果肯定越来越好",
+    "explanation": "条件句+效果保证"
+  },
+  {
+    "semantic_example_id": "SE0003",
+    "semantic_rule_id": "SR0001",
+    "example_type": "negative",
+    "example_text": "治疗效果因人而异，建议面诊后根据医师建议选择方案",
+    "explanation": "含个体差异说明，无误导"
+  },
+  {
+    "semantic_example_id": "SE0004",
+    "semantic_rule_id": "SR0002",
+    "example_type": "positive",
+    "example_text": "这个项目就像做面膜一样安全，完全不用担心",
+    "explanation": "将医疗美容类比日常保养"
+  },
+  {
+    "semantic_example_id": "SE0005",
+    "semantic_rule_id": "SR0002",
+    "example_type": "negative",
+    "example_text": "治疗前请了解可能的不良反应和注意事项",
+    "explanation": "客观风险提示"
+  },
+  {
+    "semantic_example_id": "SE0006",
+    "semantic_rule_id": "SR0003",
+    "example_type": "positive",
+    "example_text": "女人过了30不保养，老公迟早会跑的",
+    "explanation": "容貌+人际关系焦虑双重制造"
+  },
+  {
+    "semantic_example_id": "SE0007",
+    "semantic_rule_id": "SR0003",
+    "example_type": "negative",
+    "example_text": "定期皮肤维护是个人健康管理的一部分",
+    "explanation": "客观健康建议，未制造焦虑"
+  },
+  {
+    "semantic_example_id": "SE0008",
+    "semantic_rule_id": "SR0004",
+    "example_type": "positive",
+    "example_text": "你这个症状就是典型的激素依赖性皮炎",
+    "explanation": "未经面诊的确诊式表述"
+  },
+  {
+    "semantic_example_id": "SE0009",
+    "semantic_rule_id": "SR0004",
+    "example_type": "negative",
+    "example_text": "这些症状可能有多种原因，建议预约执业医师面诊评估",
+    "explanation": "建议面诊，未下结论"
+  },
+  {
+    "semantic_example_id": "SE0010",
+    "semantic_rule_id": "SR0005",
+    "example_type": "positive",
+    "example_text": "想变美就来找我做shou脸针",
+    "explanation": "拼音规避瘦脸针"
+  },
+  {
+    "semantic_example_id": "SE0011",
+    "semantic_rule_id": "SR0005",
+    "example_type": "negative",
+    "example_text": "瘦脸针属于医疗美容项目中需在正规医疗机构由执业医师操作",
+    "explanation": "合规表述"
+  }
+]
