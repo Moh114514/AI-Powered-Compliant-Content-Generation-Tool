@@ -1,0 +1,4 @@
+﻿change_id,version,change_type,object_type,object_id,previous_value,new_value,change_reason,related_source_id,changed_by,reviewed_by,change_date,effective_date
+CHG0001,1.0,added,rule,R-A01-001,,初始创建,v1.0规则库初始化,,合规研究团队,,2026-07-27,2026-07-27
+CHG0002,1.0,added,source,S0001,,14条正式来源录入,v1.0来源库初始化,,合规研究团队,,2026-07-27,2026-07-27
+CHG0003,1.0,added,test_case,T0001,,20条测试样本录入,v1.0测试集初始化,,合规研究团队,,2026-07-27,2026-07-27

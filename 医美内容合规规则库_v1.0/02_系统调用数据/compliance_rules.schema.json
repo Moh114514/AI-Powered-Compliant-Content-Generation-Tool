@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "医美内容合规规则库 Schema",
+  "description": "医美内容合规规则库 v1.0 的数据结构和校验规则，适用于 system_calls 目录下各 JSON 文件及汇总文件",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "library_name",
+        "industry",
+        "region",
+        "version",
+        "generated_at",
+        "source_cutoff_date",
+        "review_status"
+      ],
+      "properties": {
+        "library_name": {
+          "type": "string"
+        },
+        "industry": {
+          "type": "string",
+          "enum": [
+            "医美"
+          ]
+        },
+        "region": {
+          "type": "string",
+          "enum": [
+            "中国大陆"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v\\d+\\.\\d+$"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_cutoff_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "last_verified_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "review_status": {
+          "type": "string"
+        },
+        "maintainer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "schema_version": {
+          "type": "string"
+        },
+        "disclaimer": {
+          "type": "string"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "source_type",
+          "source_name",
+          "issuing_authority",
+          "status",
+          "verification_status"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "pattern": "^S\\d{4}$"
+          },
+          "verification_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "partially_verified",
+              "pending_verification",
+              "unavailable"
+            ]
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule_id",
+          "rule_name",
+          "category_code",
+          "category_name",
+          "legal_conclusion",
+          "risk_level",
+          "system_action",
+          "effective_status"
+        ],
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "pattern": "^R-A\\d{2}-\\d{3}[a-z]?$"
+          },
+          "legal_conclusion": {
+            "type": "string",
+            "enum": [
+              "explicitly_prohibited",
+              "conditionally_prohibited",
+              "evidence_required",
+              "qualification_required",
+              "platform_prohibited",
+              "internal_prohibited",
+              "not_applicable",
+              "uncertain"
+            ]
+          },
+          "risk_level": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "system_action": {
+            "type": "string",
+            "enum": [
+              "block",
+              "mandatory_human_review",
+              "request_evidence",
+              "request_qualification",
+              "warning",
+              "pass"
+            ]
+          },
+          "effective_status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "pending_review",
+              "suspended",
+              "superseded",
+              "abolished"
+            ]
+          },
+          "rule_dimension": {
+            "type": "string",
+            "enum": [
+              "content_nature",
+              "expression_risk",
+              "medical_efficacy_risk",
+              "platform_risk",
+              "legal_risk"
+            ]
+          },
+          "review_level": {
+            "type": "string",
+            "enum": [
+              "L1",
+              "L2",
+              "L3",
+              "L4"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "高",
+              "中",
+              "低"
+            ]
+          },
+          "review_status": {
+            "type": "string",
+            "enum": [
+              "已审核",
+              "待审核"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

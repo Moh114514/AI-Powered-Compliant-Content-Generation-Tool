@@ -1,0 +1,47 @@
+[
+  {
+    "change_id": "CHG0001",
+    "version": "1.0",
+    "change_type": "added",
+    "object_type": "rule",
+    "object_id": "R-A01-001",
+    "previous_value": null,
+    "new_value": "初始创建",
+    "change_reason": "v1.0规则库初始化",
+    "related_source_id": null,
+    "changed_by": "合规研究团队",
+    "reviewed_by": null,
+    "change_date": "2026-07-27",
+    "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG0002",
+    "version": "1.0",
+    "change_type": "added",
+    "object_type": "source",
+    "object_id": "S0001",
+    "previous_value": null,
+    "new_value": "14条正式来源录入",
+    "change_reason": "v1.0来源库初始化",
+    "related_source_id": null,
+    "changed_by": "合规研究团队",
+    "reviewed_by": null,
+    "change_date": "2026-07-27",
+    "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG0003",
+    "version": "1.0",
+    "change_type": "added",
+    "object_type": "test_case",
+    "object_id": "T0001",
+    "previous_value": null,
+    "new_value": "20条测试样本录入",
+    "change_reason": "v1.0测试集初始化",
+    "related_source_id": null,
+    "changed_by": "合规研究团队",
+    "reviewed_by": null,
+    "change_date": "2026-07-27",
+    "effective_date": "2026-07-27"
+  }
+]
