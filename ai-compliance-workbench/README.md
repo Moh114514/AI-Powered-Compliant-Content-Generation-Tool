@@ -38,7 +38,7 @@ Windows：
 powershell -ExecutionPolicy Bypass -File scripts/start_dev.ps1
 ```
 
-脚本源码保持纯 ASCII，兼容 Windows PowerShell 5.1 的默认编码行为。它会创建 `backend/.venv`、安装依赖、首次生成 `.env`，并启动前后端。只检查环境而不启动服务：
+脚本源码保持纯 ASCII，兼容 Windows PowerShell 5.1 的默认编码行为。它会创建 `backend/.venv`、安装依赖、首次生成 `.env`，并启动前后端。如果 5173 无法绑定，脚本会自动尝试 5174–5199，并在控制台输出实际前端地址。只检查环境而不启动服务：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/start_dev.ps1 -SkipInstall -NoLaunch
@@ -52,7 +52,7 @@ bash scripts/start_dev.sh
 
 启动地址：
 
-- 前端：http://localhost:5173
+- 前端：http://localhost:5173（端口冲突时以启动脚本输出为准）
 - 后端：http://localhost:8000
 - API 文档：http://localhost:8000/docs
 

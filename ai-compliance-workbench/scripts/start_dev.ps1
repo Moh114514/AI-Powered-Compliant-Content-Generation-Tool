@@ -1,6 +1,7 @@
 param(
     [switch]$SkipInstall,
-    [switch]$NoLaunch
+    [switch]$NoLaunch,
+    [int]$FrontendPort = 5173
 )
 
 # Keep this file ASCII-only so Windows PowerShell 5.1 can parse it without a BOM.
@@ -10,6 +11,7 @@ $BackendDir = Join-Path $ProjectRoot "backend"
 $FrontendDir = Join-Path $ProjectRoot "frontend"
 $VenvDir = Join-Path $BackendDir ".venv"
 $PythonExe = Join-Path $VenvDir "Scripts\python.exe"
+$BackendPort = 8000
 
 function Get-RequiredCommand([string[]]$Names) {
     foreach ($Name in $Names) {
@@ -37,16 +39,28 @@ function Assert-MinimumVersion(
     }
 }
 
-function Test-PortInUse([int]$Port) {
-    $Client = New-Object System.Net.Sockets.TcpClient
+function Test-PortAvailable([int]$Port) {
+    $Listener = New-Object System.Net.Sockets.TcpListener(
+        [System.Net.IPAddress]::Loopback,
+        $Port
+    )
     try {
-        $Client.Connect("127.0.0.1", $Port)
+        $Listener.Start()
         return $true
     } catch {
         return $false
     } finally {
-        $Client.Dispose()
+        $Listener.Stop()
     }
+}
+
+function Get-AvailableFrontendPort([int]$PreferredPort) {
+    foreach ($Candidate in $PreferredPort..5199) {
+        if (Test-PortAvailable $Candidate) {
+            return $Candidate
+        }
+    }
+    throw "No available frontend port was found between $PreferredPort and 5199."
 }
 
 function Stop-ProcessTree([System.Diagnostics.Process]$Process) {
@@ -128,10 +142,13 @@ if ($NoLaunch) {
     return
 }
 
-foreach ($Port in @(8000, 5173)) {
-    if (Test-PortInUse $Port) {
-        throw "Port $Port is already in use. Stop the existing service and run this script again."
-    }
+if (-not (Test-PortAvailable $BackendPort)) {
+    throw "Backend port $BackendPort cannot be used. Stop the existing service and run this script again."
+}
+
+$SelectedFrontendPort = Get-AvailableFrontendPort $FrontendPort
+if ($SelectedFrontendPort -ne $FrontendPort) {
+    Write-Host "[WARN] Port $FrontendPort is in use. Using frontend port $SelectedFrontendPort instead." -ForegroundColor Yellow
 }
 
 $PowerShellExe = Join-Path $PSHOME "powershell.exe"
@@ -139,25 +156,26 @@ $EscapedBackend = $BackendDir.Replace("'", "''")
 $EscapedFrontend = $FrontendDir.Replace("'", "''")
 $EscapedPython = $PythonExe.Replace("'", "''")
 $EscapedNpm = $NpmCommand.Source.Replace("'", "''")
-$BackendCommand = "Set-Location -LiteralPath '$EscapedBackend'; & '$EscapedPython' -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000"
-$FrontendCommand = "Set-Location -LiteralPath '$EscapedFrontend'; & '$EscapedNpm' run dev -- --host 127.0.0.1 --port 5173"
+$BackendCommand = "Set-Location -LiteralPath '$EscapedBackend'; & '$EscapedPython' -m uvicorn app.main:app --reload --host 127.0.0.1 --port $BackendPort"
+$FrontendCommand = "Set-Location -LiteralPath '$EscapedFrontend'; & '$EscapedNpm' run dev -- --host 127.0.0.1 --port $SelectedFrontendPort"
 
-$BackendProcess = Start-Process -FilePath $PowerShellExe -ArgumentList @(
-    "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $BackendCommand
-) -PassThru
-$FrontendProcess = Start-Process -FilePath $PowerShellExe -ArgumentList @(
-    "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $FrontendCommand
-) -PassThru
-
-Write-Host ""
-Write-Host "Frontend: http://localhost:5173" -ForegroundColor Green
-Write-Host "Backend:  http://localhost:8000" -ForegroundColor Green
-Write-Host "API docs: http://localhost:8000/docs" -ForegroundColor Green
-Write-Host ""
-
+$BackendProcess = $null
+$FrontendProcess = $null
 try {
+    $BackendProcess = Start-Process -FilePath $PowerShellExe -ArgumentList @(
+        "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $BackendCommand
+    ) -PassThru
+    $FrontendProcess = Start-Process -FilePath $PowerShellExe -ArgumentList @(
+        "-NoProfile", "-ExecutionPolicy", "Bypass", "-NoExit", "-Command", $FrontendCommand
+    ) -PassThru
+
+    Write-Host ""
+    Write-Host "Frontend: http://localhost:$SelectedFrontendPort" -ForegroundColor Green
+    Write-Host "Backend:  http://localhost:$BackendPort" -ForegroundColor Green
+    Write-Host "API docs: http://localhost:$BackendPort/docs" -ForegroundColor Green
+    Write-Host ""
     Read-Host "Press Enter to stop the services"
 } finally {
-    Stop-ProcessTree $BackendProcess
     Stop-ProcessTree $FrontendProcess
+    Stop-ProcessTree $BackendProcess
 }
