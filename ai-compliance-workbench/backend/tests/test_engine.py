@@ -98,6 +98,28 @@ def test_contains_match(store, provider):
     assert any(m["rule_id"] == v["rule_id"] for m in res["matched_rules"])
 
 
+@pytest.mark.parametrize("text", [
+    "在决定尝试任何光电项目前，到店评估是必要的第一步。",
+    "术后护理第一天：按医嘱冰敷、避免沾水。",
+    "第一次咨询会先说明流程、风险和注意事项。",
+    "该设备按照第一类医疗器械相关要求管理。",
+    "方案第一部分介绍适用情况，第二部分说明注意事项。",
+])
+def test_ordinal_first_is_not_treated_as_top_rank(text, store, provider):
+    res = _check(text, store=store, provider=provider)
+    assert not any(item["rule_id"] == "R-A01-002" for item in res["matched_rules"])
+
+
+@pytest.mark.parametrize("text", [
+    "我们是行业第一的医美机构。",
+    "本市排名第一，值得所有人选择。",
+    "这是一家第一品牌医美机构。",
+])
+def test_first_still_matches_when_used_as_rank_claim(text, store, provider):
+    res = _check(text, store=store, provider=provider)
+    assert any(item["rule_id"] == "R-A01-002" for item in res["matched_rules"])
+
+
 # 5. 正则匹配
 def test_regex_match(store, provider):
     v = next((x for x in store.variants if x.get("regex_pattern")), None)

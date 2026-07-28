@@ -62,6 +62,34 @@ def _find_fuzzy(norm_text: str, variant_text: str) -> list[tuple[int, int, str]]
     return out
 
 
+def _filter_excluded_contexts(
+    norm_text: str,
+    matches: list[tuple[int, int, str]],
+    variant: dict,
+) -> list[tuple[int, int, str]]:
+    """Drop a keyword hit when it is part of a reviewed safe expression.
+
+    `exclude_context_regex` lives on the individual variant so a narrow
+    exception cannot accidentally weaken other variants of the same rule.
+    The exclusion expression must cover the original hit span.
+    """
+    raw_patterns = variant.get("exclude_context_regex") or []
+    patterns = [raw_patterns] if isinstance(raw_patterns, str) else raw_patterns
+    compiled = [rx for pattern in patterns if (rx := _compile(str(pattern or "")))]
+    if not compiled:
+        return matches
+    output = []
+    for start, end, text in matches:
+        excluded = any(
+            exclusion.start() <= start and exclusion.end() >= end
+            for rx in compiled
+            for exclusion in rx.finditer(norm_text)
+        )
+        if not excluded:
+            output.append((start, end, text))
+    return output
+
+
 def match_variant(norm_text: str, variant: dict) -> list[tuple[int, int, str]]:
     method = (variant.get("matching_method") or "contains").lower()
     vtext = variant.get("variant_text") or ""
@@ -73,16 +101,20 @@ def match_variant(norm_text: str, variant: dict) -> list[tuple[int, int, str]]:
             out = []
             for m in rx.finditer(norm_text):
                 out.append((m.start(), m.end(), m.group(0)))
-            return out
+            return _filter_excluded_contexts(norm_text, out, variant)
 
     nv = normalize_text(vtext)[0] if vtext else ""
 
     if method == "exact":
-        return _find_substring(norm_text, nv)
+        matches = _find_substring(norm_text, nv)
+        return _filter_excluded_contexts(norm_text, matches, variant)
     if method == "contains":
-        return _find_substring(norm_text, nv)
+        matches = _find_substring(norm_text, nv)
+        return _filter_excluded_contexts(norm_text, matches, variant)
     if method == "fuzzy":
-        return _find_fuzzy(norm_text, nv)
+        matches = _find_fuzzy(norm_text, nv)
+        return _filter_excluded_contexts(norm_text, matches, variant)
     if method == "semantic":
         return []
-    return _find_substring(norm_text, nv)
+    matches = _find_substring(norm_text, nv)
+    return _filter_excluded_contexts(norm_text, matches, variant)
