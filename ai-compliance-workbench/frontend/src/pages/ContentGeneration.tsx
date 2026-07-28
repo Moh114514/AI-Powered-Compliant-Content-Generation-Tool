@@ -194,6 +194,8 @@ export default function ContentGeneration() {
       text: version.text,
       platform: version.platform,
       content_type: version.content_type,
+      platform_id: version.platform_id,
+      scene_id: version.scene_id,
       brand: form.brand,
       adjust_type: adjustType,
       tone: form.tone,
@@ -220,7 +222,14 @@ export default function ContentGeneration() {
     if (!version) return;
     setBusy(`rewrite-${index}`);
     setError(null);
-    const response = await api.rewrite({ text: version.text, platform: version.platform, content_type: version.content_type, brand: form.brand });
+    const response = await api.rewrite({
+      text: version.text,
+      platform: version.platform,
+      content_type: version.content_type,
+      platform_id: version.platform_id,
+      scene_id: version.scene_id,
+      brand: form.brand,
+    });
     setBusy(null);
     if (response.success) setRewriteModal({ text: version.text, rev: response.data });
     else setError(response.message || "改写失败");

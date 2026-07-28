@@ -5,20 +5,17 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.core import config
-
-
-def _validate_scene(platform: str, content_type: str) -> None:
-    if platform not in config.PLATFORMS:
-        raise ValueError(f"不支持的发布平台：{platform}")
-    if content_type not in config.CONTENT_TYPES.get(platform, []):
-        raise ValueError(f"“{content_type}”不属于“{platform}”的可选内容类型")
+def _resolve_scene(platform: str, content_type: str, platform_id: str | None, scene_id: str | None):
+    from app.services.prompts.catalog import resolve_scene
+    return resolve_scene(platform, content_type, platform_id, scene_id)
 
 
 class GenerateRequest(BaseModel):
     brand: Optional[str] = None
     platform: str
     content_type: str
+    platform_id: Optional[str] = None
+    scene_id: Optional[str] = None
     topic: str = Field("", max_length=300)
     selling_points: str = Field("", max_length=3000)
     target_audience: str = Field("", max_length=500)
@@ -31,7 +28,9 @@ class GenerateRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_request(self):
-        _validate_scene(self.platform, self.content_type)
+        platform, scene = _resolve_scene(self.platform, self.content_type, self.platform_id, self.scene_id)
+        self.platform, self.content_type = platform["name"], scene["name"]
+        self.platform_id, self.scene_id = platform["id"], scene["id"]
         if not self.topic.strip() and not self.selling_points.strip():
             raise ValueError("请至少填写主题或核心卖点")
         return self
@@ -41,11 +40,15 @@ class RewriteRequest(BaseModel):
     text: str = Field(min_length=1, max_length=20000)
     platform: str
     content_type: str
+    platform_id: Optional[str] = None
+    scene_id: Optional[str] = None
     brand: Optional[str] = None
 
     @model_validator(mode="after")
     def validate_request(self):
-        _validate_scene(self.platform, self.content_type)
+        platform, scene = _resolve_scene(self.platform, self.content_type, self.platform_id, self.scene_id)
+        self.platform, self.content_type = platform["name"], scene["name"]
+        self.platform_id, self.scene_id = platform["id"], scene["id"]
         return self
 
 
@@ -53,6 +56,8 @@ class AdjustRequest(BaseModel):
     text: str = Field(min_length=1, max_length=20000)
     platform: str
     content_type: str
+    platform_id: Optional[str] = None
+    scene_id: Optional[str] = None
     brand: Optional[str] = None
     adjust_type: Literal["缩短", "扩写", "调整语气"] = "缩短"
     topic: str = Field("", max_length=300)
@@ -64,7 +69,9 @@ class AdjustRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_request(self):
-        _validate_scene(self.platform, self.content_type)
+        platform, scene = _resolve_scene(self.platform, self.content_type, self.platform_id, self.scene_id)
+        self.platform, self.content_type = platform["name"], scene["name"]
+        self.platform_id, self.scene_id = platform["id"], scene["id"]
         return self
 
 
@@ -72,6 +79,8 @@ class ComplianceCheckRequest(BaseModel):
     text: str = Field(min_length=1, max_length=20000)
     platform: str
     content_type: str
+    platform_id: Optional[str] = None
+    scene_id: Optional[str] = None
     brand: Optional[str] = None
     publisher_identity: Optional[str] = Field(None, max_length=100)
     business_domain: Optional[str] = Field(None, max_length=100)
@@ -89,7 +98,9 @@ class ComplianceCheckRequest(BaseModel):
 
     @model_validator(mode="after")
     def validate_request(self):
-        _validate_scene(self.platform, self.content_type)
+        platform, scene = _resolve_scene(self.platform, self.content_type, self.platform_id, self.scene_id)
+        self.platform, self.content_type = platform["name"], scene["name"]
+        self.platform_id, self.scene_id = platform["id"], scene["id"]
         return self
 
 

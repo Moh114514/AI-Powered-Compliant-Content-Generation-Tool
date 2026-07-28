@@ -5,6 +5,7 @@ from app.core import config
 from app.core.data_loader import get_store
 from app.core.responses import fail, ok
 from app.repositories import db
+from app.services.prompts.catalog import active_platform_names, catalog_stats
 
 router = APIRouter(prefix="/api", tags=["system"])
 
@@ -27,6 +28,13 @@ def status():
         if configured_provider != "mock" and not api_key_configured:
             provider_error = "已选择真实模型，但未读取到 LLM_API_KEY。"
         validation = store.validation
+        configured_default = db.get_setting_override("default_platform")
+        active_platforms = active_platform_names()
+        default_platform_warning = ""
+        if configured_default and configured_default not in active_platforms:
+            default_platform_warning = (
+                f"原默认平台“{configured_default}”已停用，当前已回退为“{settings.get('default_platform')}”。"
+            )
         return ok({
             "data_version": store.metadata.get("version", "unknown"),
             "library_name": store.metadata.get("library_name", ""),
@@ -50,7 +58,9 @@ def status():
             "provider_error": provider_error,
             "api_key_configured": api_key_configured,
             "model_name": settings.get("model_name") or config.LLM_MODEL,
-            "platforms": config.PLATFORMS,
+            "platforms": active_platforms,
+            "default_platform_warning": default_platform_warning,
+            **catalog_stats(),
         })
     except Exception as exc:
         return fail(f"加载规则库失败：{exc}", "COMPLIANCE_DATA_INVALID")

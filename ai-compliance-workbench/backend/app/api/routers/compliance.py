@@ -11,6 +11,7 @@ from app.schemas.models import ComplianceCheckRequest
 from app.services.compliance import engine
 from app.services.compliance.evaluator import run_test_suite
 from app.services.llm.provider import build_provider
+from app.services.prompts.catalog import platform_rule_mapping
 
 router = APIRouter(prefix="/api/compliance", tags=["compliance"])
 
@@ -35,6 +36,8 @@ def check(req: ComplianceCheckRequest):
             provider=provider,
             settings=settings,
         )
+        result["platform_id"] = req.platform_id
+        result["scene_id"] = req.scene_id
         result["history_saved"] = False
         if settings.get("save_history"):
             try:
@@ -69,7 +72,11 @@ def list_rules(
     limit: int = Query(100, ge=1, le=500),
 ):
     store = get_store()
-    mapped = config.PLATFORM_TO_RULE_PLATFORM.get(platform, None) if platform else None
+    mapped = None
+    if platform:
+        mapped = platform_rule_mapping(platform)
+        if mapped is None:
+            mapped = config.PLATFORM_TO_RULE_PLATFORM.get(platform, None)
     search_text = (keyword or "").strip().lower()
     rows = []
 

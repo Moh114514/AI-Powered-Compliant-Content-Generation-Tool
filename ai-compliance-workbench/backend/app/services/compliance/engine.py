@@ -64,8 +64,12 @@ def _rule_enabled(rule: dict) -> bool:
 
 def _filter_applicable_rules(store, platform: str, content_type: str) -> tuple[list[dict], bool]:
     """返回适用规则与平台专项覆盖不足标记。"""
-    mapped_platforms = config.PLATFORM_TO_RULE_PLATFORM.get(platform, [])
-    mapped_content_types = config.map_content_type_to_rule_ct(content_type)
+    from app.services.prompts.catalog import rule_mapping
+    mapped_platforms, mapped_content_types = rule_mapping(platform, content_type)
+    if mapped_platforms is None:
+        mapped_platforms = config.PLATFORM_TO_RULE_PLATFORM.get(platform, [])
+    if mapped_content_types is None:
+        mapped_content_types = config.map_content_type_to_rule_ct(content_type)
     applicable: list[dict] = []
     platform_scoped_total = 0
     platform_scoped_matched = 0
@@ -103,6 +107,11 @@ def _filter_applicable_rules(store, platform: str, content_type: str) -> tuple[l
     if platform_scoped_total > 0 and platform_scoped_matched == 0:
         incomplete = True
     return applicable, incomplete
+
+
+def get_applicable_rules(store, platform: str, content_type: str) -> tuple[list[dict], bool]:
+    """Public selector shared by generation guardrails and the detection engine."""
+    return _filter_applicable_rules(store, platform, content_type)
 
 
 def _dedup_matches(matches: list[dict]) -> list[dict]:

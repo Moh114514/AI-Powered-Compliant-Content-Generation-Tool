@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routers import compliance, export, generation, history, platforms, settings, system
+from app.api.routers import compliance, export, generation, history, platforms, prompts, settings, system
 from app.core.data_loader import load_data
 from app.repositories import db
 
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AI医美内容合规工作台",
     description="企业内部轻量级工具：内容生成、风险检测、规则解释与人工复核摘要。",
-    version="1.1.0",
+    version="1.3.0",
     lifespan=lifespan,
 )
 
@@ -44,12 +44,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
     allow_credentials=False,
-    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
 )
 
 app.include_router(system.router)
 app.include_router(platforms.router)
+app.include_router(prompts.router)
 app.include_router(generation.router)
 app.include_router(compliance.router)
 app.include_router(history.router)

@@ -27,6 +27,9 @@ class LLMProvider:
     def adjust(self, text, adjust_type, platform, content_type, tone) -> str:
         raise NotImplementedError
 
+    def prompt_draft(self, context: dict) -> str:
+        raise NotImplementedError
+
 
 class MockProvider(LLMProvider):
     name = "mock"
@@ -222,6 +225,9 @@ class MockProvider(LLMProvider):
             return f"{source}\n\n{addition}"
         return source
 
+    def prompt_draft(self, context: dict) -> str:
+        raise ValueError("AI 生成提示词仅支持真实模型。请先在设置中启用并配置真实 LLM。")
+
 
 class OpenAICompatibleProvider(LLMProvider):
     name = "openai_compatible"
@@ -379,6 +385,35 @@ class OpenAICompatibleProvider(LLMProvider):
         if not adjusted:
             raise ValueError("模型没有返回调整后的文案。")
         return adjusted
+
+    def prompt_draft(self, context: dict) -> str:
+        target_type = str(context.get("target_type") or "scene")
+        target_labels = {"base": "公共基础", "platform": "平台级", "scene": "场景级"}
+        system_prompt = (
+            "你是内容生成系统的提示词设计助手。请根据用户约束编写一段可复用的中文系统提示词，"
+            "目标层级是“" + target_labels.get(target_type, target_type) + "”。"
+            "只输出提示词正文，不输出示例文案、分析过程、Markdown 代码块或保存说明。"
+            "提示词必须要求模型不虚构事实，但不要罗列大批具体禁词；具体合规规则由运行时规则库注入。"
+            "不得写入关闭、绕过、弱化合规检测的指令，也不要使用品牌、主题等模板占位符。"
+        )
+        user_prompt = (
+            f"平台名称：{context.get('platform_name', '')}\n"
+            f"平台用途：{context.get('platform_description', '')}\n"
+            f"合规画像：{context.get('rule_profile', '通用')}\n"
+            f"场景名称：{context.get('scene_name', '')}\n"
+            f"场景用途：{context.get('scene_description', '')}\n"
+            f"合规内容类型：{context.get('rule_content_type', '通用')}\n"
+            f"上层有效提示词：{context.get('parent_prompt', '')}\n"
+            f"用户需求约束：{context.get('requirements', '')}\n"
+            f"待优化的现有提示词：{context.get('current_prompt', '')}\n"
+            "请输出完整、可直接保存的提示词正文。"
+        )
+        output = self._chat(system_prompt, user_prompt).strip()
+        output = re.sub(r"^```(?:text|markdown)?\s*", "", output, flags=re.IGNORECASE)
+        output = re.sub(r"\s*```$", "", output).strip()
+        if not output:
+            raise ValueError("模型没有返回可用的提示词草稿。")
+        return output
 
     @staticmethod
     def _extract_json(raw: str) -> str:

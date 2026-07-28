@@ -1,8 +1,7 @@
 """品牌与平台路由。"""
 from fastapi import APIRouter
 from app.services.brands.loader import list_brands, get_brand
-from app.services.prompts.loader import list_prompt_templates
-from app.core import config
+from app.services.prompts.catalog import active_content_types, active_platform_names, get_catalog
 from app.core.responses import ok, fail
 
 router = APIRouter(prefix="/api", tags=["meta"])
@@ -23,14 +22,25 @@ def brand_detail(brand_id: str):
 
 @router.get("/platforms")
 def platforms():
-    return ok(config.PLATFORMS)
+    return ok(active_platform_names())
 
 
 @router.get("/content-types")
 def content_types():
-    return ok(config.CONTENT_TYPES)
+    return ok(active_content_types())
 
 
 @router.get("/prompt-templates")
 def prompt_templates():
-    return ok(list_prompt_templates())
+    catalog = get_catalog(False)
+    # Preserve the old list response while exposing platform-level effective prompts.
+    return ok([
+        {
+            "platform": platform["name"],
+            "platform_id": platform["id"],
+            "file": "",
+            "content": platform["effective_prompt"],
+            "scenes": platform["scenes"],
+        }
+        for platform in catalog["platforms"]
+    ])

@@ -8,7 +8,7 @@ from app.core.data_loader import get_store
 from app.services.brands.loader import get_brand
 from app.services.compliance.engine import run_compliance_check
 from app.services.llm.provider import build_provider
-from app.services.prompts.loader import load_prompt_template
+from app.services.prompts.catalog import compose_prompt, resolve_scene
 
 
 def _now() -> str:
@@ -26,19 +26,18 @@ def _detection_settings(settings: dict) -> dict:
     return copied
 
 
-def _validate_scene(platform: str, content_type: str) -> None:
-    if platform not in config.PLATFORMS:
-        raise ValueError(f"不支持的发布平台：{platform}")
-    supported = config.CONTENT_TYPES.get(platform, [])
-    if content_type not in supported:
-        raise ValueError(f"“{content_type}”不属于“{platform}”的可选内容类型。")
+def _validate_scene(platform: str, content_type: str, platform_id=None, scene_id=None) -> tuple[dict, dict]:
+    return resolve_scene(platform, content_type, platform_id, scene_id)
 
 
 def generate(request: dict, settings: dict) -> dict:
     store = get_store()
     platform = str(request.get("platform") or "")
     content_type = str(request.get("content_type") or "")
-    _validate_scene(platform, content_type)
+    platform_item, scene = _validate_scene(
+        platform, content_type, request.get("platform_id"), request.get("scene_id")
+    )
+    platform, content_type = platform_item["name"], scene["name"]
 
     topic = str(request.get("topic") or "").strip()
     selling_points = str(request.get("selling_points") or "").strip()
@@ -49,7 +48,9 @@ def generate(request: dict, settings: dict) -> dict:
     use_brand = bool(request.get("use_brand_profile", True))
     versions = max(1, min(int(request.get("versions") or settings.get("default_versions", 3) or 3), 5))
     brand_profile = get_brand(brand_id) if use_brand and brand_id else None
-    prompt_template = load_prompt_template(platform)
+    prompt_template, platform_item, scene = compose_prompt(
+        platform, content_type, platform_item["id"], scene["id"]
+    )
     provider = build_provider(settings)
     model_name = str(getattr(provider, "model", provider.name))
 
@@ -82,6 +83,8 @@ def generate(request: dict, settings: dict) -> dict:
             "text": text,
             "platform": platform,
             "content_type": content_type,
+            "platform_id": platform_item["id"],
+            "scene_id": scene["id"],
             "char_count": len(text),
             "generated_at": _now(),
             "model": model_name,
@@ -95,6 +98,8 @@ def generate(request: dict, settings: dict) -> dict:
     return {
         "platform": platform,
         "content_type": content_type,
+        "platform_id": platform_item["id"],
+        "scene_id": scene["id"],
         "brand": brand_id,
         "model": model_name,
         "provider": provider.name,
@@ -111,7 +116,10 @@ def rewrite(request: dict, settings: dict) -> dict:
     text = str(request.get("text") or "").strip()
     platform = str(request.get("platform") or "")
     content_type = str(request.get("content_type") or "")
-    _validate_scene(platform, content_type)
+    platform_item, scene = _validate_scene(
+        platform, content_type, request.get("platform_id"), request.get("scene_id")
+    )
+    platform, content_type = platform_item["name"], scene["name"]
     if not text:
         raise ValueError("待改写文本不能为空。")
 
@@ -138,6 +146,8 @@ def rewrite(request: dict, settings: dict) -> dict:
             "demo_mode": provider.name == "mock",
             "model": model_name,
             "provider": provider.name,
+            "platform_id": platform_item["id"],
+            "scene_id": scene["id"],
             "disclaimer": config.DISCLAIMER,
             "message": "未发现需要自动改写的明显风险。",
         }
@@ -171,6 +181,8 @@ def rewrite(request: dict, settings: dict) -> dict:
         "demo_mode": provider.name == "mock",
         "model": model_name,
         "provider": provider.name,
+        "platform_id": platform_item["id"],
+        "scene_id": scene["id"],
         "disclaimer": config.DISCLAIMER,
     }
 
@@ -180,7 +192,10 @@ def adjust(request: dict, settings: dict) -> dict:
     text = str(request.get("text") or "").strip()
     platform = str(request.get("platform") or "")
     content_type = str(request.get("content_type") or "")
-    _validate_scene(platform, content_type)
+    platform_item, scene = _validate_scene(
+        platform, content_type, request.get("platform_id"), request.get("scene_id")
+    )
+    platform, content_type = platform_item["name"], scene["name"]
     if not text:
         raise ValueError("待调整文本不能为空。")
 
@@ -215,6 +230,8 @@ def adjust(request: dict, settings: dict) -> dict:
         "adjust_type": adjust_type,
         "platform": platform,
         "content_type": content_type,
+        "platform_id": platform_item["id"],
+        "scene_id": scene["id"],
         "model": model_name,
         "provider": provider.name,
         "demo_mode": provider.name == "mock",

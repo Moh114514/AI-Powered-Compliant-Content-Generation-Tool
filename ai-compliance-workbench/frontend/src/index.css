@@ -85,6 +85,23 @@ mark.risk-hit.semantic {
   background: #fff;
   color: #111827;
 }
+
+.prompt-manager-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(360px, 1.5fr);
+  gap: 16px;
+}
+
+.prompt-preview {
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  font: 12px/1.6 inherit;
+}
 .input:focus,
 .select:focus,
 .textarea:focus {
@@ -140,6 +157,9 @@ mark.risk-hit.semantic {
 @media (max-width: 900px) {
   .gen-grid,
   .set-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .prompt-manager-grid {
     grid-template-columns: 1fr !important;
   }
 }

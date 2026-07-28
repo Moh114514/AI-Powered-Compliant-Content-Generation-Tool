@@ -38,6 +38,57 @@ export interface StatusInfo {
   api_key_configured?: boolean;
   model_name?: string;
   platforms: string[];
+  prompt_version?: string;
+  prompt_platform_count?: number;
+  prompt_scene_count?: number;
+  prompt_active_platform_count?: number;
+  prompt_active_scene_count?: number;
+  prompt_custom_platform_count?: number;
+  prompt_custom_scene_count?: number;
+  prompt_override_count?: number;
+  default_platform_warning?: string;
+}
+
+export interface PromptScene {
+  id: string;
+  platform_id: string;
+  name: string;
+  description: string;
+  prompt_text: string;
+  default_prompt: string;
+  effective_prompt: string;
+  rule_content_type: string;
+  sort_order: number;
+  is_builtin: boolean;
+  active: boolean;
+  is_overridden: boolean;
+  updated_at?: string;
+}
+
+export interface PromptPlatform {
+  id: string;
+  name: string;
+  description: string;
+  prompt_text: string;
+  default_prompt: string;
+  effective_prompt: string;
+  rule_profile: string;
+  sort_order: number;
+  is_builtin: boolean;
+  active: boolean;
+  is_overridden: boolean;
+  scenes: PromptScene[];
+  updated_at?: string;
+}
+
+export interface PromptCatalog {
+  version: string;
+  source: string;
+  base_prompt: { default: string; effective: string; is_overridden: boolean };
+  self_check_prompt: string;
+  rule_profiles: string[];
+  content_rule_profiles: string[];
+  platforms: PromptPlatform[];
 }
 
 export interface RuleSummary {
@@ -142,6 +193,8 @@ export interface ComplianceResult {
   normalized_text: string;
   platform: string;
   content_type: string;
+  platform_id?: string;
+  scene_id?: string;
   overall_risk_level: string;
   review_level: string;
   publish_recommendation: string;
@@ -167,6 +220,8 @@ export interface VersionResult {
   text: string;
   platform: string;
   content_type: string;
+  platform_id?: string;
+  scene_id?: string;
   char_count: number;
   generated_at: string;
   model: string;
@@ -180,6 +235,8 @@ export interface VersionResult {
 export interface GenerateResult {
   platform: string;
   content_type: string;
+  platform_id?: string;
+  scene_id?: string;
   brand?: string;
   model: string;
   provider?: string;

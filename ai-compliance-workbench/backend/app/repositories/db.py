@@ -30,6 +30,41 @@ CREATE TABLE IF NOT EXISTS content_records (
 CREATE INDEX IF NOT EXISTS idx_content_records_created_at ON content_records(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_content_records_platform ON content_records(platform);
 CREATE INDEX IF NOT EXISTS idx_content_records_risk ON content_records(risk_level);
+CREATE TABLE IF NOT EXISTS prompt_platforms (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL COLLATE NOCASE UNIQUE,
+    description TEXT NOT NULL DEFAULT '',
+    prompt_text TEXT NOT NULL DEFAULT '',
+    rule_profile TEXT NOT NULL DEFAULT '通用',
+    sort_order INTEGER NOT NULL DEFAULT 100,
+    is_builtin INTEGER NOT NULL DEFAULT 0,
+    active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS prompt_scenes (
+    id TEXT PRIMARY KEY,
+    platform_id TEXT NOT NULL,
+    name TEXT NOT NULL COLLATE NOCASE,
+    description TEXT NOT NULL DEFAULT '',
+    prompt_text TEXT NOT NULL DEFAULT '',
+    rule_content_type TEXT NOT NULL DEFAULT '通用',
+    sort_order INTEGER NOT NULL DEFAULT 100,
+    is_builtin INTEGER NOT NULL DEFAULT 0,
+    active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY(platform_id) REFERENCES prompt_platforms(id),
+    UNIQUE(platform_id, name)
+);
+CREATE INDEX IF NOT EXISTS idx_prompt_scenes_platform ON prompt_scenes(platform_id, sort_order);
+CREATE TABLE IF NOT EXISTS prompt_overrides (
+    scope TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY(scope, target_id)
+);
 """
 
 _ALLOWED_SETTING_KEYS = set(config.DEFAULT_SETTINGS)
@@ -41,7 +76,9 @@ def _get_conn() -> sqlite3.Connection:
     global _CONN
     with _LOCK:
         if _CONN is None:
-            os.makedirs(os.path.dirname(str(config.DB_PATH)), exist_ok=True)
+            parent = os.path.dirname(str(config.DB_PATH))
+            if parent:
+                os.makedirs(parent, exist_ok=True)
             _CONN = sqlite3.connect(str(config.DB_PATH), check_same_thread=False, timeout=10)
             _CONN.row_factory = sqlite3.Row
             _CONN.execute("PRAGMA journal_mode=WAL")
@@ -54,6 +91,9 @@ def init_db() -> None:
         connection = _get_conn()
         connection.executescript(_SCHEMA)
         connection.commit()
+    # Import lazily to avoid a repository/service import cycle during module load.
+    from app.services.prompts.catalog import seed_builtins
+    seed_builtins()
 
 
 def close_db() -> None:
@@ -81,7 +121,21 @@ def load_settings() -> dict:
     overrides = {row["key"]: _coerce(row["value"]) for row in rows if row["key"] in _ALLOWED_SETTING_KEYS}
     merged = dict(config.DEFAULT_SETTINGS)
     merged.update(overrides)
+    try:
+        from app.services.prompts.catalog import active_platform_names
+        active_platforms = active_platform_names()
+        if active_platforms and merged.get("default_platform") not in active_platforms:
+            merged["default_platform"] = "小红书" if "小红书" in active_platforms else active_platforms[0]
+    except sqlite3.OperationalError:
+        # Catalog tables may not exist yet during first-time database initialization.
+        pass
     return merged
+
+
+def get_setting_override(key: str) -> Any:
+    with _LOCK:
+        row = _get_conn().execute("SELECT value FROM settings WHERE key=?", (key,)).fetchone()
+    return _coerce(row["value"]) if row else None
 
 
 def _sanitize_setting(key: str, value: Any) -> Any:
@@ -99,8 +153,10 @@ def _sanitize_setting(key: str, value: Any) -> Any:
         return max(128, min(int(value), 32000))
     if key == "model_provider" and value not in {"mock", "openai_compatible"}:
         raise ValueError(f"不支持的模型 Provider：{value}")
-    if key == "default_platform" and value not in config.PLATFORMS:
-        raise ValueError(f"不支持的默认平台：{value}")
+    if key == "default_platform":
+        from app.services.prompts.catalog import active_platform_names
+        if value not in active_platform_names():
+            raise ValueError(f"不支持的默认平台：{value}")
     if key == "default_length" and value not in {"短", "中", "长"}:
         raise ValueError(f"不支持的默认长度：{value}")
     return value
@@ -223,3 +279,245 @@ def _row_to_dict(row) -> dict:
         "created_at": row["created_at"],
         "updated_at": row["updated_at"],
     }
+
+
+def seed_prompt_catalog(defaults: dict) -> None:
+    """Idempotently seed the immutable built-in catalog structure."""
+    now = _now()
+    with _LOCK:
+        connection = _get_conn()
+        for platform_order, (platform_name, platform) in enumerate(defaults["platforms"].items(), 1):
+            connection.execute(
+                """INSERT INTO prompt_platforms(
+                       id, name, description, prompt_text, rule_profile, sort_order,
+                       is_builtin, active, created_at, updated_at
+                   ) VALUES(?,?,?,?,?,?,?,?,?,?)
+                   ON CONFLICT(id) DO UPDATE SET
+                       name=excluded.name, rule_profile=excluded.rule_profile,
+                       sort_order=excluded.sort_order, is_builtin=1, active=1,
+                       updated_at=excluded.updated_at""",
+                (
+                    platform["id"], platform_name, f"系统内置平台：{platform_name}", "",
+                    platform["rule_profile"], platform_order * 10, 1, 1, now, now,
+                ),
+            )
+            for scene_order, scene_name in enumerate(platform["scenes"], 1):
+                scene_id = f"{platform['id']}-scene-{scene_order:02d}"
+                rule_content_type = "自动"
+                connection.execute(
+                    """INSERT INTO prompt_scenes(
+                           id, platform_id, name, description, prompt_text,
+                           rule_content_type, sort_order, is_builtin, active,
+                           created_at, updated_at
+                       ) VALUES(?,?,?,?,?,?,?,?,?,?,?)
+                       ON CONFLICT(id) DO UPDATE SET
+                           platform_id=excluded.platform_id, name=excluded.name,
+                           rule_content_type=excluded.rule_content_type,
+                           sort_order=excluded.sort_order, is_builtin=1, active=1,
+                           updated_at=excluded.updated_at""",
+                    (
+                        scene_id, platform["id"], scene_name,
+                        f"系统内置场景：{platform_name}—{scene_name}", "",
+                        rule_content_type, scene_order * 10, 1, 1, now, now,
+                    ),
+                )
+        connection.commit()
+
+
+def _prompt_platform_dict(row) -> dict:
+    return {
+        "id": row["id"],
+        "name": row["name"],
+        "description": row["description"],
+        "prompt_text": row["prompt_text"],
+        "rule_profile": row["rule_profile"],
+        "sort_order": row["sort_order"],
+        "is_builtin": bool(row["is_builtin"]),
+        "active": bool(row["active"]),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def _prompt_scene_dict(row) -> dict:
+    return {
+        "id": row["id"],
+        "platform_id": row["platform_id"],
+        "name": row["name"],
+        "description": row["description"],
+        "prompt_text": row["prompt_text"],
+        "rule_content_type": row["rule_content_type"],
+        "sort_order": row["sort_order"],
+        "is_builtin": bool(row["is_builtin"]),
+        "active": bool(row["active"]),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def load_prompt_catalog(include_inactive: bool = True) -> list[dict]:
+    platform_where = "" if include_inactive else "WHERE active=1"
+    scene_active = "" if include_inactive else "AND active=1"
+    with _LOCK:
+        connection = _get_conn()
+        platform_rows = connection.execute(
+            f"SELECT * FROM prompt_platforms {platform_where} ORDER BY sort_order, name"
+        ).fetchall()
+        output = []
+        for platform_row in platform_rows:
+            platform = _prompt_platform_dict(platform_row)
+            scene_rows = connection.execute(
+                f"""SELECT * FROM prompt_scenes
+                    WHERE platform_id=? {scene_active}
+                    ORDER BY sort_order, name""",
+                (platform["id"],),
+            ).fetchall()
+            platform["scenes"] = [_prompt_scene_dict(row) for row in scene_rows]
+            output.append(platform)
+    return output
+
+
+def get_prompt_platform(platform_id: str) -> dict | None:
+    with _LOCK:
+        row = _get_conn().execute("SELECT * FROM prompt_platforms WHERE id=?", (platform_id,)).fetchone()
+    return _prompt_platform_dict(row) if row else None
+
+
+def get_prompt_scene(scene_id: str) -> dict | None:
+    with _LOCK:
+        row = _get_conn().execute("SELECT * FROM prompt_scenes WHERE id=?", (scene_id,)).fetchone()
+    return _prompt_scene_dict(row) if row else None
+
+
+def create_prompt_platform(
+    platform_id: str, name: str, description: str, prompt_text: str,
+    rule_profile: str, sort_order: int,
+) -> None:
+    now = _now()
+    try:
+        with _LOCK:
+            connection = _get_conn()
+            connection.execute(
+                """INSERT INTO prompt_platforms(
+                       id,name,description,prompt_text,rule_profile,sort_order,
+                       is_builtin,active,created_at,updated_at
+                   ) VALUES(?,?,?,?,?,?,0,1,?,?)""",
+                (platform_id, name, description, prompt_text, rule_profile, sort_order, now, now),
+            )
+            connection.commit()
+    except sqlite3.IntegrityError as exc:
+        raise ValueError("平台名称已存在。") from exc
+
+
+def update_prompt_platform(platform_id: str, fields: dict) -> None:
+    allowed = {"name", "description", "rule_profile", "sort_order", "active"}
+    values = {key: value for key, value in fields.items() if key in allowed}
+    if not values:
+        return
+    if "active" in values:
+        values["active"] = int(bool(values["active"]))
+    values["updated_at"] = _now()
+    assignments = ", ".join(f"{key}=?" for key in values)
+    try:
+        with _LOCK:
+            connection = _get_conn()
+            connection.execute(
+                f"UPDATE prompt_platforms SET {assignments} WHERE id=?",
+                (*values.values(), platform_id),
+            )
+            connection.commit()
+    except sqlite3.IntegrityError as exc:
+        raise ValueError("平台名称已存在。") from exc
+
+
+def create_prompt_scene(
+    scene_id: str, platform_id: str, name: str, description: str,
+    prompt_text: str, rule_content_type: str, sort_order: int,
+) -> None:
+    now = _now()
+    try:
+        with _LOCK:
+            connection = _get_conn()
+            connection.execute(
+                """INSERT INTO prompt_scenes(
+                       id,platform_id,name,description,prompt_text,rule_content_type,
+                       sort_order,is_builtin,active,created_at,updated_at
+                   ) VALUES(?,?,?,?,?,?,?,0,1,?,?)""",
+                (
+                    scene_id, platform_id, name, description, prompt_text,
+                    rule_content_type, sort_order, now, now,
+                ),
+            )
+            connection.commit()
+    except sqlite3.IntegrityError as exc:
+        raise ValueError("该平台下已存在同名场景。") from exc
+
+
+def update_prompt_scene(scene_id: str, fields: dict) -> None:
+    allowed = {"name", "description", "rule_content_type", "sort_order", "active"}
+    values = {key: value for key, value in fields.items() if key in allowed}
+    if not values:
+        return
+    if "active" in values:
+        values["active"] = int(bool(values["active"]))
+    values["updated_at"] = _now()
+    assignments = ", ".join(f"{key}=?" for key in values)
+    try:
+        with _LOCK:
+            connection = _get_conn()
+            connection.execute(
+                f"UPDATE prompt_scenes SET {assignments} WHERE id=?",
+                (*values.values(), scene_id),
+            )
+            connection.commit()
+    except sqlite3.IntegrityError as exc:
+        raise ValueError("该平台下已存在同名场景。") from exc
+
+
+def get_prompt_override(scope: str, target_id: str) -> str | None:
+    with _LOCK:
+        row = _get_conn().execute(
+            "SELECT content FROM prompt_overrides WHERE scope=? AND target_id=?",
+            (scope, target_id),
+        ).fetchone()
+    return str(row["content"]) if row else None
+
+
+def set_prompt_override(scope: str, target_id: str, content: str) -> None:
+    with _LOCK:
+        connection = _get_conn()
+        connection.execute(
+            """INSERT INTO prompt_overrides(scope,target_id,content,updated_at)
+               VALUES(?,?,?,?)
+               ON CONFLICT(scope,target_id) DO UPDATE SET
+                   content=excluded.content, updated_at=excluded.updated_at""",
+            (scope, target_id, content, _now()),
+        )
+        connection.commit()
+
+
+def delete_prompt_override(scope: str, target_id: str) -> None:
+    with _LOCK:
+        connection = _get_conn()
+        connection.execute(
+            "DELETE FROM prompt_overrides WHERE scope=? AND target_id=?",
+            (scope, target_id),
+        )
+        connection.commit()
+
+
+def delete_builtin_prompt_overrides() -> None:
+    with _LOCK:
+        connection = _get_conn()
+        connection.execute("DELETE FROM prompt_overrides WHERE scope='base' AND target_id='global'")
+        connection.execute(
+            """DELETE FROM prompt_overrides
+               WHERE scope='platform' AND target_id IN
+                     (SELECT id FROM prompt_platforms WHERE is_builtin=1)"""
+        )
+        connection.execute(
+            """DELETE FROM prompt_overrides
+               WHERE scope='scene' AND target_id IN
+                     (SELECT id FROM prompt_scenes WHERE is_builtin=1)"""
+        )
+        connection.commit()

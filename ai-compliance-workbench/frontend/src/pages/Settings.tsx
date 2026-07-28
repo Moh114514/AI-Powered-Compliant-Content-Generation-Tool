@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle, PlayCircle, RefreshCw, Save, Trash2 } from "lucide-react";
 import { api } from "../api/client";
+import { PromptCatalogManager } from "../components/PromptCatalogManager";
 import type { Settings as SettingsType, StatusInfo, TestSuiteResult } from "../types";
 
 export default function Settings() {
@@ -76,6 +77,7 @@ export default function Settings() {
       <h2 style={{ margin: "0 0 4px", fontSize: 18 }}>工具设置</h2>
       <p style={{ margin: "0 0 16px", color: "#6b7280", fontSize: 13 }}>配置模型、检测能力、本地记录和规则库检查。</p>
       {error && <div className="card" style={{ marginBottom: 12, color: "#b91c1c", borderColor: "#fecaca", background: "#fef2f2" }}>⚠️ {error}</div>}
+      {status?.default_platform_warning && <div className="card" style={{ marginBottom: 12, color: "#92400e", borderColor: "#fde68a", background: "#fffbeb" }}>{status.default_platform_warning}</div>}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }} className="set-grid">
         <Section title="模型配置">
@@ -135,6 +137,11 @@ export default function Settings() {
         </Section>
       </div>
 
+      <PromptCatalogManager
+        modelReady={!!status?.provider_ready && !status?.demo_mode}
+        demoMode={!!status?.demo_mode}
+      />
+
       <Section title="规则库状态" style={{ marginTop: 16 }}>
         {status ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 8, fontSize: 13 }}>
           <Info label="规则库版本" value={status.data_version || "—"} />
@@ -148,6 +155,9 @@ export default function Settings() {
           <Info label="校验" value={status.validation_valid ? `通过（${status.validation_warning_count ?? 0} 条警告）` : `异常（${status.validation_error_count}）`} />
           <Info label="运行模式" value={status.demo_mode ? "演示模式" : status.provider_ready === false ? "真实模型未就绪" : "真实模型已就绪"} />
           <Info label="当前模型" value={status.demo_mode ? "Mock" : status.model_name || "—"} />
+          <Info label="提示词版本" value={status.prompt_version || "—"} />
+          <Info label="平台 / 场景" value={`${status.prompt_platform_count ?? 0} / ${status.prompt_scene_count ?? 0}`} />
+          <Info label="提示词覆盖" value={`${status.prompt_override_count ?? 0} 项`} />
           <Info label="最近加载" value={status.loaded_at || "—"} />
         </div> : <div style={{ color: "#6b7280" }}>正在读取状态……</div>}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
