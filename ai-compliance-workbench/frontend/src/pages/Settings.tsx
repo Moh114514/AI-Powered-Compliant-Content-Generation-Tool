@@ -136,6 +136,7 @@ export default function Settings() {
           <Info label="来源" value={`${status.source_count} 条`} />
           <Info label="测试样本" value={`${status.test_case_count ?? 0} 条`} />
           <Info label="视觉检查项" value={`${status.visual_check_count ?? 0} 条`} />
+          <Info label="待人工复核规则" value={`${status.pending_review_count ?? 0} 条`} />
           <Info label="校验" value={status.validation_valid ? `通过（${status.validation_warning_count ?? 0} 条警告）` : `异常（${status.validation_error_count}）`} />
           <Info label="运行模式" value={status.demo_mode ? "演示模式" : "模型已连接"} />
           <Info label="最近加载" value={status.loaded_at || "—"} />

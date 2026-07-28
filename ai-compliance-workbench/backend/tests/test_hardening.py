@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.core.data_loader import DataStore
 from app.main import app
 from app.services.compliance.engine import run_compliance_check
+from app.services.compliance.evaluator import _risk_matches
 
 
 BASE_SETTINGS = {
@@ -128,3 +129,8 @@ def test_regression_suite_endpoint_is_available():
         assert payload["success"] is True
         assert payload["data"]["total"] == 2
         assert "pass_rate" in payload["data"]
+
+
+def test_regression_low_risk_accepts_runtime_none():
+    assert _risk_matches("low", "none") is True
+    assert _risk_matches("critical", "none") is False

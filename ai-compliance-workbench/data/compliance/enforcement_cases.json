@@ -122,10 +122,18 @@
     "applicable_rule_ids": [
       "R-A06-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例1：北京爱悦丽格医疗美容诊所有限公司虚假宣传医生资历案。基本案情：2021年6月，执法人员现场检查中发现当事人在大众点评App“爱悦丽格医疗美容”主页下宣传的诊所医生李某为原三甲医院医生，实际其仅到中日友好医院进修，而非中日友好医院正式医生。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款对当事人责令停止违法行为，处罚款31万元。",
+    "captured_text_sha256": "12cb3ebc4c676cc1368434b6d9f0ce424c76a9521ff305610c279419fd1092cf",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0006",
@@ -142,10 +150,18 @@
     "applicable_rule_ids": [
       "R-A06-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例2：四川省绵阳韩美医疗管理服务有限公司虚假宣传医生及医疗机构资历荣誉案。基本案情：2020年7月，执法人员现场检查中发现当事人在店内墙壁上“韩美医疗整形美容—专家介绍”栏集中对其机构医生姓名、荣誉资质、擅长项目等进行了详细介绍，其中的“曹某某”“郑某某”既不是当事人的特约专家，也未在当事人处开展过医疗整形服务，在当事人不能提供其荣誉资质、擅长项目的证明资料情况下，仅凭同行推荐，就将其两人放于首要位置进行宣传。同时，利用微信杜撰自己是从韩国首尔发展而来，有68个分支机构，国际级连锁医疗美容机构等虚假情况。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款10万元。",
+    "captured_text_sha256": "c79fe3726fe0d6e4f30f97bb2a5edffbc63cc915748aef2ef10936a3ed036029",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0007",
@@ -162,10 +178,18 @@
     "applicable_rule_ids": [
       "R-A06-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例3：江苏省南京美贝尔美容医院有限公司虚假宣传医生资历案。基本案情：当事人2020年8月份制作了6个KT广告板，分别介绍陈某、黄某某、刘某某、潘某某、郝某某和郭某某6名工作人员信息。其中，陈某为“韩国首尔大学医学院特聘外籍教授、澳洲墨尔本整形专家课程国际讲师”，刘某某为“日韩鼻整形协会荣誉会员、凝时焕眸术整形专利获得者”等宣传信息不实，系当事人为了包装医生进行的夸大、虚假宣传。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款10万元。",
+    "captured_text_sha256": "0128502124115e3393f7a0f0570da81e1dd367b240737e8ce0769cc30f85fbcd",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0008",
@@ -183,10 +207,18 @@
       "R-A05-001",
       "R-A05-002"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例4：浙江省台州艺星医疗美容医院有限公司虚假宣传整形功效案。基本案情：2020年6月，执法人员现场检查中发现当事人新氧医美平台上的“氧气zuzmc的美丽日记3.11假体隆胸”“爱末回生的美丽日记 6.15 鼻部多项”医美案例为艺星集团内其他医院案例，并非当事人医院真实案例，但当事人在案例下标示“医院：艺星整形美容医院（台州旗舰店）”。同时，当事人在网站上使用病人形象作宣传，展示手术过程以及手术后效果照片，使用虚假案例对自身进行商业宣传，容易对消费者造成误导。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款25万元。",
+    "captured_text_sha256": "fac6afa18ebd9f4cace639e8a7cace7b5804915cb9d5dd07a966422df159cea7",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0009",
@@ -204,10 +236,18 @@
       "R-A02-001",
       "R-A05-002"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例5：浙江省舟山市定海丹颐美容会所虚假宣传功效案。基本案情：2021年4月，执法人员现场检查中发现当事人在店里悬挂品牌沿革的宣传牌，印有“2015年引进全国最先进的美容养生项目”等内容，在护理室内有三块“JIMI WATER CLUB”的宣传牌，上面印有“特性一：通过纳米科学技术，将水转换为纳米雾状粒子，利用热胀原理，打开肌肤毛孔，形成肌肤觉醒效果，把皮肤浸浴于42℃热水5min，即可防止紫外线造成的伤害多达1星期”等内容，并包含3组消费者使用前后的对比照片。当事人无法说明宣传内容的真实性，无法提供相关材料予以证明。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款2万元。",
+    "captured_text_sha256": "fd2f17e5d89933679abee54d6a1704fd1263a582ae54f7626883742e4a07d0f1",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0010",
@@ -225,10 +265,18 @@
       "R-A02-001",
       "R-A10-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例6：浙江省温州建国化妆品有限公司虚假宣传光子能量产品案。基本案情：2021年4月，当事人在温州顺锦国际宴会中心组织开展“凤凰阳光 光子床养生项目发布会”的美培会，宣传光子能量产品。宣传牌的内容包括：“+睡眠质量优化85%”“+新陈代谢加速13%”“+体内毒素净化69%”“+寒湿气排出72%”“+亚健康改善90%”等。当事人经营的光子能量垫、光子能量腰带为一般产品（非医疗器械），却宣传其具有疾病防治效果、医疗功能，以制作宣传资料、编写使用宣传话术资料、组织开展美培会等方式虚假宣传其产品性能、功效，以达到诱导客户购买的目的。截至被执法人员查获之日，当事人销售金额共计335915元，销售利润为67715元。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款20万元。",
+    "captured_text_sha256": "cf190fb7bdec62d4dc0e8039cbcbcf541d98472d35192fb9be54122839cc820a",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0011",
@@ -245,10 +293,18 @@
     "applicable_rule_ids": [
       "R-A02-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例7：山西省阳泉经济技术开发区靓钰美容仪器经销处虚假宣传功效案。基本案情：当事人于2018年4月30日取得南京项美电子科技有限公司的授权，采取店内体验式销售模式，经销该公司生产的项美美体减肥仪（型号AM--8200）；2020年7月份，当事人印制了“常见疾病管理方案”，附送给已购买产品的顾客。打印件中含有在身体的不同部位使用该仪器，对糖尿病等疾病的管理方法。其内容易使公众误解该仪器对相关疾病有一定的治疗作用。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款2万元。",
+    "captured_text_sha256": "b6d8c40070052a2e7f4bc61152171a22174884597a44dd38e960a8e6b25ac724",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0012",
@@ -266,10 +322,18 @@
       "R-A05-003",
       "R-A08-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例8：江苏省南京熙涵医疗美容门诊有限公司编造用户评价虚假宣传案。基本案情：当事人为了尽快打开市场，2020年6月起，雇佣张某等8名刷单人员，在大众点评当事人网上店铺平台上以消费者的身份下单并支付费用，实际并不消费，交易完成后，当事人将下单的费用退还给上述8名刷单人员，并按照30元/单标准给予刷单佣金。2020年6月至2021年1月，当事人以实际下单、不实际消费的方式虚构交易，编造用户评价，在大众点评网络平台形成虚假的销售状况及用户评价，当事人共计刷单220笔，刷单佣金6600元，支付刷单费用13.48万元，构成不正当竞争行为。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款35万元。",
+    "captured_text_sha256": "8b03ce1d0c434f320f3331c15732ee455f932f20093041a7d20f7c364a4854c1",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0013",
@@ -286,10 +350,18 @@
     "applicable_rule_ids": [
       "R-A05-003"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例9：上海美希卓馨医疗美容门诊部有限公司编造用户评价虚假宣传案。基本案情：当事人作为平台内经营者入驻北京新氧科技有限公司运营的“新氧App”平台，2021年1月9日新氧账号“氧气bqwbqo”在当事人新氧账号“上海美希卓馨医疗美容”下发布有日记评价内容，而账号“氧气bqwbqo”的实际用户为当事人公司员工，该员工应其上级要求购买当事人所销售的医美项目是为了编造用户评价给当事人新氧账号获取好评，提升人气，该员工并未实际接受相关项目服务，系以虚构交易、编造用户评价的方式进行虚假宣传。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款0.5万元。",
+    "captured_text_sha256": "475ede0125d591d18592d60d642950f078559fa196a5f093ecb96050029e4537",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0014",
@@ -307,10 +379,18 @@
       "R-A02-001",
       "R-A16-001"
     ],
-    "official_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "official_url": "https://www.samr.gov.cn/jjj/sjdt/gzdt/art/2023/art_9fd488d9fc8c4da885d0eeae18ed6eed.html",
     "source_id": "S0009",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "previous_url": "https://www.chinanews.com.cn/cj/2021/10-25/9594278.shtml",
+    "url_update_note": "2026-07-27 由中国新闻网转载源升级为市场监管总局官方通报页",
+    "case_detail": "案例10：梦泉时尚（北京）贸易有限公司通过直播进行虚假宣传案。基本案情：2020年12月，执法人员现场检查中发现，当事人通过在快手短视频App上注册的个人直播账号进行直播，用以促进自营商品的线上销售。贺某在宣传标称为“花源密语抑菌凝胶”的二类消毒产品（非药品及医疗器械）的产品过程中，使用了治疗类功能性表述，对消费者产生实际误导。法律依据及处罚：当事人的行为违反了《反不正当竞争法》第八条第一款的规定，依据第二十条第一款责令当事人停止违法行为，处罚款20万元。",
+    "captured_text_sha256": "5c51ba8d6f1e83bc7a6426a82e5e0f029d588ed12704bc14f5d306dd8fdc9a79",
+    "capture_method": "webfetch_official_page",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured_verbatim",
+    "source_grade": "official_publication"
   },
   {
     "case_id": "C0015",
@@ -359,7 +439,9 @@
     "official_url": "http://www.xjks.gov.cn/kss/c109256/202501/15bd6b0707514b50bc73babc3acbff0c/files/%E5%96%80%E5%B8%82%E5%B8%82%E7%9B%91%E5%A4%84%E7%BD%9A%E3%80%902024%E3%80%91189%E5%8F%B7-20250114201000728002.pdf",
     "source_id": "S0004",
     "generalizable": true,
-    "verification_status": "verified"
+    "verification_status": "verified",
+    "official_text_status": "pending_manual_pdf",
+    "capture_note": "喀什市行政处罚决定书PDF(xjks.gov.cn)返回403，需人工下载后回填 case_detail 与 SHA-256"
   },
   {
     "case_id": "C0017",
@@ -403,9 +485,14 @@
       "R-A16-001"
     ],
     "official_url": "https://scjgj.jiangsu.gov.cn/art/2025/11/26/art_70154_11681437.html",
-    "source_id": "S0004",
+    "source_id": "S0003",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "case_detail": "案例一 南京某医疗美容诊所有限公司未按审查内容发布医疗美容违法广告案：经查，南京某医疗美容诊所有限公司在美团发布\"美国除皱2U单位348元\"\"M22黄金超光子3X打法389元\"等产品广告，与核准的医疗广告审查批准文件内容不一致。当事人的行为违反《中华人民共和国广告法》第四十六条规定，构成未按审查内容发布医疗广告的违法情形。2025年4月，南京市栖霞区市场监管局依据《中华人民共和国广告法》有关规定，对南京某医疗美容诊所有限公司作出罚款1万元的行政处罚。",
+    "captured_text_sha256": "36c393141a8dafc448cf2c6b8105bfedb53b46a7ba056d0801815e00da199a81",
+    "capture_method": "web_fetch",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured"
   },
   {
     "case_id": "C0019",
@@ -423,9 +510,14 @@
       "R-A16-001"
     ],
     "official_url": "https://scjgj.jiangsu.gov.cn/art/2025/11/26/art_70154_11681437.html",
-    "source_id": "S0004",
+    "source_id": "S0003",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "case_detail": "案例二 徐州某美容医院有限公司未按审查内容发布医疗美容违法广告案：经查，徐州某美容医院有限公司通过抖音账号发布\"[双12专区]玻尿酸护理2\"团购广告及含\"小部位微调\"医疗广告，与核准的医疗广告审查批准文件内容不一致。当事人的行为违反《中华人民共和国广告法》第四十六条规定，构成未按审查内容发布医疗广告的违法情形。2025年4月，徐州市泉山区市场监管局依据《中华人民共和国广告法》有关规定，对徐州某美容医院有限公司作出罚款1万元的行政处罚。",
+    "captured_text_sha256": "eae91dc743075394da9f206368478a1f8f420732b48a1c90fcc345b879cc7ad2",
+    "capture_method": "web_fetch",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured"
   },
   {
     "case_id": "C0020",
@@ -444,9 +536,14 @@
       "R-A01-009"
     ],
     "official_url": "https://new.qq.com/rain/a/20251127A0306D00",
-    "source_id": "S0004",
+    "source_id": "S0003",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "case_detail": "案例三 苏州工业园区某医疗美容诊所有限公司发布医疗美容违法广告案：经查，苏州工业园区某医疗美容诊所有限公司通过经营场所海报、电子显示屏及抖音店铺发布\"紧致嫩肤\"\"抗衰黑科技\"\"泪沟|黑眼圈补水提亮\"等广告，功能、效果均无合法依据，以虚假信息欺骗、误导消费者。当事人的行为违反《中华人民共和国广告法》第二十八条第二款第二项、第四项，构成发布虚假广告违法情形。2025年1月，苏州工业园区市场监管局依据《中华人民共和国广告法》有关规定，对苏州工业园区某医疗美容诊所有限公司作出罚款4万元的行政处罚。",
+    "captured_text_sha256": "8fcb52a9415ca7c8fca052f7073cddfd6ea75fe93887e31fbb38ff3a1fa6076a",
+    "capture_method": "web_fetch",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured"
   },
   {
     "case_id": "C0021",
@@ -464,8 +561,13 @@
       "R-A11-001"
     ],
     "official_url": "https://new.qq.com/rain/a/20251127A0306D00",
-    "source_id": "S0004",
+    "source_id": "S0003",
     "generalizable": true,
-    "verification_status": "partially_verified"
+    "verification_status": "partially_verified",
+    "case_detail": "案例四 连云港某医疗美容有限公司发布医疗用毒性药品违法广告案：经查，连云港某医疗美容有限公司在微信公众号发布未经审查的介绍保妥适与衡力牌A类肉毒素（均为医疗用毒性药品）两款药品产地、成分、分子量等差异的广告。当事人的行为违反《中华人民共和国广告法》第十五条规定，构成发布医疗用毒性药品广告的违法行为。2025年5月，连云港市海州区市场监管局依据《中华人民共和国广告法》有关规定，对连云港某医疗美容有限公司作出罚款1万元的行政处罚。",
+    "captured_text_sha256": "59a1c9ff2381c7f654a5cd8a729b93e3ed2a625bdf701406362c317e460f9888",
+    "capture_method": "web_fetch",
+    "captured_at": "2026-07-27",
+    "official_text_status": "captured"
   }
 ]

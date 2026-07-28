@@ -37,6 +37,7 @@ def status():
             "validation_valid": validation.get("valid", False),
             "validation_error_count": validation.get("error_count", 0),
             "validation_warning_count": validation.get("warning_count", 0),
+            "pending_review_count": validation.get("pending_review_count", 0),
             "demo_mode": demo_mode,
             "configured_provider": configured_provider,
             "platforms": config.PLATFORMS,

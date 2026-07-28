@@ -32,6 +32,6 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: ai-compliance-workbench/frontend/package.json
-      - run: npm install
+          cache-dependency-path: ai-compliance-workbench/frontend/package-lock.json
+      - run: npm ci
       - run: npm run build

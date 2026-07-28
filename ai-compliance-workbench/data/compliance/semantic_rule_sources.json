@@ -68,5 +68,230 @@
     "source_id": "S0001",
     "article_clause": "第9条",
     "supporting_summary": "广告法一般规制"
+  },
+  {
+    "relation_id": "SRS1001",
+    "semantic_rule_id": "SR0101",
+    "source_id": "S0003",
+    "article_clause": "",
+    "supporting_summary": "识别某某做完很好/大家都满意/案例证明等个案后接普遍性结论，区分纯流程评价。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1002",
+    "semantic_rule_id": "SR0102",
+    "source_id": "S0001",
+    "article_clause": "",
+    "supporting_summary": "识别任何人/所有人/不挑肤质/什么年龄都可以+项目适用性。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1003",
+    "semantic_rule_id": "SR0103",
+    "source_id": "S0003",
+    "article_clause": "",
+    "supporting_summary": "识别不做/再不/否则+老化、没人喜欢、被淘汰、失去竞争力等后果。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1004",
+    "semantic_rule_id": "SR0104",
+    "source_id": "S0006",
+    "article_clause": "",
+    "supporting_summary": "识别已认证/获批/进口+所以安全/效果更好/一定可靠的因果结构。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1005",
+    "semantic_rule_id": "SR0105",
+    "source_id": "S0013",
+    "article_clause": "",
+    "supporting_summary": "识别CCTV/权威媒体/大奖/协会推荐+证明有效、值得信赖等。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1006",
+    "semantic_rule_id": "SR0106",
+    "source_id": "S0013",
+    "article_clause": "",
+    "supporting_summary": "识别百分比、人数、排名与缺少出处/统计期/样本量的组合。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1007",
+    "semantic_rule_id": "SR0107",
+    "source_id": "S0011",
+    "article_clause": "",
+    "supporting_summary": "综合判断科普目的、商业要素和交易路径，不只看是否出现“科普”。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1008",
+    "semantic_rule_id": "SR0108",
+    "source_id": "S0011",
+    "article_clause": "",
+    "supporting_summary": "结合发布者关系、素材来源、频率、转化路径和利益关系判断。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1009",
+    "semantic_rule_id": "SR0109",
+    "source_id": "S0002",
+    "article_clause": "",
+    "supporting_summary": "识别利益关系和否认商业合作的组合。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1010",
+    "semantic_rule_id": "SR0110",
+    "source_id": "S0003",
+    "article_clause": "",
+    "supporting_summary": "识别生活美容主体与医疗用语、侵入性技术、诊疗效果的冲突。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1011",
+    "semantic_rule_id": "SR0111",
+    "source_id": "S0003",
+    "article_clause": "",
+    "supporting_summary": "识别医疗项目与生活化、安全化类比，判断是否降低消费者风险认知。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1012",
+    "semantic_rule_id": "SR0112",
+    "source_id": "S0014",
+    "article_clause": "",
+    "supporting_summary": "识别特殊人群+可以做/放心/绝对安全等。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1013",
+    "semantic_rule_id": "SR0113",
+    "source_id": "S0029",
+    "article_clause": "",
+    "supporting_summary": "比较主文案与小字、详情和实际条件，判断是否形成误导。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1014",
+    "semantic_rule_id": "SR0114",
+    "source_id": "S0029",
+    "article_clause": "",
+    "supporting_summary": "识别多次发布、自动重置倒计时和无法核实库存/名额。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1015",
+    "semantic_rule_id": "SR0115",
+    "source_id": "S0010",
+    "article_clause": "",
+    "supporting_summary": "识别融资宣传中只强调小额月供而不披露总成本和风险。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1016",
+    "semantic_rule_id": "SR0116",
+    "source_id": "S0010",
+    "article_clause": "",
+    "supporting_summary": "识别必须搭配/升级/加购与效果、治疗资格的绑定。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1017",
+    "semantic_rule_id": "SR0117",
+    "source_id": "S0015",
+    "article_clause": "",
+    "supporting_summary": "综合多种身份线索判断可识别性，不以打码作为唯一标准。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1018",
+    "semantic_rule_id": "SR0118",
+    "source_id": "S0015",
+    "article_clause": "",
+    "supporting_summary": "比较原授权目的、平台、期限与当前用途。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1019",
+    "semantic_rule_id": "SR0119",
+    "source_id": "S0015",
+    "article_clause": "",
+    "supporting_summary": "判断是否从个人表达转化为机构广告、患者证明或商业推荐。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1020",
+    "semantic_rule_id": "SR0120",
+    "source_id": "S0015",
+    "article_clause": "",
+    "supporting_summary": "识别AI工具使用、外部接收方、脱敏、同意和数据留存情况。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1021",
+    "semantic_rule_id": "SR0121",
+    "source_id": "S0014",
+    "article_clause": "",
+    "supporting_summary": "识别异常症状+肯定没事/忍忍/不用看医生等。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1022",
+    "semantic_rule_id": "SR0122",
+    "source_id": "S0014",
+    "article_clause": "",
+    "supporting_summary": "结合自称身份、执业资质和实际话术判断误导。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1023",
+    "semantic_rule_id": "SR0123",
+    "source_id": "S0011",
+    "article_clause": "",
+    "supporting_summary": "按账号和活动整体分析，不限于单条文本。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1024",
+    "semantic_rule_id": "SR0124",
+    "source_id": "S0022",
+    "article_clause": "",
+    "supporting_summary": "识别规范词与变体间的语义相似，并结合平台与商业目的。",
+    "confidence": "中",
+    "review_status": "待法务复核"
+  },
+  {
+    "relation_id": "SRS1025",
+    "semantic_rule_id": "SR0125",
+    "source_id": "S0002",
+    "article_clause": "",
+    "supporting_summary": "对比核准样件与发布版本，识别新增主张和语义变化。",
+    "confidence": "中",
+    "review_status": "待法务复核"
   }
 ]

@@ -2,14 +2,15 @@
 
 ## 自动检查
 
-- [ ] `python -m pytest -q` 通过；
-- [ ] `npm run build` 通过；
-- [ ] `/api/compliance/validate` 返回 `valid=true`；
-- [ ] `/api/compliance/test-suite` 可以完成并输出通过率；
-- [ ] 语义模型不可用时返回 `semantic_analysis_failed=true`，不会静默判为低风险；
-- [ ] 同一文本命中多条重叠规则时，所有规则均被保留；
-- [ ] L1 与 L4 同时命中时总体复核等级为 L1；
-- [ ] `pending_review` 规则触发人工复核。
+- [x] PowerShell 5.1 解析 `start_dev.ps1` 无错误，直接执行和点调用均可完成环境检查；
+- [x] `python -m pytest -q` 通过（33 项）；
+- [x] `npm ci` 与 `npm run build` 通过；
+- [x] `/api/compliance/validate` 返回 `valid=true`；
+- [x] `/api/compliance/test-suite` 完成 320 条测试并输出分类通过率；
+- [x] 语义模型不可用时返回 `semantic_analysis_failed=true`，不会静默判为低风险；
+- [x] 同一文本命中多条重叠规则时，所有规则均被保留；
+- [x] L1 与 L4 同时命中时总体复核等级为 L1；
+- [x] `pending_review` 规则触发人工复核。
 
 ## 页面检查
 

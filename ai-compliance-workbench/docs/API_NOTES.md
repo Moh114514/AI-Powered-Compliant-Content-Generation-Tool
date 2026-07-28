@@ -9,6 +9,7 @@
 - `GET /api/compliance/rules/{rule_id}`：规则、变体、平台、示例及来源；
 - `POST /api/compliance/validate`：校验规则结构与引用；
 - `POST /api/compliance/test-suite`：执行规则回归测试。
+- `GET /api/status`：返回规则版本、数量、待人工复核数量和运行模式。
 
 所有业务响应均使用：
 
@@ -20,6 +21,8 @@
   "request_id": ""
 }
 ```
+
+`/api/status`、`/api/compliance/validate` 和 `/api/compliance/reload` 均包含 `pending_review_count`。v1.2 当前值为 56。
 
 语义检测失败时不返回“通过”，而是：
 

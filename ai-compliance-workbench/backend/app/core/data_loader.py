@@ -263,6 +263,10 @@ def validate_store(store: DataStore) -> dict:
         warnings.append("语义规则为空，系统只能进行确定性检测。")
 
     warning_total = len(warnings)
+    pending_review_count = sum(
+        1 for rule in store.rules
+        if str(rule.get("effective_status") or "active") == "pending_review"
+    )
     warning_preview = warnings[:100]
     if warning_total > len(warning_preview):
         warning_preview.append(f"另有 {warning_total - len(warning_preview)} 条警告未展开。")
@@ -281,4 +285,5 @@ def validate_store(store: DataStore) -> dict:
         "platform_relation_count": len(store.rule_platforms),
         "test_case_count": len(store.test_cases),
         "visual_check_count": len(store.visual_manual_checks),
+        "pending_review_count": pending_review_count,
     }

@@ -75,5 +75,530 @@
     "example_type": "negative",
     "example_text": "瘦脸针属于医疗美容项目中需在正规医疗机构由执业医师操作",
     "explanation": "合规表述"
+  },
+  {
+    "semantic_example_id": "SE01001",
+    "semantic_rule_id": "SR0101",
+    "example_type": "positive",
+    "example_text": "她做完三次后皮肤特别好，所以这个项目对所有人都有效。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01002",
+    "semantic_rule_id": "SR0101",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01003",
+    "semantic_rule_id": "SR0101",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01004",
+    "semantic_rule_id": "SR0102",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“暗示项目适合所有人”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01005",
+    "semantic_rule_id": "SR0102",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01006",
+    "semantic_rule_id": "SR0102",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01007",
+    "semantic_rule_id": "SR0103",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“不治疗后果威胁”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01008",
+    "semantic_rule_id": "SR0103",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01009",
+    "semantic_rule_id": "SR0103",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01010",
+    "semantic_rule_id": "SR0104",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“资质事实引申为疗效或安全保证”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01011",
+    "semantic_rule_id": "SR0104",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01012",
+    "semantic_rule_id": "SR0104",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01013",
+    "semantic_rule_id": "SR0105",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“媒体报道或奖项包装成权威背书”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01014",
+    "semantic_rule_id": "SR0105",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01015",
+    "semantic_rule_id": "SR0105",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01016",
+    "semantic_rule_id": "SR0106",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“数据缺少统计口径”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01017",
+    "semantic_rule_id": "SR0106",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01018",
+    "semantic_rule_id": "SR0106",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01019",
+    "semantic_rule_id": "SR0107",
+    "example_type": "positive",
+    "example_text": "【皮肤科普】文末扫码预约本院热玛吉，今天下单立减2000元。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01020",
+    "semantic_rule_id": "SR0107",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01021",
+    "semantic_rule_id": "SR0107",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01022",
+    "semantic_rule_id": "SR0108",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“员工个人账号变相广告”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01023",
+    "semantic_rule_id": "SR0108",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01024",
+    "semantic_rule_id": "SR0108",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01025",
+    "semantic_rule_id": "SR0109",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“商业合作伪装自发体验”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01026",
+    "semantic_rule_id": "SR0109",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01027",
+    "semantic_rule_id": "SR0109",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01028",
+    "semantic_rule_id": "SR0110",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“生活美容包装成医疗治疗”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01029",
+    "semantic_rule_id": "SR0110",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01030",
+    "semantic_rule_id": "SR0110",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01031",
+    "semantic_rule_id": "SR0111",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“医疗美容包装成普通保养”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01032",
+    "semantic_rule_id": "SR0111",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01033",
+    "semantic_rule_id": "SR0111",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01034",
+    "semantic_rule_id": "SR0112",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“特殊人群安全暗示”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01035",
+    "semantic_rule_id": "SR0112",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01036",
+    "semantic_rule_id": "SR0112",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01037",
+    "semantic_rule_id": "SR0113",
+    "example_type": "positive",
+    "example_text": "29.9元体验全脸项目，麻醉、耗材和术后护理费用到店另算。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01038",
+    "semantic_rule_id": "SR0113",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01039",
+    "semantic_rule_id": "SR0113",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01040",
+    "semantic_rule_id": "SR0114",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“虚假稀缺和倒计时”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01041",
+    "semantic_rule_id": "SR0114",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01042",
+    "semantic_rule_id": "SR0114",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01043",
+    "semantic_rule_id": "SR0115",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“借贷成本和风险弱化”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01044",
+    "semantic_rule_id": "SR0115",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01045",
+    "semantic_rule_id": "SR0115",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01046",
+    "semantic_rule_id": "SR0116",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“强制套餐或升级诱导”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01047",
+    "semantic_rule_id": "SR0116",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01048",
+    "semantic_rule_id": "SR0116",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01049",
+    "semantic_rule_id": "SR0117",
+    "example_type": "positive",
+    "example_text": "聊天截图遮住姓名，但保留头像、昵称、城市和具体诊断信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01050",
+    "semantic_rule_id": "SR0117",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01051",
+    "semantic_rule_id": "SR0117",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01052",
+    "semantic_rule_id": "SR0118",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“患者素材超范围二次使用”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01053",
+    "semantic_rule_id": "SR0118",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01054",
+    "semantic_rule_id": "SR0118",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01055",
+    "semantic_rule_id": "SR0119",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“公开内容被机构再利用”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01056",
+    "semantic_rule_id": "SR0119",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01057",
+    "semantic_rule_id": "SR0119",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01058",
+    "semantic_rule_id": "SR0120",
+    "example_type": "positive",
+    "example_text": "把患者正脸照片和病历直接上传到外部AI，让它生成宣传文案和案例图。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01059",
+    "semantic_rule_id": "SR0120",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01060",
+    "semantic_rule_id": "SR0120",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01061",
+    "semantic_rule_id": "SR0121",
+    "example_type": "positive",
+    "example_text": "你这个持续发热和疼痛都是正常反应，不用去医院，再等几天。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01062",
+    "semantic_rule_id": "SR0121",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01063",
+    "semantic_rule_id": "SR0121",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01064",
+    "semantic_rule_id": "SR0122",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“非医生身份模糊化”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01065",
+    "semantic_rule_id": "SR0122",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01066",
+    "semantic_rule_id": "SR0122",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01067",
+    "semantic_rule_id": "SR0123",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“跨页面拆分广告链路”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01068",
+    "semantic_rule_id": "SR0123",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01069",
+    "semantic_rule_id": "SR0123",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01070",
+    "semantic_rule_id": "SR0124",
+    "example_type": "positive",
+    "example_text": "热·玛·吉和bo尿酸想了解的扣1，主页有方式。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01071",
+    "semantic_rule_id": "SR0124",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01072",
+    "semantic_rule_id": "SR0124",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
+  },
+  {
+    "semantic_example_id": "SE01073",
+    "semantic_rule_id": "SR0125",
+    "example_type": "positive",
+    "example_text": "示例内容同时体现“审批广告被二次剪辑改变含义”所描述的风险意图，并带有具体项目或转化信息。",
+    "explanation": "应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01074",
+    "semantic_rule_id": "SR0125",
+    "example_type": "negative",
+    "example_text": "仅客观介绍服务流程、适用条件和风险，不作效果、安全、资质或价格保证。",
+    "explanation": "一般不应命中该语义风险。"
+  },
+  {
+    "semantic_example_id": "SE01075",
+    "semantic_rule_id": "SR0125",
+    "example_type": "boundary",
+    "example_text": "存在相关表达，但需结合发布者身份、平台产品线、利益关系和证明材料判断。",
+    "explanation": "需要人工结合上下文判断。"
   }
 ]

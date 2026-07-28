@@ -1,0 +1,104 @@
+{
+  "synced_at": "2026-07-28T02:04:45.171332+00:00",
+  "source_directory": "../医美内容合规规则库_v1.1/02_系统调用数据",
+  "destination_directory": "data/compliance",
+  "library_version": "v1.2-dev",
+  "counts": {
+    "rules.json": 153,
+    "rule_variants.json": 682,
+    "sources.json": 31,
+    "rule_sources.json": 297,
+    "rule_platforms.json": 168,
+    "semantic_rules.json": 30,
+    "rule_channels.json": 7,
+    "rule_examples.json": 240,
+    "semantic_rule_sources.json": 35,
+    "semantic_rule_examples.json": 86,
+    "ad_classification_rules.json": 13,
+    "enforcement_cases.json": 21,
+    "case_leads.json": 5,
+    "test_cases.json": 320,
+    "visual_manual_checks.json": 15,
+    "manual_review_issues.json": 5,
+    "changelog.json": 13
+  },
+  "files": {
+    "ad_classification_rules.json": {
+      "sha256": "9ae5ba586d3abeb0d55799ec2d367912c6990d29daa81fbf5e37ae31827d7d36",
+      "size_bytes": 14573
+    },
+    "case_leads.json": {
+      "sha256": "e5f15af58d642986d8688fa11123bd8c477c8371e778e326ffc411814a5ec501",
+      "size_bytes": 3597
+    },
+    "changelog.json": {
+      "sha256": "42ead18e39e513e359ec1e2b1560903ce65bba96382b83597584ff99f3491219",
+      "size_bytes": 7957
+    },
+    "compliance_rules.schema.json": {
+      "sha256": "3876b13af2ee25bc7dcd4e6a0287c1c58ea310ce824059a45421ddaa8e678e6a",
+      "size_bytes": 5057
+    },
+    "enforcement_cases.json": {
+      "sha256": "23f11d649ad1586275c1b3c12e8c75cb6dfb4ee643e77c179f56d3b2c31129f9",
+      "size_bytes": 47893
+    },
+    "manual_review_issues.json": {
+      "sha256": "1d6d7ba69e478b848001266d52c57bc84160f9973a0cef1f3f5cab93f18c951f",
+      "size_bytes": 4951
+    },
+    "metadata.json": {
+      "sha256": "691b54fbc3fd04c5bdf8d1a6c558147291384238a724646cea95ebf63f94ed63",
+      "size_bytes": 811
+    },
+    "rule_channels.json": {
+      "sha256": "caae09dc6c4157b880084522e54d0807c7104020e2901b6532743db306991078",
+      "size_bytes": 1375
+    },
+    "rule_examples.json": {
+      "sha256": "9c7dce3eec73dcf8da82bb6459080aa290a60908d2e6542fd72484930a3010ca",
+      "size_bytes": 203046
+    },
+    "rule_platforms.json": {
+      "sha256": "ac9e34df9061a242acd86bc974207988b0f05de8688784bf23d991870ee698a2",
+      "size_bytes": 71085
+    },
+    "rule_sources.json": {
+      "sha256": "7a64a918157e0eb86dd2b7417e5ecc082c8f5e6559c5b362b2df9fc3679b00a4",
+      "size_bytes": 99527
+    },
+    "rule_variants.json": {
+      "sha256": "1bf58d722b6d06d8ba534e57435c394289b94966fb9aaa2bfc0698232b8fb60b",
+      "size_bytes": 284121
+    },
+    "rules.json": {
+      "sha256": "48b43159e18fb6db61297ab3f95741c300b333117380af8acb85ff01479673e9",
+      "size_bytes": 243867
+    },
+    "semantic_rule_examples.json": {
+      "sha256": "d05569784d9a0f06cb2c9d26b8aa7880b808e66a5ce8a2c6f31144ccff64da8d",
+      "size_bytes": 25671
+    },
+    "semantic_rule_sources.json": {
+      "sha256": "a3263c0fdcc29e41ed1e93bb3bb2e48ca59b53ca4bb35522287592d3c92c1d6d",
+      "size_bytes": 9590
+    },
+    "semantic_rules.json": {
+      "sha256": "e831096cfeaa4a998bd851038e4741fee788422cd10b14971e4168412475edd8",
+      "size_bytes": 27583
+    },
+    "sources.json": {
+      "sha256": "ed960a3212f3158896c1cfaab61cdf4d5073b993b50071fd6e8d58e1294d5db0",
+      "size_bytes": 64414
+    },
+    "test_cases.json": {
+      "sha256": "00a98650d4eaa46c6f5225479d47e6b463ca957e65782371134e744005026e1b",
+      "size_bytes": 294250
+    },
+    "visual_manual_checks.json": {
+      "sha256": "22a6f3b46ab881194e07da863534a3a8cded5fcb091e26a0cffaf5b1497c09ab",
+      "size_bytes": 6965
+    }
+  },
+  "backup_directory": "data/_backup_before_compliance_sync_20260728_100445"
+}

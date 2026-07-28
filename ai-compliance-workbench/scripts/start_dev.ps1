@@ -57,7 +57,7 @@ function Stop-ProcessTree([System.Diagnostics.Process]$Process) {
 
 $PythonCommand = Get-RequiredCommand @("python.exe", "python", "py.exe", "py")
 $PythonPrefix = @()
-if ($PythonCommand.Name -like "py*") {
+if ($PythonCommand.Name -in @("py.exe", "py")) {
     $PythonPrefix = @("-3")
 }
 $NodeCommand = Get-RequiredCommand @("node.exe", "node")
@@ -86,6 +86,15 @@ if (-not (Test-Path -LiteralPath $PythonExe)) {
     }
 } else {
     Write-Host "[3/5] Reusing Python virtual environment." -ForegroundColor Cyan
+}
+
+$PipExe = Join-Path $VenvDir "Scripts\pip.exe"
+if (-not (Test-Path -LiteralPath $PipExe)) {
+    Write-Host "[INFO] Repairing pip in the virtual environment..." -ForegroundColor Cyan
+    & $PythonExe -m ensurepip --upgrade --default-pip
+    if ($LASTEXITCODE -ne 0) {
+        throw "The virtual environment exists but pip could not be repaired."
+    }
 }
 
 if (-not $SkipInstall) {

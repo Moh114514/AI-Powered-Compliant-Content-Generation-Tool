@@ -37,6 +37,15 @@ def _normalize_action(value: Any) -> str:
     return max(actions, key=lambda action: config.ACTION_PRIORITY.get(action, 0))
 
 
+def _risk_matches(expected: str, actual: str) -> bool:
+    """规则库用 low 表示合规基线；运行时用 none 表示未发现风险。"""
+    if not expected:
+        return True
+    if expected == "low" and actual == "none":
+        return True
+    return expected == actual
+
+
 def run_test_suite(store, *, limit: int | None = None, include_passed: bool = False) -> dict:
     cases = list(store.test_cases)
     if limit and limit > 0:
@@ -94,7 +103,7 @@ def run_test_suite(store, *, limit: int | None = None, include_passed: bool = Fa
 
             missing_ids = sorted(expected_ids - actual_ids)
             unexpected_high_risk = not expected_ids and actual_risk in {"critical", "high"}
-            risk_ok = not expected_risk or actual_risk == expected_risk
+            risk_ok = _risk_matches(expected_risk, actual_risk)
             expected_recommendation = config.ACTION_TO_RECOMMENDATION.get(expected_action, expected_action)
             action_ok = not expected_recommendation or actual_action == expected_recommendation
             ids_ok = not missing_ids and not unexpected_high_risk

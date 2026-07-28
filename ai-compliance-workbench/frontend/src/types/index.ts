@@ -29,6 +29,7 @@ export interface StatusInfo {
   validation_valid: boolean;
   validation_error_count: number;
   validation_warning_count?: number;
+  pending_review_count?: number;
   demo_mode: boolean;
   platforms: string[];
 }

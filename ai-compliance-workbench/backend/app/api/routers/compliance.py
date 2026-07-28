@@ -147,6 +147,7 @@ def reload_rules():
             "validation_valid": store.validation.get("valid"),
             "validation_error_count": store.validation.get("error_count"),
             "validation_warning_count": store.validation.get("warning_count"),
+            "pending_review_count": store.validation.get("pending_review_count", 0),
         })
     except Exception as exc:
         return fail(f"重新加载失败：{exc}", "COMPLIANCE_DATA_INVALID")

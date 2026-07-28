@@ -148,5 +148,63 @@
     "reviewed_by": "pending",
     "change_date": "2026-07-27",
     "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG0011",
+    "version": "v1.1-dev",
+    "change_type": "added",
+    "object_type": "case_content",
+    "object_id": "Step4.5-batch2+batch3",
+    "previous_value": "",
+    "new_value": "enforcement_cases C0002/C0003/C0004/C0015/C0017/C0018/C0019/C0020/C0021 写入 case_detail+sha256；C0015 处罚决定书文号校正为德市监处罚〔2024〕F002号；C0016 标记 pending_manual_pdf(403)",
+    "change_reason": "Step 4.5 案例内容本地化：抓取官方通报逐字原文，C0020/C0021 由媒体源升级为官方源",
+    "related_source_id": "S0003",
+    "changed_by": "agent",
+    "reviewed_by": "pending",
+    "change_date": "2026-07-27",
+    "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG0012",
+    "version": "v1.1-dev",
+    "change_type": "added",
+    "object_type": "source_and_case_content",
+    "object_id": "Step4.5-batch4",
+    "previous_value": "",
+    "new_value": "sources S0002(互联网广告管理办法核心条款)/S0003(医美广告执法指南全文,URL已更新为现行有效页)/S0007(广告绝对化用语执法指南全文,URL更新) 写入 source_text+sha256; enforcement_cases C0005-C0014 写入官方通报原文 case_detail,官方源URL由中国新闻网升级为 samr.gov.cn 官方页",
+    "change_reason": "Step 4.5 批次4：核心执法指南与2021医美十大案例官方原文本地化；S0003/S0007 原URL已404，更新为现行有效官方页面",
+    "related_source_id": "S0002,S0003,S0007",
+    "changed_by": "agent",
+    "reviewed_by": "pending",
+    "change_date": "2026-07-27",
+    "effective_date": "2026-07-27"
+  },
+  {
+    "change_id": "CHG-V1.2-COVERAGE",
+    "version": "v1.2-dev",
+    "change_type": "added",
+    "object_type": "coverage_supplement",
+    "object_id": "A08/A10/A14/A15/A16/SR/AC/VC",
+    "previous_value": null,
+    "new_value": {
+      "sources.json": 3,
+      "rules.json": 56,
+      "rule_variants.json": 448,
+      "rule_sources.json": 115,
+      "rule_platforms.json": 155,
+      "rule_examples.json": 224,
+      "semantic_rules.json": 25,
+      "semantic_rule_sources.json": 25,
+      "semantic_rule_examples.json": 75,
+      "ad_classification_rules.json": 10,
+      "test_cases.json": 120,
+      "visual_manual_checks.json": 15
+    },
+    "change_reason": "补齐价格促销、客服、平台专项、隐私肖像、广告认定、视觉复核与语义检测覆盖",
+    "related_source_id": "S0015;S0016;S0029;S0030;S0031",
+    "changed_by": "AI-assisted draft",
+    "reviewed_by": null,
+    "change_date": "2026-07-27",
+    "effective_date": null
   }
 ]

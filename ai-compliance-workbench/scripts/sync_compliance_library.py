@@ -18,6 +18,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import re
 import shutil
 import sys
@@ -266,10 +267,18 @@ def apply_sync(source: Path, destination: Path, validation: dict, no_backup: boo
         shutil.copy2(path, temporary)
         temporary.replace(destination / path.name)
 
+    project_root = destination.parent.parent
+
+    def portable_path(path: Path) -> str:
+        try:
+            return Path(os.path.relpath(path.resolve(), project_root.resolve())).as_posix()
+        except ValueError:
+            return path.name
+
     manifest = {
         "synced_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-        "source_directory": str(source.resolve()),
-        "destination_directory": str(destination.resolve()),
+        "source_directory": portable_path(source),
+        "destination_directory": portable_path(destination),
         "library_version": validation.get("version"),
         "counts": validation.get("counts", {}),
         "files": {
@@ -279,7 +288,7 @@ def apply_sync(source: Path, destination: Path, validation: dict, no_backup: boo
             }
             for path in files
         },
-        "backup_directory": str(backup_dir.resolve()) if not no_backup else None,
+        "backup_directory": portable_path(backup_dir) if not no_backup else None,
     }
     (destination / "sync_manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
@@ -311,6 +320,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--allow-pre-v1.2",
+        dest="allow_pre_v1_2",
         action="store_true",
         help="不执行 v1.2 最低数据量检查，仅检查结构和引用。",
     )

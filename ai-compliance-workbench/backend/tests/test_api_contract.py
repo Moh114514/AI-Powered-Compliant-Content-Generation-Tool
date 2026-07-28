@@ -29,8 +29,15 @@ def test_status_exposes_quality_counts():
     with TestClient(app) as client:
         payload = client.get("/api/status").json()
         assert payload["success"] is True
-        for key in ("rule_count", "variant_count", "test_case_count", "validation_warning_count"):
+        for key in (
+            "rule_count",
+            "variant_count",
+            "test_case_count",
+            "validation_warning_count",
+            "pending_review_count",
+        ):
             assert key in payload["data"]
+        assert payload["data"]["pending_review_count"] == 56
 
 
 def test_rule_list_supports_pagination():
