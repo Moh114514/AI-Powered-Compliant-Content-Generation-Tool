@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Copy, FileText, Save, Sparkles, Trash2, Wand2 } from "lucide-react";
 import { api } from "../api/client";
 import { ComplianceReport } from "../components/ComplianceReport";
@@ -23,14 +23,52 @@ const DEMO = {
 };
 
 type BusyAction = "generate" | `adjust-${number}` | `rewrite-${number}` | "save" | null;
+const GENERATION_DRAFT_KEY = "workbench:generation-draft:v1";
+
+function loadGenerationDraft(): {
+  form: typeof DEMO;
+  result: GenerateResult | null;
+  openVersions: Record<number, boolean>;
+  restored: boolean;
+} {
+  const continuedRaw = sessionStorage.getItem("continue_input");
+  if (continuedRaw) {
+    sessionStorage.removeItem("continue_input");
+    try {
+      return {
+        form: { ...DEMO, ...JSON.parse(continuedRaw) },
+        result: null,
+        openVersions: {},
+        restored: true,
+      };
+    } catch {
+      // Fall through to the regular draft.
+    }
+  }
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(GENERATION_DRAFT_KEY) || "null");
+    if (saved?.form) {
+      return {
+        form: { ...DEMO, ...saved.form },
+        result: saved.result || null,
+        openVersions: saved.openVersions || {},
+        restored: true,
+      };
+    }
+  } catch {
+    // Ignore corrupt browser state.
+  }
+  return { form: { ...DEMO }, result: null, openVersions: {}, restored: false };
+}
 
 export default function ContentGeneration() {
+  const initialDraft = useRef(loadGenerationDraft()).current;
   const [brands, setBrands] = useState<Brand[]>([]);
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [contentTypes, setContentTypes] = useState<Record<string, string[]>>({});
-  const [form, setForm] = useState({ ...DEMO });
-  const [result, setResult] = useState<GenerateResult | null>(null);
-  const [openVersions, setOpenVersions] = useState<Record<number, boolean>>({});
+  const [form, setForm] = useState(initialDraft.form);
+  const [result, setResult] = useState<GenerateResult | null>(initialDraft.result);
+  const [openVersions, setOpenVersions] = useState<Record<number, boolean>>(initialDraft.openVersions);
   const [busy, setBusy] = useState<BusyAction>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -47,12 +85,7 @@ export default function ContentGeneration() {
       const firstError = [brandResponse, platformResponse, typeResponse, settingsResponse].find((response) => !response.success);
       if (firstError && !firstError.success) setError(firstError.message);
 
-      let continued: any = null;
-      const raw = sessionStorage.getItem("continue_input");
-      if (raw) {
-        try { continued = JSON.parse(raw); } catch { /* ignore invalid local state */ }
-        sessionStorage.removeItem("continue_input");
-      }
+      if (initialDraft.restored) return;
       setForm((current) => {
         const settings = settingsResponse.success ? settingsResponse.data : {};
         return {
@@ -62,12 +95,19 @@ export default function ContentGeneration() {
           versions: settings.default_versions || current.versions,
           tone: settings.default_tone || current.tone,
           length: settings.default_length || current.length,
-          ...(continued || {}),
         };
       });
     }
     void initialize();
   }, []);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(GENERATION_DRAFT_KEY, JSON.stringify({ form, result, openVersions }));
+    } catch {
+      // A full compliance report can exceed a browser storage quota; keep the UI usable.
+    }
+  }, [form, result, openVersions]);
 
   const contentTypeOptions = useMemo(() => contentTypes[form.platform] || [], [contentTypes, form.platform]);
 
@@ -104,9 +144,13 @@ export default function ContentGeneration() {
     }
     setResult(response.data);
     setOpenVersions({});
+    const messages: string[] = [];
+    if (response.data.history_saved) messages.push("已自动保存到最近记录");
+    if (response.data.history_error) setError(response.data.history_error);
     if ((response.data.returned_versions ?? response.data.versions.length) < (response.data.requested_versions ?? form.versions)) {
-      setNotice("模型返回的有效版本少于请求数量，系统已保留实际可用版本。");
+      messages.push("模型返回的有效版本少于请求数量，系统已保留实际可用版本");
     }
+    if (messages.length) setNotice(messages.join("；") + "。");
   }
 
   function onClear() {
@@ -130,7 +174,7 @@ export default function ContentGeneration() {
       risk_level: result.versions[0]?.overall_risk_level || "none",
     });
     setBusy(null);
-    if (response.success) setNotice("已保存到最近记录");
+    if (response.success) setNotice("已将当前版本另存到最近记录");
     else setError(response.message);
   }
 
@@ -214,7 +258,7 @@ export default function ContentGeneration() {
           <button className="btn btn-primary" onClick={onGenerate} disabled={busy !== null}><Sparkles size={16} /> {busy === "generate" ? "生成与检测中…" : "生成并检测"}</button>
           <button className="btn" onClick={() => { setForm({ ...DEMO }); setResult(null); }} disabled={busy !== null}><FileText size={16} /> 加载风险示例</button>
           <button className="btn" onClick={onClear} disabled={busy !== null}><Trash2 size={16} /> 清空</button>
-          <button className="btn" onClick={onSaveHistory} disabled={!result || busy !== null}><Save size={16} /> {busy === "save" ? "保存中…" : "保存到最近记录"}</button>
+          <button className="btn" onClick={onSaveHistory} disabled={!result || busy !== null}><Save size={16} /> {busy === "save" ? "保存中…" : result?.history_saved ? "另存当前版本" : "保存到最近记录"}</button>
         </div>
       </div></div>
 

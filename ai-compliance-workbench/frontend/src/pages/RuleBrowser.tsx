@@ -7,11 +7,21 @@ import { copyText } from "../utils/misc";
 import { riskMeta } from "../utils/risk";
 
 const EMPTY_FILTERS = { category: "", risk_level: "", platform: "", status: "", keyword: "" };
+const RULE_FILTER_KEY = "workbench:rule-filters:v1";
+type RuleFilters = typeof EMPTY_FILTERS;
+
+function loadFilters(): RuleFilters {
+  try {
+    return { ...EMPTY_FILTERS, ...JSON.parse(sessionStorage.getItem(RULE_FILTER_KEY) || "{}") };
+  } catch {
+    return { ...EMPTY_FILTERS };
+  }
+}
 
 export default function RuleBrowser() {
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [catalog, setCatalog] = useState<RuleSummary[]>([]);
-  const [filters, setFilters] = useState({ ...EMPTY_FILTERS });
+  const [filters, setFilters] = useState(loadFilters);
   const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [rows, setRows] = useState<RuleSummary[]>([]);
   const [total, setTotal] = useState(0);
@@ -23,6 +33,10 @@ export default function RuleBrowser() {
     const timer = window.setTimeout(() => setDebouncedKeyword(filters.keyword), 250);
     return () => window.clearTimeout(timer);
   }, [filters.keyword]);
+
+  useEffect(() => {
+    sessionStorage.setItem(RULE_FILTER_KEY, JSON.stringify(filters));
+  }, [filters]);
 
   useEffect(() => {
     async function initialize() {

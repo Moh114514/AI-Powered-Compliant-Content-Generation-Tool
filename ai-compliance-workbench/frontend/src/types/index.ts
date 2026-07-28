@@ -31,6 +31,12 @@ export interface StatusInfo {
   validation_warning_count?: number;
   pending_review_count?: number;
   demo_mode: boolean;
+  configured_provider?: string;
+  active_provider?: string;
+  provider_ready?: boolean;
+  provider_error?: string;
+  api_key_configured?: boolean;
+  model_name?: string;
   platforms: string[];
 }
 
@@ -151,6 +157,9 @@ export interface ComplianceResult {
   highlights: HighlightSpan[];
   platform_rules_incomplete?: boolean;
   stats?: ComplianceStats;
+  history_saved?: boolean;
+  history_record_id?: string;
+  history_error?: string;
 }
 
 export interface VersionResult {
@@ -161,6 +170,7 @@ export interface VersionResult {
   char_count: number;
   generated_at: string;
   model: string;
+  provider?: string;
   overall_risk_level: string;
   matched_count: number;
   manual_review_required: boolean;
@@ -172,11 +182,15 @@ export interface GenerateResult {
   content_type: string;
   brand?: string;
   model: string;
+  provider?: string;
   demo_mode: boolean;
   requested_versions?: number;
   returned_versions?: number;
   versions: VersionResult[];
   disclaimer: string;
+  history_saved?: boolean;
+  history_record_id?: string;
+  history_error?: string;
 }
 
 export interface HistoryRecord {

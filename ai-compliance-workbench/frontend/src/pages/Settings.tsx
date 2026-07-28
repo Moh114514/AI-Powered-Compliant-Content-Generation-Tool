@@ -37,6 +37,7 @@ export default function Settings() {
       setSettings(response.data);
       setSaved(true);
       await load();
+      window.dispatchEvent(new Event("workbench:status-changed"));
     } else setError(response.message);
   }
 
@@ -91,6 +92,13 @@ export default function Settings() {
           <Field label="温度（0—2）"><input type="number" min={0} max={2} step="0.1" className="input" value={settings.temperature ?? 0.7} onChange={(event) => set("temperature", Number(event.target.value))} /></Field>
           <Field label="最大 Token"><input type="number" min={128} max={32000} className="input" value={settings.max_tokens ?? 1200} onChange={(event) => set("max_tokens", Number(event.target.value))} /></Field>
           <Note>API Key 仅通过项目根目录 <code>.env</code> 中的 <code>LLM_API_KEY</code> 配置，不在网页保存。</Note>
+          {settings.model_provider !== "mock" && status && (
+            <Note>
+              当前状态：{status.provider_ready
+                ? `真实模型已就绪（${status.model_name || settings.model_name || "未命名模型"}）`
+                : status.provider_error || "真实模型尚未就绪"}
+            </Note>
+          )}
         </Section>
 
         <Section title="生成设置">
@@ -138,7 +146,8 @@ export default function Settings() {
           <Info label="视觉检查项" value={`${status.visual_check_count ?? 0} 条`} />
           <Info label="待人工复核规则" value={`${status.pending_review_count ?? 0} 条`} />
           <Info label="校验" value={status.validation_valid ? `通过（${status.validation_warning_count ?? 0} 条警告）` : `异常（${status.validation_error_count}）`} />
-          <Info label="运行模式" value={status.demo_mode ? "演示模式" : "模型已连接"} />
+          <Info label="运行模式" value={status.demo_mode ? "演示模式" : status.provider_ready === false ? "真实模型未就绪" : "真实模型已就绪"} />
+          <Info label="当前模型" value={status.demo_mode ? "Mock" : status.model_name || "—"} />
           <Info label="最近加载" value={status.loaded_at || "—"} />
         </div> : <div style={{ color: "#6b7280" }}>正在读取状态……</div>}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>

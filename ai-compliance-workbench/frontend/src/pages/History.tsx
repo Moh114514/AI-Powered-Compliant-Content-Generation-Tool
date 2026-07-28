@@ -13,30 +13,51 @@ export default function History() {
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<HistoryRecord | null>(null);
   const [recheck, setRecheck] = useState<ComplianceResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   async function load() {
     setLoading(true);
+    setError(null);
     const r = await api.history(200);
     setLoading(false);
     if (r.success) setRecords(r.data);
+    else setError(r.message || "读取最近记录失败");
   }
   useEffect(() => { load(); }, []);
 
   async function del(id: string) {
     if (!confirm("确定删除该记录？")) return;
-    await api.deleteHistory(id);
-    load();
+    const response = await api.deleteHistory(id);
+    if (!response.success) {
+      setError(response.message || "删除记录失败");
+      return;
+    }
+    if (view?.id === id) setView(null);
+    await load();
   }
   async function clearAll() {
     if (!confirm("确定清空全部最近记录？此操作不可恢复。")) return;
-    await api.clearHistory();
-    load();
+    const response = await api.clearHistory();
+    if (!response.success) {
+      setError(response.message || "清空记录失败");
+      return;
+    }
+    setView(null);
+    await load();
   }
 
   function continueEdit(rec: HistoryRecord) {
-    sessionStorage.setItem("continue_input", JSON.stringify(rec.input || {}));
-    navigate("/generate");
+    if (rec.operation_type === "generation") {
+      sessionStorage.setItem("continue_input", JSON.stringify(rec.input || {}));
+      navigate("/generate");
+      return;
+    }
+    sessionStorage.setItem(
+      "workbench:compliance-check-draft:v1",
+      JSON.stringify({ form: rec.input || {}, result: rec.detection || null }),
+    );
+    navigate("/check");
   }
 
   async function recheckRecord(rec: HistoryRecord) {
@@ -85,6 +106,7 @@ export default function History() {
         </div>
         <button className="btn btn-danger" onClick={clearAll}><Trash2 size={16} /> 清空全部</button>
       </div>
+      {error && <div className="card" style={{ marginBottom: 12, color: "#b91c1c", borderColor: "#fecaca", background: "#fef2f2" }}>⚠️ {error}</div>}
 
       {loading && <div style={{ color: "#6b7280" }}>加载中…</div>}
       {!loading && records.length === 0 && (

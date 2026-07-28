@@ -51,6 +51,7 @@ def generate(request: dict, settings: dict) -> dict:
     brand_profile = get_brand(brand_id) if use_brand and brand_id else None
     prompt_template = load_prompt_template(platform)
     provider = build_provider(settings)
+    model_name = str(getattr(provider, "model", provider.name))
 
     copies = provider.generate(
         platform=platform,
@@ -83,7 +84,8 @@ def generate(request: dict, settings: dict) -> dict:
             "content_type": content_type,
             "char_count": len(text),
             "generated_at": _now(),
-            "model": provider.name,
+            "model": model_name,
+            "provider": provider.name,
             "overall_risk_level": compliance["overall_risk_level"],
             "matched_count": len(compliance["matched_rules"]),
             "manual_review_required": compliance["manual_review_required"],
@@ -94,7 +96,8 @@ def generate(request: dict, settings: dict) -> dict:
         "platform": platform,
         "content_type": content_type,
         "brand": brand_id,
-        "model": provider.name,
+        "model": model_name,
+        "provider": provider.name,
         "demo_mode": provider.name == "mock",
         "requested_versions": versions,
         "returned_versions": len(result_versions),
@@ -113,6 +116,7 @@ def rewrite(request: dict, settings: dict) -> dict:
         raise ValueError("待改写文本不能为空。")
 
     provider = build_provider(settings)
+    model_name = str(getattr(provider, "model", provider.name))
     detection_settings = _detection_settings(settings)
     original_compliance = run_compliance_check(
         text=text,
@@ -132,6 +136,8 @@ def rewrite(request: dict, settings: dict) -> dict:
             "original_compliance": original_compliance,
             "revised_compliance": original_compliance,
             "demo_mode": provider.name == "mock",
+            "model": model_name,
+            "provider": provider.name,
             "disclaimer": config.DISCLAIMER,
             "message": "未发现需要自动改写的明显风险。",
         }
@@ -163,6 +169,8 @@ def rewrite(request: dict, settings: dict) -> dict:
         "revised_compliance": revised_compliance,
         "compliance": original_compliance,
         "demo_mode": provider.name == "mock",
+        "model": model_name,
+        "provider": provider.name,
         "disclaimer": config.DISCLAIMER,
     }
 
@@ -181,6 +189,7 @@ def adjust(request: dict, settings: dict) -> dict:
         raise ValueError(f"不支持的调整类型：{adjust_type}")
 
     provider = build_provider(settings)
+    model_name = str(getattr(provider, "model", provider.name))
     new_text = provider.adjust(
         text=text,
         adjust_type=adjust_type,
@@ -206,7 +215,8 @@ def adjust(request: dict, settings: dict) -> dict:
         "adjust_type": adjust_type,
         "platform": platform,
         "content_type": content_type,
-        "model": provider.name,
+        "model": model_name,
+        "provider": provider.name,
         "demo_mode": provider.name == "mock",
         "compliance": compliance,
         "disclaimer": config.DISCLAIMER,

@@ -4,7 +4,7 @@
 
 - [x] PowerShell 5.1 解析 `start_dev.ps1` 无错误，直接执行和点调用均可完成环境检查；
 - [x] 默认使用 5174；该端口被占用或无法绑定时自动选择 5175–5199 中的可用端口；
-- [x] `python -m pytest -q` 通过（35 项）；
+- [x] `python -m pytest -q` 通过（37 项）；
 - [x] `npm ci` 与 `npm run build` 通过；
 - [x] `/api/compliance/validate` 返回 `valid=true`；
 - [x] `/api/compliance/test-suite` 完成 320 条测试并输出分类通过率；

@@ -392,10 +392,17 @@ class OpenAICompatibleProvider(LLMProvider):
 def build_provider(settings: dict) -> LLMProvider:
     settings = settings or {}
     provider_name = settings.get("model_provider", "mock")
-    if provider_name == "mock" or not config.LLM_API_KEY:
+    if provider_name == "mock":
         return MockProvider()
+    if provider_name != "openai_compatible":
+        raise ValueError(f"不支持的模型 Provider：{provider_name}")
+    api_key = config.get_llm_api_key()
+    if not api_key:
+        raise ValueError(
+            "已选择真实模型，但未读取到 LLM_API_KEY。请填写项目根目录 .env 后重试。"
+        )
     return OpenAICompatibleProvider(
-        api_key=config.LLM_API_KEY,
+        api_key=api_key,
         base_url=settings.get("api_base") or config.LLM_BASE_URL,
         model=settings.get("model_name") or config.LLM_MODEL,
         temperature=settings.get("temperature", config.LLM_TEMPERATURE),

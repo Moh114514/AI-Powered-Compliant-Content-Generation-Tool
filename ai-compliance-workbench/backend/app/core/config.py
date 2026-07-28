@@ -1,7 +1,7 @@
 """全局配置：路径、运行参数、平台与内容类型定义、风险/动作优先级。"""
 import os
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 
 _BACKEND = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = _BACKEND.parent
@@ -12,6 +12,7 @@ BRAND_DIR = DATA_DIR / "brand_profiles"
 DEMO_DIR = DATA_DIR / "demo"
 DB_PATH = DATA_DIR / "workbench.db"
 
+_PROCESS_LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 load_dotenv(PROJECT_ROOT / ".env")
 
 PLATFORMS = ["朋友圈", "微信社群", "小红书", "微信公众号", "客服话术"]
@@ -115,6 +116,14 @@ LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.7"))
 LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "1200"))
+
+
+def get_llm_api_key() -> str:
+    """Return the current key without requiring a backend restart after .env changes."""
+    if _PROCESS_LLM_API_KEY:
+        return _PROCESS_LLM_API_KEY
+    values = dotenv_values(PROJECT_ROOT / ".env")
+    return str(values.get("LLM_API_KEY") or "").strip()
 
 DEFAULT_SETTINGS = {
     "model_provider": "mock",

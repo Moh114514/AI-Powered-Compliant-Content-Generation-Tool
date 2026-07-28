@@ -20,7 +20,12 @@ def status():
         store = get_store()
         settings = db.load_settings()
         configured_provider = settings.get("model_provider", "mock")
-        demo_mode = configured_provider == "mock" or not bool(config.LLM_API_KEY)
+        api_key_configured = bool(config.get_llm_api_key())
+        demo_mode = configured_provider == "mock"
+        provider_ready = demo_mode or api_key_configured
+        provider_error = ""
+        if configured_provider != "mock" and not api_key_configured:
+            provider_error = "已选择真实模型，但未读取到 LLM_API_KEY。"
         validation = store.validation
         return ok({
             "data_version": store.metadata.get("version", "unknown"),
@@ -40,6 +45,11 @@ def status():
             "pending_review_count": validation.get("pending_review_count", 0),
             "demo_mode": demo_mode,
             "configured_provider": configured_provider,
+            "active_provider": configured_provider if provider_ready else "unavailable",
+            "provider_ready": provider_ready,
+            "provider_error": provider_error,
+            "api_key_configured": api_key_configured,
+            "model_name": settings.get("model_name") or config.LLM_MODEL,
             "platforms": config.PLATFORMS,
         })
     except Exception as exc:

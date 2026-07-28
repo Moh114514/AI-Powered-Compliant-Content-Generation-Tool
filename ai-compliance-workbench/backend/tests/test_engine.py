@@ -31,6 +31,15 @@ def provider():
     return MockProvider()
 
 
+@pytest.fixture
+def isolated_history_db(tmp_path, monkeypatch):
+    db.close_db()
+    monkeypatch.setattr(config, "DB_PATH", tmp_path / "history-test.db")
+    db.init_db()
+    yield
+    db.close_db()
+
+
 def _check(text, platform="小红书", content_type="项目介绍", provider=None, store=None):
     store = store or get_store()
     provider = provider or MockProvider()
@@ -240,8 +249,7 @@ def test_mock_provider():
 
 
 # 16. 历史保存
-def test_history_save():
-    db.init_db()
+def test_history_save(isolated_history_db):
     rid = db.add_record("check", "guangnian18", "小红书", {"text": "t"}, None, {"overall_risk_level": "low"}, "low")
     assert rid
     rec = db.get_record(rid)
@@ -249,7 +257,7 @@ def test_history_save():
 
 
 # 17. 历史删除
-def test_history_delete():
+def test_history_delete(isolated_history_db):
     rid = db.add_record("check", "vyno", "朋友圈", {"text": "t2"}, None, {}, "none")
     assert db.delete_record(rid)
     assert db.get_record(rid) is None

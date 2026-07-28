@@ -16,7 +16,12 @@ export function AppLayout() {
   const [status, setStatus] = useState<StatusInfo | null>(null);
 
   useEffect(() => {
-    api.status().then((r) => r.success && setStatus(r.data));
+    const refreshStatus = () => {
+      api.status().then((response) => response.success && setStatus(response.data));
+    };
+    refreshStatus();
+    window.addEventListener("workbench:status-changed", refreshStatus);
+    return () => window.removeEventListener("workbench:status-changed", refreshStatus);
   }, []);
 
   return (
@@ -63,6 +68,8 @@ export function AppLayout() {
               核心规则 {status.rule_count} 条
               {status.demo_mode ? (
                 <span style={{ color: "#d97706" }}> · 演示模式</span>
+              ) : status.provider_ready === false ? (
+                <span style={{ color: "#dc2626" }}> · 模型未就绪</span>
               ) : (
                 <span style={{ color: "#16a34a" }}> · 模型已连接</span>
               )}

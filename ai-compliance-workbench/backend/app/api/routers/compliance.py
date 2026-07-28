@@ -35,16 +35,22 @@ def check(req: ComplianceCheckRequest):
             provider=provider,
             settings=settings,
         )
+        result["history_saved"] = False
         if settings.get("save_history"):
-            db.add_record(
-                operation_type="check",
-                brand=req.brand,
-                platform=req.platform,
-                input_data=req.model_dump(),
-                generated=None,
-                detection=result,
-                risk_level=result.get("overall_risk_level", ""),
-            )
+            try:
+                result["history_saved"] = True
+                result["history_record_id"] = db.add_record(
+                    operation_type="check",
+                    brand=req.brand,
+                    platform=req.platform,
+                    input_data=req.model_dump(),
+                    generated=None,
+                    detection=result,
+                    risk_level=result.get("overall_risk_level", ""),
+                )
+            except Exception as exc:
+                result["history_saved"] = False
+                result["history_error"] = f"自动保存最近记录失败：{exc}"
         return ok(result)
     except ValueError as exc:
         return fail(str(exc), "COMPLIANCE_INPUT_INVALID")
