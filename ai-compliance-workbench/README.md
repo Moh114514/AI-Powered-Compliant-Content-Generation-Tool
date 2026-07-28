@@ -38,7 +38,7 @@ Windows：
 powershell -ExecutionPolicy Bypass -File scripts/start_dev.ps1
 ```
 
-脚本源码保持纯 ASCII，兼容 Windows PowerShell 5.1 的默认编码行为。它会创建 `backend/.venv`、安装依赖、首次生成 `.env`，并启动前后端。如果 5173 无法绑定，脚本会自动尝试 5174–5199，并在控制台输出实际前端地址。只检查环境而不启动服务：
+脚本源码保持纯 ASCII，兼容 Windows PowerShell 5.1 的默认编码行为。它会创建 `backend/.venv`、安装依赖、首次生成 `.env`，并启动前后端。默认前端端口为 5174；如果无法绑定，脚本会自动尝试 5175–5199，并在控制台输出实际前端地址。只检查环境而不启动服务：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/start_dev.ps1 -SkipInstall -NoLaunch
@@ -52,7 +52,7 @@ bash scripts/start_dev.sh
 
 启动地址：
 
-- 前端：http://localhost:5173（端口冲突时以启动脚本输出为准）
+- 前端：http://localhost:5174（端口冲突时以启动脚本输出为准）
 - 后端：http://localhost:8000
 - API 文档：http://localhost:8000/docs
 
@@ -66,7 +66,7 @@ LLM_BASE_URL=https://api.openai.com/v1
 LLM_MODEL=gpt-4o-mini
 LLM_TEMPERATURE=0.7
 LLM_MAX_TOKENS=1200
-CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+CORS_ORIGINS=http://localhost:5174,http://127.0.0.1:5174
 ```
 
 模型调用失败时，检测结果会标记 `semantic_analysis_failed=true` 并要求人工复核，不会静默降级为低风险。

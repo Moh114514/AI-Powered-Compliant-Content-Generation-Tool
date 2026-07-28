@@ -4,6 +4,7 @@
 
 - `POST /api/generation/generate`：生成并检测；
 - `POST /api/generation/rewrite`：显式改写，并返回改写前后检测；
+- `POST /api/generation/adjust`：仅调整请求中的当前文案，不重新套用生成模板；返回 `text`、`original_text`、`adjust_type` 和调整后检测结果；
 - `POST /api/compliance/check`：检测文本；
 - `GET /api/compliance/rules`：分页查询规则；
 - `GET /api/compliance/rules/{rule_id}`：规则、变体、平台、示例及来源；

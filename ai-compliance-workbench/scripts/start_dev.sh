@@ -35,7 +35,7 @@ BACKEND_PID=$!
 (cd "$FRONTEND_DIR" && npm run dev) &
 FRONTEND_PID=$!
 
-echo "前端: http://localhost:5173"
+echo "前端: http://localhost:5174"
 echo "后端: http://localhost:8000"
 echo "API 文档: http://localhost:8000/docs"
 wait

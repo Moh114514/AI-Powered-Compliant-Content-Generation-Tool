@@ -24,6 +24,9 @@ class LLMProvider:
     def rewrite(self, text, matched_rules, platform, content_type) -> dict:
         raise NotImplementedError
 
+    def adjust(self, text, adjust_type, platform, content_type, tone) -> str:
+        raise NotImplementedError
+
 
 class MockProvider(LLMProvider):
     name = "mock"
@@ -187,6 +190,38 @@ class MockProvider(LLMProvider):
             "unresolved_items": unresolved,
         }
 
+    def adjust(self, text, adjust_type, platform, content_type, tone) -> str:
+        source = str(text or "").strip()
+        if adjust_type == "缩短":
+            target = max(40, int(len(source) * 0.65))
+            if len(source) <= target:
+                return source
+            sentences = [
+                item.strip()
+                for item in re.split(r"(?<=[。！？!?])\s*", source)
+                if item.strip()
+            ]
+            selected: list[str] = []
+            for sentence in sentences:
+                candidate = "".join(selected) + sentence
+                if selected and len(candidate) > target:
+                    break
+                selected.append(sentence)
+                if len(candidate) >= target:
+                    break
+            shortened = "".join(selected).strip()
+            if not shortened or len(shortened) >= len(source):
+                shortened = source[:target].rstrip("，,；;、 ")
+                if shortened and shortened[-1] not in "。！？!?":
+                    shortened += "。"
+            return shortened
+        if adjust_type == "扩写":
+            addition = "发布前建议进一步确认操作流程、适用条件、注意事项及可能风险，并结合个人情况进行专业评估。"
+            if addition in source:
+                return source
+            return f"{source}\n\n{addition}"
+        return source
+
 
 class OpenAICompatibleProvider(LLMProvider):
     name = "openai_compatible"
@@ -319,6 +354,31 @@ class OpenAICompatibleProvider(LLMProvider):
                 "auto_rewrite": False,
                 "unresolved_items": [f"改写结果解析失败，请人工复核：{exc}"],
             }
+
+    def adjust(self, text, adjust_type, platform, content_type, tone) -> str:
+        requirements = {
+            "缩短": "压缩篇幅，保留核心事实，删除重复内容，不新增任何事实主张。",
+            "扩写": "扩展必要的流程、适用条件、注意事项和风险提示，不编造数据、资质或效果。",
+            "调整语气": f"仅将表达调整为“{tone}”语气，不改变事实含义。",
+        }
+        system_prompt = (
+            "你只负责调整一份现有医美文案。不得重复展示原文，不得把原文与修改稿并列，"
+            "不得套用新的标题或营销模板，不得引入请求中没有的事实。"
+            "严格返回 JSON，格式为 {\"text\":\"调整后的完整文案\"}。"
+        )
+        raw = self._chat(
+            system_prompt,
+            f"调整类型：{adjust_type}\n平台：{platform}\n内容类型：{content_type}\n"
+            f"要求：{requirements[adjust_type]}\n待调整文案：\n{text}",
+        )
+        try:
+            data = json.loads(self._extract_json(raw))
+            adjusted = str(data.get("text") or "").strip()
+        except Exception as exc:
+            raise ValueError(f"调整结果无法解析：{exc}") from exc
+        if not adjusted:
+            raise ValueError("模型没有返回调整后的文案。")
+        return adjusted
 
     @staticmethod
     def _extract_json(raw: str) -> str:

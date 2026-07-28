@@ -181,36 +181,16 @@ def adjust(request: dict, settings: dict) -> dict:
         raise ValueError(f"不支持的调整类型：{adjust_type}")
 
     provider = build_provider(settings)
-    inputs = {
-        "topic": request.get("topic", ""),
-        "selling_points": text,
-        "target_audience": request.get("target_audience", ""),
-        "campaign_info": request.get("campaign_info", ""),
-        "tone": request.get("tone", settings.get("default_tone", "亲切专业")),
-        "length": request.get("length", settings.get("default_length", "中")),
-        "extra_requirements": request.get("extra_requirements", ""),
-    }
-    if adjust_type == "缩短":
-        inputs["length"] = "短"
-        inputs["extra_requirements"] = "保留核心事实，删除重复内容，不新增任何事实主张。"
-    elif adjust_type == "扩写":
-        inputs["length"] = "长"
-        inputs["extra_requirements"] = "仅扩展流程、注意事项和适用条件，不编造数据、资质或效果。"
-    else:
-        inputs["extra_requirements"] = (
-            str(inputs.get("extra_requirements") or "")
-            + f"；仅调整为{inputs['tone']}语气，不改变事实含义。"
-        ).strip("；")
-
-    copies = provider.generate(
+    new_text = provider.adjust(
+        text=text,
+        adjust_type=adjust_type,
         platform=platform,
         content_type=content_type,
-        inputs=inputs,
-        prompt_template=load_prompt_template(platform),
-        brand_profile=get_brand(request.get("brand")) if request.get("brand") else None,
-        versions=1,
+        tone=str(request.get("tone") or settings.get("default_tone", "亲切专业")),
     )
-    new_text = str(copies[0]).strip() if copies else text
+    new_text = str(new_text or "").strip()
+    if not new_text:
+        raise ValueError("调整服务没有返回有效文案。")
     compliance = run_compliance_check(
         text=new_text,
         platform=platform,
@@ -222,6 +202,8 @@ def adjust(request: dict, settings: dict) -> dict:
     )
     return {
         "text": new_text,
+        "original_text": text,
+        "adjust_type": adjust_type,
         "platform": platform,
         "content_type": content_type,
         "model": provider.name,

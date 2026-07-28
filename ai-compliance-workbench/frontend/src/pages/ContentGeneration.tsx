@@ -153,10 +153,6 @@ export default function ContentGeneration() {
       brand: form.brand,
       adjust_type: adjustType,
       tone: form.tone,
-      topic: form.topic,
-      target_audience: form.target_audience,
-      campaign_info: form.campaign_info,
-      extra_requirements: form.extra_requirements,
     });
     setBusy(null);
     if (!response.success) {
@@ -172,6 +168,7 @@ export default function ContentGeneration() {
       matched_count: compliance.matched_rules.length,
       manual_review_required: compliance.manual_review_required,
     });
+    setNotice(`已基于当前版本完成${adjustType}，未混入原始表单中的主题或活动信息。`);
   }
 
   async function doRewrite(index: number) {

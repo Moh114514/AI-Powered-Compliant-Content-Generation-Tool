@@ -1,7 +1,7 @@
 param(
     [switch]$SkipInstall,
     [switch]$NoLaunch,
-    [int]$FrontendPort = 5173
+    [int]$FrontendPort = 5174
 )
 
 # Keep this file ASCII-only so Windows PowerShell 5.1 can parse it without a BOM.
