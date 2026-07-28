@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# 项目根目录：backend/app/core/config.py -> parents[3] = ai-compliance-workbench
 _BACKEND = Path(__file__).resolve().parents[2]
 PROJECT_ROOT = _BACKEND.parent
 DATA_DIR = PROJECT_ROOT / "data"
@@ -11,11 +10,10 @@ COMPLIANCE_DIR = DATA_DIR / "compliance"
 PROMPTS_DIR = DATA_DIR / "prompts"
 BRAND_DIR = DATA_DIR / "brand_profiles"
 DEMO_DIR = DATA_DIR / "demo"
-DB_PATH = PROJECT_ROOT / "data" / "workbench.db"
+DB_PATH = DATA_DIR / "workbench.db"
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-# ---- 平台与内容类型（权威来源：后端，前端通过 API 获取）----
 PLATFORMS = ["朋友圈", "微信社群", "小红书", "微信公众号", "客服话术"]
 
 CONTENT_TYPES: dict[str, list[str]] = {
@@ -26,7 +24,6 @@ CONTENT_TYPES: dict[str, list[str]] = {
     "客服话术": ["首次咨询", "项目介绍", "价格咨询", "风险咨询", "预约跟进", "投诉安抚"],
 }
 
-# 本工具平台 -> 规则库中 rule_platforms.platform 的取值（用于平台专项规则匹配）
 PLATFORM_TO_RULE_PLATFORM = {
     "朋友圈": ["微信"],
     "微信社群": ["微信"],
@@ -35,25 +32,42 @@ PLATFORM_TO_RULE_PLATFORM = {
     "客服话术": ["微信"],
 }
 
-# 本工具内容类型 -> 规则库中 rule_platforms.content_type 的取值
+PLATFORM_PRODUCT_LINE_HINTS = {
+    "朋友圈": ["朋友圈个人内容", "朋友圈付费广告"],
+    "微信社群": ["微信社群", "私信及客服"],
+    "微信公众号": ["微信公众号自然内容"],
+    "小红书": ["自然笔记", "商业合作", "聚光广告", "电商", "直播"],
+    "客服话术": ["私信及客服", "微信社群"],
+}
+
+
 def map_content_type_to_rule_ct(content_type: str) -> list[str]:
-    ct = content_type or ""
-    targets = []
-    if any(k in ct for k in ("活动", "种草", "营销", "预热")):
-        targets.append("广告")
-    if any(k in ct for k in ("文章", "科普", "品牌", "须知", "说明")):
-        targets.append("文章")
-    if any(k in ct for k in ("笔记", "分享", "问答")):
-        targets.append("笔记")
-    if "项目介绍" in ct or "朋友圈" in ct:
-        targets.append("朋友圈")
-    if any(k in ct for k in ("直播", "口播")):
-        targets.append("直播口播")
-    return targets
+    """将产品侧内容类型映射到规则库 content_type。
+
+    历史规则粒度不完全统一；无法可靠映射时返回空数组，检测引擎将退化为仅按平台筛选。
+    """
+    content_type = (content_type or "").strip()
+    targets: list[str] = []
+    if any(key in content_type for key in ("活动", "营销", "种草", "预热", "转化", "节日")):
+        targets.extend(["广告", "推广", "活动"])
+    if any(key in content_type for key in ("文章", "科普", "品牌", "须知", "说明")):
+        targets.extend(["文章", "科普"])
+    if any(key in content_type for key in ("笔记", "分享", "问答")):
+        targets.extend(["笔记", "内容"])
+    if any(key in content_type for key in ("群公告", "预约提醒", "用户答疑", "社群")):
+        targets.extend(["社群消息", "群聊", "客服话术"])
+    if any(key in content_type for key in ("咨询", "跟进", "投诉", "话术")):
+        targets.extend(["客服话术", "私信", "咨询"])
+    if "项目介绍" in content_type:
+        targets.extend(["朋友圈", "文章", "笔记", "广告"])
+    if any(key in content_type for key in ("直播", "口播")):
+        targets.extend(["直播", "直播口播"])
+    return list(dict.fromkeys(targets))
 
 
-# ---- 风险与动作优先级 ----
 RISK_PRIORITY = {"critical": 4, "high": 3, "medium": 2, "low": 1, "none": 0}
+# L1 最严格，不能按字符串中的数字直接取最大值。
+REVIEW_PRIORITY = {"L1": 4, "L2": 3, "L3": 2, "L4": 1, "": 0}
 
 ACTION_PRIORITY = {
     "block": 6,
@@ -64,7 +78,6 @@ ACTION_PRIORITY = {
     "pass": 1,
 }
 
-# system_action（规则库字符串） -> 发布建议枚举
 ACTION_TO_RECOMMENDATION = {
     "block": "block",
     "mandatory_human_review": "manual_review",
@@ -92,17 +105,14 @@ RISK_LABELS = {
 }
 
 REVIEW_LEVEL_LABELS = {"L1": "L1", "L2": "L2", "L3": "L3", "L4": "L4"}
-
 DISCLAIMER = "本结果仅用于内容风险筛查，不替代律师、法务、医疗专业人员或监管部门的正式意见。"
 
-# ---- 大模型配置 ----
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.7"))
 LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "1200"))
 
-# ---- 默认工具设置（可被数据库覆盖）----
 DEFAULT_SETTINGS = {
     "model_provider": "mock",
     "model_name": LLM_MODEL,
@@ -118,7 +128,8 @@ DEFAULT_SETTINGS = {
     "enable_keyword_detection": True,
     "enable_regex_detection": True,
     "enable_semantic_detection": True,
-    "auto_generate_revision": True,
+    # 改写应由用户显式触发，避免每次检测额外调用模型。
+    "auto_generate_revision": False,
     "force_disclaimer": True,
     "save_history": True,
     "max_history": 100,

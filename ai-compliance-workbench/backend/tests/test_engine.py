@@ -44,7 +44,7 @@ def _unrestricted_variant(store, method=None, has_source=False, risk_level=None)
     """选取一个非平台受限规则的变体（确保适用于测试平台）。"""
     for v in store.variants:
         rid = v.get("rule_id")
-        if rid in store.platforms_by_rule:  # 受限，跳过
+        if rid in store.platforms_by_rule:
             continue
         if method and v.get("matching_method") != method:
             continue
@@ -52,7 +52,7 @@ def _unrestricted_variant(store, method=None, has_source=False, risk_level=None)
             continue
         if risk_level and store.rules_by_id.get(rid, {}).get("risk_level") != risk_level:
             continue
-        if v.get("regex_pattern"):  # 走正则分支，非纯关键词测试
+        if v.get("regex_pattern"):
             continue
         if v.get("variant_text"):
             return v
@@ -119,21 +119,46 @@ def test_multi_rule(store, provider):
     assert len(res["matched_rules"]) >= 2, [(m["rule_id"], m["matched_text"]) for m in res["matched_rules"]]
 
 
-# 7. 平台筛选（受限规则不污染不相关平台）
+# 7. 平台筛选（受限规则不污染没有任何平台交集的场景）
 def test_platform_filter(store, provider):
     restricted = [r for r in store.rules if store.platforms_by_rule.get(r["rule_id"])]
     if not restricted:
         pytest.skip("无平台受限规则")
-    r = restricted[0]
-    entries = store.platforms_by_rule[r["rule_id"]]
-    rule_platform = entries[0]["platform"]
-    target = next((p for p in config.PLATFORMS if config.PLATFORM_TO_RULE_PLATFORM.get(p) != [rule_platform]), None)
-    assert target, "找不到对照平台"
-    v = next((x for x in store.variants_by_rule.get(r["rule_id"], []) if x.get("variant_text")), None)
-    if not v:
-        pytest.skip("受限规则无可匹配变体")
-    res = _check(f"示例{v['variant_text']}示例", platform=target, store=store, provider=provider)
-    assert not any(m["rule_id"] == r["rule_id"] for m in res["matched_rules"])
+
+    selected = None
+    target = None
+    for rule in restricted:
+        entries = store.platforms_by_rule[rule["rule_id"]]
+        rule_platforms = {
+            entry.get("platform")
+            for entry in entries
+            if entry.get("platform")
+            and str(entry.get("effective_status") or "active").lower()
+            not in {"suspended", "superseded", "abolished", "inactive", "disabled"}
+        }
+        candidate = next(
+            (
+                platform
+                for platform in config.PLATFORMS
+                if not set(config.PLATFORM_TO_RULE_PLATFORM.get(platform, [])) & rule_platforms
+            ),
+            None,
+        )
+        variant = next(
+            (x for x in store.variants_by_rule.get(rule["rule_id"], []) if x.get("variant_text")),
+            None,
+        )
+        if candidate and variant:
+            selected = (rule, variant)
+            target = candidate
+            break
+
+    if not selected or not target:
+        pytest.skip("没有可构造的无平台交集对照样本")
+
+    rule, variant = selected
+    res = _check(f"示例{variant['variant_text']}示例", platform=target, store=store, provider=provider)
+    assert not any(m["rule_id"] == rule["rule_id"] for m in res["matched_rules"])
 
 
 # 8. 来源关联
@@ -153,12 +178,17 @@ def test_critical_aggregation(store, provider):
     assert res["overall_risk_level"] == "critical"
 
 
-# 10. 无命中结果
+# 10. 无命中结果：使用不含广告动作词的中性说明，避免把边界场景误当作纯净样本
 def test_no_hit(store, provider):
-    res = _check("本文介绍项目流程、适用人群与注意事项，并说明需到店由专业医师评估个人情况。",
-                 store=store, provider=provider)
+    res = _check(
+        "项目流程、适用人群与注意事项需由专业医师结合个人情况评估。",
+        store=store,
+        provider=provider,
+    )
     assert res["overall_risk_level"] == "none"
     assert res["manual_review_required"] is False
+    assert not res["matched_rules"]
+    assert not res["semantic_findings"]
 
 
 # 11. Unicode 与中文标点

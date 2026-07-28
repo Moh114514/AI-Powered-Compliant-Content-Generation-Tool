@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Sparkles, Trash2, FileText, Save, Copy, Wand2, ChevronDown, RefreshCw } from "lucide-react";
+import { ChevronDown, Copy, FileText, Save, Sparkles, Trash2, Wand2 } from "lucide-react";
 import { api } from "../api/client";
-import type { Brand, GenerateResult, VersionResult, Settings } from "../types";
-import { RiskBadge } from "../components/RiskBadge";
 import { ComplianceReport } from "../components/ComplianceReport";
-import { statusOf } from "../utils/risk";
+import { RiskBadge } from "../components/RiskBadge";
+import type { Brand, GenerateResult, VersionResult } from "../types";
 import { copyText, downloadText } from "../utils/misc";
+import { statusOf } from "../utils/risk";
 
 const DEMO = {
   brand: "guangnian18",
@@ -14,7 +14,7 @@ const DEMO = {
   topic: "夏季光电抗衰体验周",
   selling_points: "全城效果最好，零风险，7天年轻十岁，限时免费体验",
   target_audience: "25-40岁关注抗初老的都市女性",
-  campaign_info: "7月限时，前100名免费体验",
+  campaign_info: "7月活动，具体条件以正式活动说明为准",
   tone: "亲切专业",
   length: "中",
   extra_requirements: "",
@@ -22,300 +22,251 @@ const DEMO = {
   versions: 3,
 };
 
+type BusyAction = "generate" | `adjust-${number}` | `rewrite-${number}` | "save" | null;
+
 export default function ContentGeneration() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [contentTypes, setContentTypes] = useState<Record<string, string[]>>({});
-  const [settings, setSettings] = useState<Settings>({});
-
   const [form, setForm] = useState({ ...DEMO });
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [openVersions, setOpenVersions] = useState<Record<number, boolean>>({});
-  const [loading, setLoading] = useState(false);
+  const [busy, setBusy] = useState<BusyAction>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [rewriteModal, setRewriteModal] = useState<{ text: string; rev: any } | null>(null);
 
   useEffect(() => {
-    api.brands().then((r) => r.success && setBrands(r.data));
-    api.platforms().then((r) => r.success && setPlatforms(r.data));
-    api.contentTypes().then((r) => r.success && setContentTypes(r.data));
-    // 从「最近记录-继续修改」带入输入
-    const cont = sessionStorage.getItem("continue_input");
-    if (cont) {
-      try {
-        const parsed = JSON.parse(cont);
-        setForm((f) => ({ ...f, ...parsed }));
-      } catch { /* ignore */ }
-      sessionStorage.removeItem("continue_input");
-    }
-    api.settings().then((r) => {
-      if (r.success) {
-        setSettings(r.data);
-        setForm((f) => ({
-          ...f,
-          brand: r.data.default_brand || f.brand,
-          platform: r.data.default_platform || f.platform,
-          versions: r.data.default_versions || f.versions,
-          tone: r.data.default_tone || f.tone,
-          length: r.data.default_length || f.length,
-        }));
+    async function initialize() {
+      const [brandResponse, platformResponse, typeResponse, settingsResponse] = await Promise.all([
+        api.brands(), api.platforms(), api.contentTypes(), api.settings(),
+      ]);
+      if (brandResponse.success) setBrands(brandResponse.data);
+      if (platformResponse.success) setPlatforms(platformResponse.data);
+      if (typeResponse.success) setContentTypes(typeResponse.data);
+      const firstError = [brandResponse, platformResponse, typeResponse, settingsResponse].find((response) => !response.success);
+      if (firstError && !firstError.success) setError(firstError.message);
+
+      let continued: any = null;
+      const raw = sessionStorage.getItem("continue_input");
+      if (raw) {
+        try { continued = JSON.parse(raw); } catch { /* ignore invalid local state */ }
+        sessionStorage.removeItem("continue_input");
       }
-    });
+      setForm((current) => {
+        const settings = settingsResponse.success ? settingsResponse.data : {};
+        return {
+          ...current,
+          brand: settings.default_brand || current.brand,
+          platform: settings.default_platform || current.platform,
+          versions: settings.default_versions || current.versions,
+          tone: settings.default_tone || current.tone,
+          length: settings.default_length || current.length,
+          ...(continued || {}),
+        };
+      });
+    }
+    void initialize();
   }, []);
 
-  const ctOptions = useMemo(() => contentTypes[form.platform] || [], [contentTypes, form.platform]);
+  const contentTypeOptions = useMemo(() => contentTypes[form.platform] || [], [contentTypes, form.platform]);
 
-  function set<K extends keyof typeof form>(k: K, v: any) {
-    setForm((f) => ({ ...f, [k]: v }));
+  useEffect(() => {
+    if (contentTypeOptions.length && !contentTypeOptions.includes(form.content_type)) {
+      setForm((current) => ({ ...current, content_type: contentTypeOptions[0] }));
+    }
+  }, [contentTypeOptions, form.content_type]);
+
+  function setField<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
+    setForm((current) => ({ ...current, [key]: value }));
+    setNotice(null);
+  }
+
+  function changePlatform(platform: string) {
+    const firstType = contentTypes[platform]?.[0] || "";
+    setForm((current) => ({ ...current, platform, content_type: firstType }));
+    setResult(null);
   }
 
   async function onGenerate() {
-    setLoading(true);
-    setError(null);
-    const r = await api.generate(form);
-    setLoading(false);
-    if (!r.success) {
-      setError(r.message || "生成失败");
+    if (!form.topic.trim() && !form.selling_points.trim()) {
+      setError("请至少填写主题或核心卖点");
       return;
     }
-    setResult(r.data);
+    setBusy("generate");
+    setError(null);
+    setNotice(null);
+    const response = await api.generate(form);
+    setBusy(null);
+    if (!response.success) {
+      setError(response.message || "生成失败");
+      return;
+    }
+    setResult(response.data);
     setOpenVersions({});
+    if ((response.data.returned_versions ?? response.data.versions.length) < (response.data.requested_versions ?? form.versions)) {
+      setNotice("模型返回的有效版本少于请求数量，系统已保留实际可用版本。");
+    }
   }
 
   function onClear() {
-    setForm({ ...DEMO, brand: form.brand, platform: form.platform });
+    const firstType = contentTypes[form.platform]?.[0] || DEMO.content_type;
+    setForm({ ...DEMO, brand: form.brand, platform: form.platform, content_type: firstType });
     setResult(null);
     setError(null);
-  }
-
-  function onLoadDemo() {
-    setForm({ ...DEMO });
+    setNotice(null);
   }
 
   async function onSaveHistory() {
     if (!result) return;
-    const r = await api.addHistory({
+    setBusy("save");
+    const response = await api.addHistory({
       operation_type: "generation",
       brand: form.brand,
       platform: form.platform,
       input: form,
       generated: result,
       detection: null,
-      risk_level: result.versions[0]?.overall_risk_level || "",
+      risk_level: result.versions[0]?.overall_risk_level || "none",
     });
-    alert(r.success ? "已保存到最近记录" : r.message || "保存失败");
+    setBusy(null);
+    if (response.success) setNotice("已保存到最近记录");
+    else setError(response.message);
   }
 
-  async function updateVersion(idx: number, patch: Partial<VersionResult>) {
-    setResult((res) => {
-      if (!res) return res;
-      const versions = res.versions.map((v, i) => (i === idx ? { ...v, ...patch } : v));
-      return { ...res, versions };
+  function updateVersion(index: number, patch: Partial<VersionResult>) {
+    setResult((current) => {
+      if (!current) return current;
+      return { ...current, versions: current.versions.map((version, position) => position === index ? { ...version, ...patch } : version) };
     });
   }
 
-  async function doAdjust(idx: number, adjust_type: string) {
-    const v = result?.versions[idx];
-    if (!v) return;
-    setLoading(true);
-    const r = await api.adjust({ text: v.text, platform: v.platform, content_type: v.content_type, brand: form.brand, adjust_type });
-    setLoading(false);
-    if (r.success) {
-      updateVersion(idx, { text: r.data.text, compliance: r.data.compliance, overall_risk_level: r.data.compliance.overall_risk_level, matched_count: r.data.compliance.matched_rules.length, manual_review_required: r.data.compliance.manual_review_required });
-    } else {
-      alert(r.message || "操作失败");
+  async function doAdjust(index: number, adjustType: "缩短" | "扩写" | "调整语气") {
+    const version = result?.versions[index];
+    if (!version) return;
+    setBusy(`adjust-${index}`);
+    setError(null);
+    const response = await api.adjust({
+      text: version.text,
+      platform: version.platform,
+      content_type: version.content_type,
+      brand: form.brand,
+      adjust_type: adjustType,
+      tone: form.tone,
+      topic: form.topic,
+      target_audience: form.target_audience,
+      campaign_info: form.campaign_info,
+      extra_requirements: form.extra_requirements,
+    });
+    setBusy(null);
+    if (!response.success) {
+      setError(response.message || "调整失败");
+      return;
     }
+    const compliance = response.data.compliance;
+    updateVersion(index, {
+      text: response.data.text,
+      char_count: response.data.text.length,
+      compliance,
+      overall_risk_level: compliance.overall_risk_level,
+      matched_count: compliance.matched_rules.length,
+      manual_review_required: compliance.manual_review_required,
+    });
   }
 
-  async function doRewrite(idx: number) {
-    const v = result?.versions[idx];
-    if (!v) return;
-    setLoading(true);
-    const r = await api.rewrite({ text: v.text, platform: v.platform, content_type: v.content_type, brand: form.brand });
-    setLoading(false);
-    if (r.success) {
-      setRewriteModal({ text: v.text, rev: r.data });
-    } else {
-      alert(r.message || "改写失败");
-    }
+  async function doRewrite(index: number) {
+    const version = result?.versions[index];
+    if (!version) return;
+    setBusy(`rewrite-${index}`);
+    setError(null);
+    const response = await api.rewrite({ text: version.text, platform: version.platform, content_type: version.content_type, brand: form.brand });
+    setBusy(null);
+    if (response.success) setRewriteModal({ text: version.text, rev: response.data });
+    else setError(response.message || "改写失败");
   }
 
-  async function downloadReport(v: VersionResult) {
-    const r = await api.report(v.compliance, "md");
-    if (r.success) downloadText(`检测报告_${v.platform}_v${v.version_index}.md`, r.data.content, "text/markdown");
+  async function downloadReport(version: VersionResult) {
+    const response = await api.report(version.compliance, "md");
+    if (response.success) downloadText(`检测报告_${version.platform}_v${version.version_index}.md`, response.data.content, "text/markdown");
+    else setError(response.message);
   }
 
-  return (
-    <div>
-      <h2 style={{ margin: "0 0 4px", fontSize: 18 }}>内容生成</h2>
-      <p style={{ margin: "0 0 16px", color: "#6b7280", fontSize: 13 }}>
-        选择品牌、平台与内容类型，生成宣传文案并自动完成合规风险检测。
-      </p>
+  return <div>
+    <h2 style={{ margin: "0 0 4px", fontSize: 18 }}>内容生成</h2>
+    <p style={{ margin: "0 0 16px", color: "#6b7280", fontSize: 13 }}>选择品牌和发布场景，生成文案后自动进行确定性与语义风险检测。</p>
+    {error && <Message tone="error">⚠️ {error}</Message>}
+    {notice && <Message tone="success">{notice}</Message>}
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) 1fr", gap: 16, alignItems: "start" }} className="gen-grid">
-        {/* 左：输入 */}
-        <div className="card">
-          <div style={{ display: "grid", gap: 10 }}>
-            <Field label="品牌">
-              <select className="select" value={form.brand} onChange={(e) => set("brand", e.target.value)}>
-                {brands.map((b) => (
-                  <option key={b.brand_id} value={b.brand_id}>{b.brand_name}{b.is_demo ? "（演示）" : ""}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="发布平台">
-              <select className="select" value={form.platform} onChange={(e) => set("platform", e.target.value)}>
-                {platforms.map((p) => (<option key={p} value={p}>{p}</option>))}
-              </select>
-            </Field>
-            <Field label="内容类型">
-              <select className="select" value={form.content_type} onChange={(e) => set("content_type", e.target.value)}>
-                {ctOptions.map((c) => (<option key={c} value={c}>{c}</option>))}
-              </select>
-            </Field>
-            <Field label="主题" hint="例如：夏季光电抗衰体验周">
-              <input className="input" value={form.topic} onChange={(e) => set("topic", e.target.value)} placeholder="夏季光电抗衰体验周" />
-            </Field>
-            <Field label="核心卖点" hint="多个卖点可用逗号分隔">
-              <textarea className="textarea" value={form.selling_points} onChange={(e) => set("selling_points", e.target.value)} placeholder="全城效果最好，零风险，7天年轻十岁" />
-            </Field>
-            <Field label="目标人群">
-              <input className="input" value={form.target_audience} onChange={(e) => set("target_audience", e.target.value)} />
-            </Field>
-            <Field label="活动信息">
-              <input className="input" value={form.campaign_info} onChange={(e) => set("campaign_info", e.target.value)} />
-            </Field>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <Field label="语气风格">
-                <input className="input" value={form.tone} onChange={(e) => set("tone", e.target.value)} />
-              </Field>
-              <Field label="内容长度">
-                <select className="select" value={form.length} onChange={(e) => set("length", e.target.value)}>
-                  {["短", "中", "长"].map((l) => (<option key={l} value={l}>{l}</option>))}
-                </select>
-              </Field>
-            </div>
-            <Field label="补充要求">
-              <input className="input" value={form.extra_requirements} onChange={(e) => set("extra_requirements", e.target.value)} />
-            </Field>
-            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}>
-              <input type="checkbox" checked={form.use_brand_profile} onChange={(e) => set("use_brand_profile", e.target.checked)} />
-              使用品牌资料（偏好用词/禁用词）
-            </label>
-            <Field label="生成版本数量">
-              <select className="select" value={form.versions} onChange={(e) => set("versions", Number(e.target.value))}>
-                {[1, 2, 3, 4, 5].map((n) => (<option key={n} value={n}>{n} 个</option>))}
-              </select>
-            </Field>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
-              <button className="btn btn-primary" onClick={onGenerate} disabled={loading}>
-                <Sparkles size={16} /> {loading ? "生成中…" : "生成并检测"}
-              </button>
-              <button className="btn" onClick={onLoadDemo}><FileText size={16} /> 加载示例</button>
-              <button className="btn" onClick={onClear}><Trash2 size={16} /> 清空</button>
-              <button className="btn" onClick={onSaveHistory} disabled={!result}><Save size={16} /> 保存到最近记录</button>
-            </div>
-            {error && <div style={{ color: "#dc2626", fontSize: 13 }}>⚠️ {error}</div>}
-          </div>
+    <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) 1fr", gap: 16, alignItems: "start" }} className="gen-grid">
+      <div className="card"><div style={{ display: "grid", gap: 10 }}>
+        <Field label="品牌"><select className="select" value={form.brand} onChange={(event) => setField("brand", event.target.value)}>{brands.map((brand) => <option key={brand.brand_id} value={brand.brand_id}>{brand.brand_name}{brand.is_demo ? "（演示）" : ""}</option>)}</select></Field>
+        <Field label="发布平台"><select className="select" value={form.platform} onChange={(event) => changePlatform(event.target.value)}>{platforms.map((platform) => <option key={platform}>{platform}</option>)}</select></Field>
+        <Field label="内容类型"><select className="select" value={form.content_type} onChange={(event) => setField("content_type", event.target.value)}>{contentTypeOptions.map((type) => <option key={type}>{type}</option>)}</select></Field>
+        <Field label="主题" hint="主题和核心卖点至少填写一项"><input className="input" maxLength={300} value={form.topic} onChange={(event) => setField("topic", event.target.value)} placeholder="例如：夏季光电抗衰体验周" /></Field>
+        <Field label="核心卖点" hint={`${form.selling_points.length}/3000`}><textarea className="textarea" maxLength={3000} value={form.selling_points} onChange={(event) => setField("selling_points", event.target.value)} placeholder="请填写真实、可核验的信息，系统会识别高风险表达" /></Field>
+        <Field label="目标人群"><input className="input" maxLength={500} value={form.target_audience} onChange={(event) => setField("target_audience", event.target.value)} /></Field>
+        <Field label="活动信息"><input className="input" maxLength={1000} value={form.campaign_info} onChange={(event) => setField("campaign_info", event.target.value)} /></Field>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <Field label="语气风格"><input className="input" value={form.tone} onChange={(event) => setField("tone", event.target.value)} /></Field>
+          <Field label="内容长度"><select className="select" value={form.length} onChange={(event) => setField("length", event.target.value)}>{["短", "中", "长"].map((length) => <option key={length}>{length}</option>)}</select></Field>
         </div>
-
-        {/* 右：结果 */}
-        <div>
-          {!result && (
-            <div className="card" style={{ color: "#9ca3af", textAlign: "center", padding: 40, fontSize: 14 }}>
-              左侧填写后点击「生成并检测」，结果将显示在此处。
-            </div>
-          )}
-          {result && (
-            <div style={{ display: "grid", gap: 14 }}>
-              {result.demo_mode && (
-                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", color: "#92400e", borderRadius: 8, padding: "6px 10px", fontSize: 12 }}>
-                  当前为演示模式（未配置大模型 API），生成内容为演示文案，关键词与正则检测正常生效。
-                </div>
-              )}
-              {result.versions.map((v, idx) => {
-                const meta = statusOf(v.compliance);
-                const open = openVersions[v.version_index];
-                return (
-                  <div key={v.version_index} className="card">
-                    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                      <b style={{ fontSize: 14 }}>版本 {v.version_index}</b>
-                      <RiskBadge meta={meta} />
-                      <span style={{ fontSize: 12, color: "#6b7280" }}>
-                        {v.platform} · {v.content_type} · {v.char_count} 字 · {v.model} · 命中 {v.matched_count}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: 14, whiteSpace: "pre-wrap", lineHeight: 1.7, background: "#f9fafb", border: "1px solid #f1f5f9", borderRadius: 8, padding: 10 }}>
-                      {v.text}
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={async () => alert((await copyText(v.text)) ? "已复制文案" : "复制失败")}><Copy size={14} /> 复制文案</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => doAdjust(idx, "缩短")} disabled={loading}>缩短</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => doAdjust(idx, "扩写")} disabled={loading}>扩写</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => doAdjust(idx, "调整语气")} disabled={loading}>调整语气</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => doRewrite(idx)} disabled={loading}><Wand2 size={14} /> 一键合规改写</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => setOpenVersions((o) => ({ ...o, [v.version_index]: !o[v.version_index] }))}>
-                        <ChevronDown size={14} /> {open ? "收起风险" : "查看风险"}
-                      </button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={async () => { const ok = await copyText(v.compliance.review_summary); alert(ok ? "已复制复核摘要" : "复制失败"); }}><Copy size={14} /> 复制复核摘要</button>
-                      <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} onClick={() => downloadReport(v)}><FileText size={14} /> 下载检测报告</button>
-                    </div>
-                    {open && (
-                      <div style={{ marginTop: 10 }}>
-                        <ComplianceReport result={v.compliance} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+        <Field label="补充要求"><input className="input" maxLength={2000} value={form.extra_requirements} onChange={(event) => setField("extra_requirements", event.target.value)} /></Field>
+        <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13 }}><input type="checkbox" checked={form.use_brand_profile} onChange={(event) => setField("use_brand_profile", event.target.checked)} />使用品牌资料（偏好用词和禁用词）</label>
+        <Field label="生成版本数量"><select className="select" value={form.versions} onChange={(event) => setField("versions", Number(event.target.value))}>{[1, 2, 3, 4, 5].map((number) => <option key={number} value={number}>{number} 个</option>)}</select></Field>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
+          <button className="btn btn-primary" onClick={onGenerate} disabled={busy !== null}><Sparkles size={16} /> {busy === "generate" ? "生成与检测中…" : "生成并检测"}</button>
+          <button className="btn" onClick={() => { setForm({ ...DEMO }); setResult(null); }} disabled={busy !== null}><FileText size={16} /> 加载风险示例</button>
+          <button className="btn" onClick={onClear} disabled={busy !== null}><Trash2 size={16} /> 清空</button>
+          <button className="btn" onClick={onSaveHistory} disabled={!result || busy !== null}><Save size={16} /> {busy === "save" ? "保存中…" : "保存到最近记录"}</button>
         </div>
+      </div></div>
+
+      <div>
+        {!result && <div className="card" style={{ color: "#9ca3af", textAlign: "center", padding: 40, fontSize: 14 }}>填写左侧信息后点击「生成并检测」。</div>}
+        {result && <div style={{ display: "grid", gap: 14 }}>
+          {result.demo_mode && <Message tone="warning">当前为演示模式，生成内容不代表真实品牌资料；关键词、正则和模拟语义检测仍会运行。</Message>}
+          {result.versions.map((version, index) => {
+            const meta = statusOf(version.compliance);
+            const open = openVersions[version.version_index];
+            const itemBusy = busy === `adjust-${index}` || busy === `rewrite-${index}`;
+            return <div key={version.version_index} className="card">
+              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginBottom: 8 }}><b style={{ fontSize: 14 }}>版本 {version.version_index}</b><RiskBadge meta={meta} /><span style={{ fontSize: 12, color: "#6b7280" }}>{version.platform} · {version.content_type} · {version.char_count} 字 · {version.model} · 命中 {version.matched_count}</span></div>
+              <div style={{ fontSize: 14, whiteSpace: "pre-wrap", lineHeight: 1.7, background: "#f9fafb", border: "1px solid #f1f5f9", borderRadius: 8, padding: 10 }}>{version.text}</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                <SmallButton onClick={async () => setNotice((await copyText(version.text)) ? "已复制文案" : "复制失败")}><Copy size={14} />复制文案</SmallButton>
+                <SmallButton disabled={busy !== null} onClick={() => doAdjust(index, "缩短")}>缩短</SmallButton>
+                <SmallButton disabled={busy !== null} onClick={() => doAdjust(index, "扩写")}>扩写</SmallButton>
+                <SmallButton disabled={busy !== null} onClick={() => doAdjust(index, "调整语气")}>调整语气</SmallButton>
+                <SmallButton disabled={busy !== null} onClick={() => doRewrite(index)}><Wand2 size={14} />{itemBusy ? "处理中…" : "一键合规改写"}</SmallButton>
+                <SmallButton onClick={() => setOpenVersions((current) => ({ ...current, [version.version_index]: !current[version.version_index] }))}><ChevronDown size={14} />{open ? "收起风险" : "查看风险"}</SmallButton>
+                <SmallButton onClick={async () => setNotice((await copyText(version.compliance.review_summary)) ? "已复制复核摘要" : "复制失败")}><Copy size={14} />复制复核摘要</SmallButton>
+                <SmallButton onClick={() => downloadReport(version)}><FileText size={14} />下载检测报告</SmallButton>
+              </div>
+              {open && <div style={{ marginTop: 10 }}><ComplianceReport result={version.compliance} /></div>}
+            </div>;
+          })}
+        </div>}
       </div>
-
-      {rewriteModal && (
-        <RewriteModal
-          text={rewriteModal.text}
-          rev={rewriteModal.rev}
-          onClose={() => setRewriteModal(null)}
-        />
-      )}
     </div>
-  );
+
+    {rewriteModal && <RewriteModal text={rewriteModal.text} rev={rewriteModal.rev} onClose={() => setRewriteModal(null)} />}
+  </div>;
 }
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>{label}{hint && <span style={{ color: "#9ca3af", fontWeight: 400, marginLeft: 6 }}>{hint}</span>}</div>
-      {children}
-    </div>
-  );
-}
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) { return <div><div style={{ fontSize: 13, fontWeight: 500, marginBottom: 4 }}>{label}{hint && <span style={{ color: "#9ca3af", fontWeight: 400, marginLeft: 6 }}>{hint}</span>}</div>{children}</div>; }
+function SmallButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) { return <button className="btn" style={{ padding: "4px 8px", fontSize: 12 }} {...props}>{children}</button>; }
+function Message({ tone, children }: { tone: "error" | "success" | "warning"; children: React.ReactNode }) { const styles = tone === "error" ? ["#fef2f2", "#fecaca", "#b91c1c"] : tone === "success" ? ["#f0fdf4", "#bbf7d0", "#166534"] : ["#fffbeb", "#fde68a", "#92400e"]; return <div style={{ background: styles[0], border: `1px solid ${styles[1]}`, color: styles[2], borderRadius: 8, padding: "8px 10px", fontSize: 13, marginBottom: 12 }}>{children}</div>; }
 
 function RewriteModal({ text, rev, onClose }: { text: string; rev: any; onClose: () => void }) {
-  return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 16 }}>
-      <div style={{ background: "#fff", borderRadius: 12, maxWidth: 640, width: "100%", maxHeight: "85vh", overflow: "auto", padding: 20 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <h3 style={{ margin: 0, fontSize: 16 }}>一键合规改写</h3>
-          <button className="btn" onClick={onClose}>关闭</button>
-        </div>
-        <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>原文</div>
-        <div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 10, marginBottom: 12 }}>{text}</div>
-        <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>建议修改稿</div>
-        <div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: 10, marginBottom: 12 }}>{rev.suggested_revision || "（无可自动生成的改写稿，需人工复核）"}</div>
-        {rev.unresolved_items && rev.unresolved_items.length > 0 && (
-          <div style={{ fontSize: 13, color: "#6d28d9", marginBottom: 12 }}>
-            需人工复核：{rev.unresolved_items.join("；")}
-          </div>
-        )}
-        <div style={{ display: "flex", gap: 8 }}>
-          <button className="btn btn-primary" onClick={async () => alert((await copyText(rev.suggested_revision || "")) ? "已复制" : "复制失败")}><Copy size={14} /> 复制修改稿</button>
-          <button className="btn" onClick={() => downloadText("合规改写稿.txt", rev.suggested_revision || "", "text/plain")}>下载 TXT</button>
-        </div>
-      </div>
+  const revisedCompliance = rev.revised_compliance;
+  return <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 50, padding: 16 }}>
+    <div style={{ background: "#fff", borderRadius: 12, maxWidth: 720, width: "100%", maxHeight: "88vh", overflow: "auto", padding: 20 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}><h3 style={{ margin: 0, fontSize: 16 }}>一键合规改写</h3><button className="btn" onClick={onClose}>关闭</button></div>
+      <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>原文</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 10, marginBottom: 12 }}>{text}</div>
+      <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>建议修改稿</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: 10, marginBottom: 12 }}>{rev.suggested_revision || "（无可自动生成的改写稿，需人工复核）"}</div>
+      {revisedCompliance && <div style={{ marginBottom: 12 }}><b style={{ fontSize: 13 }}>改写后复检：</b> {revisedCompliance.overall_risk_level}，命中 {revisedCompliance.matched_rules?.length ?? 0} 条规则{revisedCompliance.manual_review_required ? "，仍需人工复核" : ""}。</div>}
+      {!!rev.unresolved_items?.length && <div style={{ fontSize: 13, color: "#6d28d9", marginBottom: 12 }}>仍需处理：{rev.unresolved_items.join("；")}</div>}
+      <div style={{ display: "flex", gap: 8 }}><button className="btn btn-primary" disabled={!rev.suggested_revision} onClick={async () => alert((await copyText(rev.suggested_revision || "")) ? "已复制" : "复制失败")}><Copy size={14} />复制修改稿</button><button className="btn" disabled={!rev.suggested_revision} onClick={() => downloadText("合规改写稿.txt", rev.suggested_revision || "", "text/plain")}>下载 TXT</button></div>
     </div>
-  );
+  </div>;
 }

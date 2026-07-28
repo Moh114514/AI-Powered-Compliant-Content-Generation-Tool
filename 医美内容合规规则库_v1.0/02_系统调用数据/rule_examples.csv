@@ -1,0 +1,17 @@
+﻿example_id,rule_id,example_type,original_text,content_context,platform,business_domain,content_legal_nature,expected_risk_level,risk_reason,replacement_strategy,revised_text,evidence_required,auto_rewrite_allowed,review_status,notes
+E000001,R-A01-001,prohibited,本机构是全市最好的医美医院,机构介绍,微信,医疗美容,medical_advertisement,high,最高级用语指向医美机构,改为客观信息,本机构为卫健委核准的医疗美容医院(许可证号:XXXX)，可提供XX项目,医疗机构执业许可证,false,已审核,
+E000002,R-A01-001,compliant,我们始终追求为每一位求美者提供更优质的服务体验,品牌介绍,微信,医疗美容,medical_advertisement,low,经营理念表达，不指向具体商品,,,,true,已审核,属第五条排除情形
+E000003,R-A02-001,prohibited,做一次保证彻底去除皱纹,项目推广,小红书,医疗美容,medical_advertisement,critical,明确功效保证,删除主张;增加个体差异说明,该项目用于改善皱纹，效果因人而异，需医师面诊评估,,false,已审核,
+E000004,R-A02-001,compliant,请在医师指导下了解适合您的治疗方案,服务说明,微信,医疗美容,service_information,low,无功效保证，建议咨询医师,,,,true,已审核,
+E000005,R-A03-001,prohibited,热玛吉绝对安全、零风险、无副作用,项目推广,抖音,医疗美容,medical_advertisement,critical,安全性断言,删除主张;增加个体差异说明,治疗可能存在个体差异与短暂红肿，术前需签署知情同意书,,false,已审核,
+E000006,R-A03-001,compliant,治疗后按医嘱护理，可有效降低感染风险,术后护理说明,微信,医疗美容,service_information,low,客观护理建议，未承诺零风险,,,,true,已审核,
+E000007,R-A05-002a,prohibited,做完鼻子一个月，朋友们都说变了一个人！,案例分享,小红书,医疗美容,medical_advertisement,critical,患者效果证明,删除主张,,,false,已审核,不适合改写，需删除
+E000008,R-A05-002b,compliant,这家医院环境很干净，护士小姐姐态度也特别好,用户评价,小红书,医疗美容,user_generated_content,low,纯服务评价，不涉及疗效,,,,true,已审核,
+E000009,R-A09-001,prohibited,过了25岁还不做医美，只能等着变黄脸婆,推广文案,抖音,医疗美容,medical_advertisement,critical,制造容貌焦虑,删除主张,我们提供皮肤年轻化咨询服务，欢迎预约面诊,,false,已审核,
+E000010,R-A09-002,prohibited,脸都塌了还不做热玛吉？再不抢救就真的老了,社群文案,微信,医疗美容,medical_advertisement,critical,暗示严重后果制造焦虑,删除主张,,,false,已审核,不适合改写
+E000011,R-A10-001,prohibited,你这就是典型的激素脸，必须做我们的修复套餐才能好,客服私信,微信,医疗美容,diagnosis_communication,critical,未经诊断下结论并推荐治疗,改为建议面诊,从描述看皮肤可能存在敏感问题，建议先到院由执业医师面诊，切勿自行判断,,false,已审核,
+E000012,R-A10-001,compliant,感谢您的描述，皮肤问题需要执业医师面诊才能准确判断，我可以帮您预约咨询时间,客服回复,微信,医疗美容,service_information,low,建议面诊，未给诊断结论,,,,true,已审核,
+E000013,R-A12-001a,prohibited,XX女明星都在我们这做的热玛吉，效果超级好,推广文案,抖音,医疗美容,medical_advertisement,critical,利用明星背书医疗效果,删除主张,,,false,已审核,不适合改写
+E000014,R-A12-001b,compliant,如果您喜欢自然的风格，可以参考XX的审美方向,咨询对话,微信,医疗美容,commercial_recommendation,low,审美参考，未背书具体项目,,,,true,已审核,
+E000015,R-A16-001,high_risk,【科普】为什么做完热玛吉一定要补水？点击下方预约专家面诊,公众号文章,微信,医疗美容,uncertain,high,科普名义+预约链接，可能构成变相广告,人工审核,,广告审查证明,false,已审核,需结合S0011认定
+E000016,R-A16-001,compliant,本内容为广告，由XX医疗美容医院发布，广审文号:XXXXXX,广告标识,微信,医疗美容,medical_advertisement,low,合规标示广告+审查证明,,,,true,已审核,

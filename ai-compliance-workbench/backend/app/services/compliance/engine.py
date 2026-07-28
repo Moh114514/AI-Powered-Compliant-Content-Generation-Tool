@@ -1,81 +1,158 @@
-"""合规检测引擎：五步流程 + 风险聚合。
-文本标准化 → 适用规则筛选 → 确定性检测 → 语义检测 → 风险聚合。
-返回结构遵循规范第十六节（并附带前端高亮所需的 spans 字段）。
+"""合规检测引擎。
+
+流程：文本标准化 → 适用规则筛选 → 确定性检测 → 语义检测 → 风险聚合。
+引擎只负责判定和报告组装；规则库保持只读，模型失败时确定性检测仍可用。
 """
+from __future__ import annotations
+
 from typing import Any
+
 from app.core import config
-from app.core.text_normalize import normalize_text, map_span
 from app.core.matching import match_variant
+from app.core.text_normalize import map_span, normalize_text
+
+_DISABLED_STATUSES = {"suspended", "superseded", "abolished", "inactive", "disabled"}
 
 
-def _norm_actions(val: Any) -> list[str]:
-    if isinstance(val, list):
-        return [str(x) for x in val]
-    s = str(val or "")
-    if s in config.ACTION_TO_RECOMMENDATION:
-        return [s]
-    # 兼容旧式单字母拼接
-    letter_map = {
+def _norm_actions(value: Any) -> list[str]:
+    if isinstance(value, list):
+        items = [str(item).strip() for item in value if str(item).strip()]
+    else:
+        raw = str(value or "").strip()
+        if not raw:
+            return ["pass"]
+        for delimiter in (";", "；", ",", "，", "|"):
+            raw = raw.replace(delimiter, " ")
+        items = [item for item in raw.split() if item]
+
+    known = set(config.ACTION_PRIORITY)
+    normalized: list[str] = []
+    legacy_letters = {
         "b": "block", "e": "request_evidence", "o": "pass", "c": "warning",
-        "k": "mandatory_human_review", "l": "request_qualification", "q": "request_qualification",
-        "r": "request_evidence", "w": "warning", "n": "pass", "m": "mandatory_human_review",
+        "k": "mandatory_human_review", "l": "request_qualification",
+        "q": "request_qualification", "r": "request_evidence", "w": "warning",
+        "n": "pass", "m": "mandatory_human_review",
     }
-    if len(s) > 1 and all(c in letter_map for c in s):
-        return [letter_map[c] for c in s]
-    return [s] if s else ["pass"]
+    for item in items:
+        if item in known:
+            normalized.append(item)
+        elif len(item) > 1 and all(char in legacy_letters for char in item):
+            normalized.extend(legacy_letters[char] for char in item)
+        elif item in legacy_letters:
+            normalized.append(legacy_letters[item])
+        else:
+            normalized.append("mandatory_human_review")
+    return list(dict.fromkeys(normalized)) or ["pass"]
 
 
 def _recommend_contact(rule: dict) -> str:
-    cat = rule.get("category_name", "") or ""
-    if "资质" in cat or "医生" in cat or "机构" in cat:
+    category = str(rule.get("category_name") or "")
+    if any(key in category for key in ("资质", "医生", "机构", "诊断", "器械", "药品")):
         return "法务或医疗专业人员"
-    if "数据" in cat or "排名" in cat:
-        return "项目负责人"
-    if "广告" in cat:
+    if any(key in category for key in ("数据", "排名", "价格", "优惠")):
+        return "法务或项目负责人"
+    if any(key in category for key in ("广告", "平台", "隐私", "肖像")):
         return "法务"
-    if "伪科学" in cat:
+    if "伪科学" in category:
         return "医疗专业人员"
     return "法务或项目负责人"
 
 
+def _rule_enabled(rule: dict) -> bool:
+    return str(rule.get("effective_status") or "active").lower() not in _DISABLED_STATUSES
+
+
 def _filter_applicable_rules(store, platform: str, content_type: str) -> tuple[list[dict], bool]:
-    """返回 (适用规则列表, 平台专项规则是否覆盖不完整)。"""
+    """返回适用规则与平台专项覆盖不足标记。"""
     mapped_platforms = config.PLATFORM_TO_RULE_PLATFORM.get(platform, [])
-    mapped_cts = config.map_content_type_to_rule_ct(content_type)
-    applicable = []
-    restricted_matched = 0
+    mapped_content_types = config.map_content_type_to_rule_ct(content_type)
+    applicable: list[dict] = []
+    platform_scoped_total = 0
+    platform_scoped_matched = 0
+
     for rule in store.rules:
-        rid = rule.get("rule_id")
-        entries = store.platforms_by_rule.get(rid)
-        if not entries:
-            applicable.append(rule)  # 无平台限制，通用规则
+        if not _rule_enabled(rule):
             continue
-        ok = False
-        for e in entries:
-            ep = e.get("platform")
-            ect = e.get("content_type") or ""
-            if ep in mapped_platforms:
-                if not ect or ect in mapped_cts:
-                    ok = True
-                    break
-        if ok:
+        rule_id = rule.get("rule_id")
+        entries = store.platforms_by_rule.get(rule_id, [])
+        if not entries:
             applicable.append(rule)
-            restricted_matched += 1
-    # 平台专项覆盖：若映射到的规则平台在库中存在、但本次无专项规则命中 -> 不完整
-    platform_rules_incomplete = bool(mapped_platforms) and restricted_matched == 0
-    return applicable, platform_rules_incomplete
+            continue
+
+        enabled_entries = [
+            entry for entry in entries
+            if str(entry.get("effective_status") or "active").lower() not in _DISABLED_STATUSES
+        ]
+        if not enabled_entries:
+            continue
+        platform_entries = [entry for entry in enabled_entries if entry.get("platform") in mapped_platforms]
+        if platform_entries:
+            platform_scoped_total += 1
+
+        matched = False
+        for entry in platform_entries:
+            entry_content_type = str(entry.get("content_type") or "").strip()
+            if not mapped_content_types or not entry_content_type or entry_content_type in mapped_content_types:
+                matched = True
+                break
+        if matched:
+            applicable.append(rule)
+            platform_scoped_matched += 1
+
+    incomplete = bool(mapped_platforms) and platform_scoped_total == 0
+    if platform_scoped_total > 0 and platform_scoped_matched == 0:
+        incomplete = True
+    return applicable, incomplete
 
 
-def _dedup_spans(spans: list[dict]) -> list[dict]:
-    """去除重叠区间（保留先出现者）。spans 含 norm_start/norm_end。"""
-    spans_sorted = sorted(spans, key=lambda x: (x["norm_start"], -(x["norm_end"] - x["norm_start"])))
-    result = []
-    last_end = -1
-    for s in spans_sorted:
-        if s["norm_start"] >= last_end:
-            result.append(s)
-            last_end = s["norm_end"]
-    return result
+def _dedup_matches(matches: list[dict]) -> list[dict]:
+    """仅去除完全重复命中，保留不同规则的重叠命中。"""
+    unique: dict[tuple, dict] = {}
+    for item in matches:
+        key = (
+            item.get("rule_id"), item.get("variant_id"),
+            item.get("norm_start"), item.get("norm_end"),
+        )
+        unique.setdefault(key, item)
+    return sorted(
+        unique.values(),
+        key=lambda item: (item.get("norm_start", 0), item.get("norm_end", 0), item.get("rule_id") or ""),
+    )
+
+
+def _normalize_semantic_findings(findings: Any) -> list[dict]:
+    if not isinstance(findings, list):
+        return []
+    normalized: list[dict] = []
+    for finding in findings:
+        if not isinstance(finding, dict):
+            continue
+        risk_level = str(finding.get("risk_level") or "medium").lower()
+        if risk_level not in config.RISK_PRIORITY:
+            risk_level = "medium"
+        manual_review = bool(finding.get("manual_review", risk_level in {"critical", "high"}))
+        actions = _norm_actions(finding.get("system_action"))
+        if manual_review and actions == ["pass"]:
+            actions = ["mandatory_human_review"]
+        normalized.append({
+            **finding,
+            "risk_level": risk_level,
+            "manual_review": manual_review,
+            "system_action": actions,
+            "risk_reason": finding.get("risk_reason") or "检测到需要结合上下文判断的语义风险。",
+        })
+    return normalized
+
+
+def _highest_risk(matched_rules: list[dict], semantic_findings: list[dict]) -> str:
+    levels = [item.get("risk_level", "none") for item in matched_rules]
+    levels.extend(item.get("risk_level", "none") for item in semantic_findings)
+    return max(levels or ["none"], key=lambda level: config.RISK_PRIORITY.get(level, 0))
+
+
+def _highest_review_level(matched_rules: list[dict]) -> str:
+    levels = [item.get("review_level") for item in matched_rules if item.get("review_level")]
+    return max(levels, key=lambda level: config.REVIEW_PRIORITY.get(level, 0)) if levels else ""
 
 
 def run_compliance_check(
@@ -95,239 +172,317 @@ def run_compliance_check(
 ) -> dict:
     store = store or _store()
     settings = settings or {}
-    enable_kw = settings.get("enable_keyword_detection", True)
-    enable_rx = settings.get("enable_regex_detection", True)
-    enable_sem = settings.get("enable_semantic_detection", True)
-    auto_rev = settings.get("auto_generate_revision", True)
-
-    norm_text, index_map = normalize_text(text)
     original = text or ""
+    if not original.strip():
+        raise ValueError("待检测文本不能为空。")
 
+    enable_keyword = bool(settings.get("enable_keyword_detection", True))
+    enable_regex = bool(settings.get("enable_regex_detection", True))
+    enable_semantic = bool(settings.get("enable_semantic_detection", True))
+    auto_revision = bool(settings.get("auto_generate_revision", False))
+
+    normalized_text, index_map = normalize_text(original)
     applicable_rules, platform_incomplete = _filter_applicable_rules(store, platform, content_type)
 
-    # ---- 第三步：确定性检测 ----
-    raw_spans: list[dict] = []
+    raw_matches: list[dict] = []
     for rule in applicable_rules:
-        rid = rule.get("rule_id")
-        variants = store.variants_by_rule.get(rid, [])
-        for v in variants:
-            method = (v.get("matching_method") or "contains").lower()
+        rule_id = rule.get("rule_id")
+        for variant in store.variants_by_rule.get(rule_id, []):
+            method = str(variant.get("matching_method") or "contains").lower()
             if method == "semantic":
                 continue
-            if method == "regex" or v.get("regex_pattern"):
-                if not enable_rx:
-                    continue
-            else:
-                if not enable_kw:
-                    continue
-            for (s, e, mtext) in match_variant(norm_text, v):
-                raw_spans.append({
-                    "rule_id": rid, "variant_id": v.get("variant_id"),
-                    "norm_start": s, "norm_end": e,
-                    "matched_norm": mtext, "method": method,
+            is_regex = method == "regex" or bool(variant.get("regex_pattern"))
+            if is_regex and not enable_regex:
+                continue
+            if not is_regex and not enable_keyword:
+                continue
+            for start, end, matched_text in match_variant(normalized_text, variant):
+                raw_matches.append({
+                    "rule_id": rule_id,
+                    "variant_id": variant.get("variant_id"),
+                    "norm_start": start,
+                    "norm_end": end,
+                    "matched_norm": matched_text,
+                    "method": "regex" if is_regex else method,
                 })
 
-    deduped = _dedup_spans(raw_spans)
-
-    # 分组到规则
-    matched_rules: list[dict] = []
-    highlight_spans: list[dict] = []
-    for sp in deduped:
-        rid = sp["rule_id"]
-        rule = store.rules_by_id.get(rid, {})
-        os, oe = map_span(index_map, sp["norm_start"], sp["norm_end"])
-        matched_text = original[os:oe]
-        span_info = {
-            "rule_id": rid, "variant_id": sp["variant_id"],
-            "matched_text": matched_text, "start_index": os, "end_index": oe,
-            "matching_method": sp["method"],
+    matches = _dedup_matches(raw_matches)
+    grouped: dict[str, dict] = {}
+    highlights: list[dict] = []
+    for match in matches:
+        rule_id = match["rule_id"]
+        rule = store.rules_by_id.get(rule_id, {})
+        original_start, original_end = map_span(index_map, match["norm_start"], match["norm_end"])
+        matched_text = original[original_start:original_end]
+        span = {
+            "rule_id": rule_id,
+            "variant_id": match.get("variant_id"),
+            "matched_text": matched_text,
+            "start_index": original_start,
+            "end_index": original_end,
+            "matching_method": match.get("method"),
         }
-        highlight_spans.append(span_info)
-        # 聚合到该规则的 matched_rules 条目（取首个命中作为代表）
-        existing = next((m for m in matched_rules if m["rule_id"] == rid), None)
-        if existing is None:
-            src_ids = store.sources_by_rule.get(rid, []) or []
-            src_names = [store.sources_by_id.get(sid, {}).get("source_name", "") for sid in src_ids]
-            replace = rule.get("replacement_strategy") or ""
-            replace_list = [x for x in str(replace).split(";") if x.strip()]
-            entry = {
-                "rule_id": rid,
+        highlights.append(span)
+
+        if rule_id not in grouped:
+            source_ids = list(dict.fromkeys(store.sources_by_rule.get(rule_id, []) or []))
+            replacement = rule.get("replacement_strategy") or ""
+            replacement_list = [part.strip() for part in str(replacement).replace("；", ";").split(";") if part.strip()]
+            effective_status = str(rule.get("effective_status") or "active")
+            actions = _norm_actions(rule.get("system_action"))
+            pending_review = effective_status == "pending_review"
+            if pending_review and "mandatory_human_review" not in actions:
+                actions.append("mandatory_human_review")
+            grouped[rule_id] = {
+                "rule_id": rule_id,
                 "rule_name": rule.get("rule_name", ""),
-                "variant_id": sp["variant_id"],
+                "variant_id": match.get("variant_id"),
                 "matched_text": matched_text,
-                "start_index": os,
-                "end_index": oe,
-                "matching_method": sp["method"],
+                "start_index": original_start,
+                "end_index": original_end,
+                "matching_method": match.get("method"),
                 "risk_level": rule.get("risk_level", "low"),
                 "legal_conclusion": rule.get("legal_conclusion", ""),
-                "system_action": _norm_actions(rule.get("system_action")),
+                "system_action": actions,
                 "risk_reason": rule.get("rule_description", ""),
-                "replacement_strategy": replace_list,
-                "source_ids": src_ids,
-                "source_names": src_names,
+                "replacement_strategy": replacement_list,
+                "source_ids": source_ids,
+                "source_names": [store.sources_by_id.get(source_id, {}).get("source_name", "") for source_id in source_ids],
                 "category_name": rule.get("category_name", ""),
                 "prohibited_context": rule.get("prohibited_context", ""),
                 "allowed_context": rule.get("allowed_context", ""),
                 "evidence_requirement": rule.get("evidence_requirement", ""),
                 "qualification_requirement": rule.get("qualification_requirement", ""),
                 "auto_rewrite_allowed": bool(rule.get("auto_rewrite_allowed", False)),
-                "manual_review_required": bool(rule.get("manual_review_required", False)),
+                "manual_review_required": bool(rule.get("manual_review_required", False) or pending_review),
                 "review_level": rule.get("review_level", ""),
-                "spans": [span_info],
+                "effective_status": effective_status,
+                "spans": [span],
             }
-            matched_rules.append(entry)
         else:
-            existing["spans"].append(span_info)
+            grouped[rule_id]["spans"].append(span)
 
-    # ---- 第四步：语义检测 ----
-    semantic_findings = []
+    matched_rules = list(grouped.values())
+
+    semantic_findings: list[dict] = []
+    semantic_failed = False
+    semantic_failure_reason = ""
     needs_manual_review = False
     manual_review_reason = ""
-    if enable_sem and provider is not None:
-        # 筛选适用语义规则
+    if enable_semantic and provider is not None:
         mapped_platforms = config.PLATFORM_TO_RULE_PLATFORM.get(platform, [])
-        sem_rules = []
-        for sr in store.semantic_rules:
-            ap = sr.get("applicable_platform", "") or ""
-            if not ap or any(mp in ap for mp in mapped_platforms):
-                sem_rules.append(sr)
+        semantic_rules = []
+        for semantic_rule in store.semantic_rules:
+            applicable_platform = str(semantic_rule.get("applicable_platform") or "")
+            if not applicable_platform or any(mapped in applicable_platform for mapped in mapped_platforms):
+                semantic_rules.append(semantic_rule)
         try:
-            sem_result = provider.semantic_check(
-                text=text, platform=platform, content_type=content_type,
-                semantic_rules=sem_rules, matched_rules=matched_rules,
-            )
-            semantic_findings = sem_result.get("semantic_findings", [])
-            needs_manual_review = bool(sem_result.get("needs_manual_review", False))
-            manual_review_reason = sem_result.get("manual_review_reason", "")
-        except Exception:
-            # 语义检测失败不应阻断确定性结果
-            needs_manual_review = needs_manual_review or any(
-                m.get("manual_review_required") for m in matched_rules
-            )
+            semantic_result = provider.semantic_check(
+                text=original,
+                platform=platform,
+                content_type=content_type,
+                semantic_rules=semantic_rules,
+                matched_rules=matched_rules,
+            ) or {}
+            semantic_findings = _normalize_semantic_findings(semantic_result.get("semantic_findings"))
+            needs_manual_review = bool(semantic_result.get("needs_manual_review", False))
+            manual_review_reason = str(semantic_result.get("manual_review_reason") or "")
+            semantic_failed = bool(semantic_result.get("analysis_failed", False))
+            semantic_failure_reason = str(semantic_result.get("failure_reason") or "")
+        except Exception as exc:
+            semantic_failed = True
+            semantic_failure_reason = f"语义检测失败：{exc}"
 
-    # ---- 第五步：风险聚合 ----
-    if matched_rules:
-        overall_risk = max(matched_rules, key=lambda m: config.RISK_PRIORITY.get(m["risk_level"], 0))["risk_level"]
-    else:
-        overall_risk = "none"
+    overall_risk = _highest_risk(matched_rules, semantic_findings)
+    review_level = _highest_review_level(matched_rules)
 
-    # review_level 取最大 L 值
-    rl_vals = [m["review_level"] for m in matched_rules if m.get("review_level")]
-    if rl_vals:
-        review_level = max(rl_vals, key=lambda x: int(x[1:]) if x[1:].isdigit() else 0)
-    else:
-        review_level = ""
-
-    # 发布建议：最高优先级动作
-    all_actions = []
-    for m in matched_rules:
-        all_actions.extend(m["system_action"])
-    for sf in semantic_findings:
-        if sf.get("manual_review"):
-            all_actions.append("mandatory_human_review")
-    if all_actions:
-        top_action = max(all_actions, key=lambda a: config.ACTION_PRIORITY.get(a, 0))
-        publish_recommendation = config.ACTION_TO_RECOMMENDATION.get(top_action, "warning")
-    else:
-        publish_recommendation = "pass"
+    actions: list[str] = []
+    for matched_rule in matched_rules:
+        actions.extend(matched_rule.get("system_action", []))
+    for finding in semantic_findings:
+        actions.extend(finding.get("system_action", []))
+    if needs_manual_review or semantic_failed:
+        actions.append("mandatory_human_review")
+    actions = list(dict.fromkeys(actions))
+    top_action = max(actions, key=lambda action: config.ACTION_PRIORITY.get(action, 0)) if actions else "pass"
+    publish_recommendation = config.ACTION_TO_RECOMMENDATION.get(top_action, "manual_review")
 
     manual_review_required = (
-        any(m.get("manual_review_required") for m in matched_rules)
-        or any(a == "mandatory_human_review" for a in all_actions)
+        any(item.get("manual_review_required") for item in matched_rules)
+        or any(item.get("manual_review") for item in semantic_findings)
         or needs_manual_review
+        or semantic_failed
+        or "mandatory_human_review" in actions
     )
 
-    # 人工复核事项
+    platform_findings = []
+    if platform_incomplete:
+        platform_findings.append({
+            "type": "platform_coverage_incomplete",
+            "risk_level": "low",
+            "message": "当前平台或内容类型的专项规则覆盖可能不完整，已继续使用通用法律规则检测。",
+        })
+
     manual_review_issues = _build_review_issues(
-        matched_rules, needs_manual_review, manual_review_reason, store
+        matched_rules=matched_rules,
+        semantic_findings=semantic_findings,
+        needs_manual_review=needs_manual_review,
+        reason=manual_review_reason,
+        semantic_failed=semantic_failed,
+        semantic_failure_reason=semantic_failure_reason,
     )
 
-    # 建议修改稿
     suggested_revision = ""
-    if auto_rev and provider is not None and matched_rules:
+    if auto_revision and provider is not None and matched_rules:
         try:
-            rev = provider.rewrite(
-                text=text, matched_rules=matched_rules,
-                platform=platform, content_type=content_type,
-            )
-            suggested_revision = rev.get("suggested_revision", "")
+            revision = provider.rewrite(
+                text=original,
+                matched_rules=matched_rules,
+                platform=platform,
+                content_type=content_type,
+            ) or {}
+            suggested_revision = str(revision.get("suggested_revision") or "")
         except Exception:
             suggested_revision = ""
 
     result = {
         "input_text": original,
-        "normalized_text": norm_text,
+        "normalized_text": normalized_text,
         "platform": platform,
         "content_type": content_type,
+        "brand": brand,
+        "publisher_identity": publisher_identity,
+        "business_domain": business_domain,
+        "content_legal_nature": content_legal_nature,
+        "is_paid_ad": is_paid_ad,
+        "context_note": context_note,
         "overall_risk_level": overall_risk,
         "review_level": review_level,
         "publish_recommendation": publish_recommendation,
         "manual_review_required": manual_review_required,
         "matched_rules": matched_rules,
         "semantic_findings": semantic_findings,
-        "platform_findings": [],
+        "semantic_analysis_failed": semantic_failed,
+        "platform_findings": platform_findings,
         "manual_review_issues": manual_review_issues,
         "suggested_revision": suggested_revision,
         "review_summary": "",
         "disclaimer": config.DISCLAIMER,
-        "highlights": highlight_spans,
+        "highlights": highlights,
         "platform_rules_incomplete": platform_incomplete,
+        "stats": {
+            "applicable_rule_count": len(applicable_rules),
+            "matched_rule_count": len(matched_rules),
+            "matched_span_count": len(highlights),
+            "semantic_finding_count": len(semantic_findings),
+        },
     }
     result["review_summary"] = _build_review_summary(result)
     return result
 
 
-def _build_review_issues(matched_rules, needs_manual_review, reason, store) -> list[dict]:
-    issues = []
-    for m in matched_rules:
-        if m.get("manual_review_required") or "mandatory_human_review" in m.get("system_action", []):
-            issues.append({
-                "issue_type": m.get("category_name", ""),
-                "question": (f"请确认“{m.get('matched_text','')}”是否符合合规要求。"
-                             + (f"（{m.get('evidence_requirement')}）" if m.get("evidence_requirement") else "")),
-                "required_evidence": m.get("evidence_requirement") or m.get("qualification_requirement") or "",
-                "recommended_contact": _recommend_contact(m),
-            })
-    if needs_manual_review:
+def _build_review_issues(
+    *,
+    matched_rules: list[dict],
+    semantic_findings: list[dict],
+    needs_manual_review: bool,
+    reason: str,
+    semantic_failed: bool,
+    semantic_failure_reason: str,
+) -> list[dict]:
+    issues: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+    for matched_rule in matched_rules:
+        if not (
+            matched_rule.get("manual_review_required")
+            or "mandatory_human_review" in matched_rule.get("system_action", [])
+        ):
+            continue
+        question = f"请确认“{matched_rule.get('matched_text', '')}”是否符合当前发布场景的合规要求。"
+        evidence = matched_rule.get("evidence_requirement") or matched_rule.get("qualification_requirement") or ""
+        key = (matched_rule.get("rule_id", ""), question)
+        if key in seen:
+            continue
+        seen.add(key)
+        issues.append({
+            "issue_type": matched_rule.get("category_name", ""),
+            "rule_id": matched_rule.get("rule_id", ""),
+            "question": question,
+            "required_evidence": evidence,
+            "recommended_contact": _recommend_contact(matched_rule),
+        })
+
+    for finding in semantic_findings:
+        if not finding.get("manual_review"):
+            continue
+        question = finding.get("risk_reason") or "请确认该语义风险在当前上下文中是否成立。"
+        key = (finding.get("semantic_rule_id", ""), question)
+        if key in seen:
+            continue
+        seen.add(key)
         issues.append({
             "issue_type": "语义风险",
-            "question": reason or "文案存在需要人工判断的语义风险，建议复核。",
+            "semantic_rule_id": finding.get("semantic_rule_id", ""),
+            "question": question,
+            "required_evidence": finding.get("required_evidence", ""),
+            "recommended_contact": "法务或医疗专业人员",
+        })
+
+    if needs_manual_review and not semantic_findings:
+        issues.append({
+            "issue_type": "语义风险",
+            "question": reason or "文案存在需要结合上下文判断的语义风险。",
             "required_evidence": "",
             "recommended_contact": "法务或医疗专业人员",
+        })
+    if semantic_failed:
+        issues.append({
+            "issue_type": "检测能力降级",
+            "question": semantic_failure_reason or "语义检测未成功完成，请勿仅依据关键词结果直接发布。",
+            "required_evidence": "",
+            "recommended_contact": "法务或系统维护人员",
         })
     return issues
 
 
 def _build_review_summary(result: dict) -> str:
-    lines = []
-    lines.append("【医美文案人工复核摘要】")
-    lines.append(f"平台：{result.get('platform','')}")
-    lines.append(f"内容类型：{result.get('content_type','')}")
     risk_label = config.RISK_LABELS.get(result.get("overall_risk_level"), result.get("overall_risk_level"))
-    rec = result.get("publish_recommendation")
-    rec_label = {"block": "暂停发布", "manual_review": "人工复核后发布",
-                 "request_evidence": "补充材料后发布", "warning": "修改后发布", "pass": "可发布"}.get(rec, rec)
-    lines.append(f"总体风险：{risk_label}")
-    lines.append(f"处理建议：{rec_label}")
-    lines.append("")
-    if result.get("manual_review_issues"):
+    recommendation_label = {
+        "block": "暂停发布",
+        "manual_review": "人工复核后发布",
+        "request_evidence": "补充材料后发布",
+        "warning": "修改后发布",
+        "pass": "未发现明显风险，仍需核验事实材料",
+    }.get(result.get("publish_recommendation"), result.get("publish_recommendation"))
+    lines = [
+        "【医美文案人工复核摘要】",
+        f"平台：{result.get('platform', '')}",
+        f"内容类型：{result.get('content_type', '')}",
+        f"总体风险：{risk_label}",
+        f"处理建议：{recommendation_label}",
+        "",
+    ]
+    issues = result.get("manual_review_issues") or []
+    if issues:
         lines.append("需要确认：")
-        for i, iss in enumerate(result["manual_review_issues"], 1):
-            q = iss.get("question", "")
-            ev = iss.get("required_evidence")
-            extra = f"（需材料：{ev}）" if ev else ""
-            lines.append(f"{i}. {q}{extra}")
+        for index, issue in enumerate(issues, 1):
+            evidence = issue.get("required_evidence")
+            suffix = f"（需材料：{evidence}）" if evidence else ""
+            lines.append(f"{index}. {issue.get('question', '')}{suffix}")
         lines.append("")
-    if result.get("matched_rules"):
+    rules = result.get("matched_rules") or []
+    if rules:
         lines.append("命中规则：")
-        for m in result["matched_rules"]:
-            lines.append(f"- {m['rule_id']} {m['rule_name']}")
+        lines.extend(f"- {rule.get('rule_id')} {rule.get('rule_name')}" for rule in rules)
         lines.append("")
-    contacts = sorted({iss.get("recommended_contact") for iss in result.get("manual_review_issues", []) if iss.get("recommended_contact")})
+    contacts = sorted({
+        issue.get("recommended_contact")
+        for issue in issues
+        if issue.get("recommended_contact")
+    })
     if contacts:
         lines.append("建议对接：" + "、".join(contacts) + "。")
-    lines.append("")
-    lines.append("本工具不记录复核结果。")
+    lines.extend(["", "本工具不记录复核结果。", config.DISCLAIMER])
     return "\n".join(lines)
 
 

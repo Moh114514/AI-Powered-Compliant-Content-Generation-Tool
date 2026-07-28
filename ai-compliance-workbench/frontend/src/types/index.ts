@@ -1,12 +1,8 @@
 // 与后端响应结构对应的类型定义
 
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message: string | null;
-  request_id: string;
-  error_code?: string;
-}
+export type ApiResponse<T> =
+  | { success: true; data: T; message: string | null; request_id: string; error_code?: never }
+  | { success: false; data: null; message: string; request_id: string; error_code?: string };
 
 export interface Brand {
   brand_id: string;
@@ -27,9 +23,12 @@ export interface StatusInfo {
   variant_count: number;
   source_count: number;
   semantic_count: number;
+  test_case_count?: number;
+  visual_check_count?: number;
   loaded_at: string;
   validation_valid: boolean;
   validation_error_count: number;
+  validation_warning_count?: number;
   demo_mode: boolean;
   platforms: string[];
 }
@@ -40,18 +39,23 @@ export interface RuleSummary {
   category_code?: string;
   category_name?: string;
   risk_level: string;
+  review_level?: string;
   legal_conclusion?: string;
   system_action?: string[];
   effective_status?: string;
   updated_at?: string;
+  variant_count?: number;
+  source_count?: number;
 }
 
 export interface RuleDetail {
   rule: Record<string, any>;
   source_ids: string[];
   source_names: string[];
+  sources?: SourceDetail[];
   variants: any[];
   platforms: any[];
+  examples?: any[];
 }
 
 export interface SourceDetail {
@@ -59,7 +63,18 @@ export interface SourceDetail {
   source_name: string;
   source_type?: string;
   issuing_authority?: string;
-  [k: string]: any;
+  official_url?: string;
+  verification_status?: string;
+  [key: string]: any;
+}
+
+export interface HighlightSpan {
+  rule_id: string;
+  variant_id?: string;
+  matched_text: string;
+  start_index: number;
+  end_index: number;
+  matching_method: string;
 }
 
 export interface MatchedRule {
@@ -85,16 +100,8 @@ export interface MatchedRule {
   auto_rewrite_allowed?: boolean;
   manual_review_required?: boolean;
   review_level?: string;
+  effective_status?: string;
   spans: HighlightSpan[];
-}
-
-export interface HighlightSpan {
-  rule_id: string;
-  variant_id?: string;
-  matched_text: string;
-  start_index: number;
-  end_index: number;
-  matching_method: string;
 }
 
 export interface SemanticFinding {
@@ -104,13 +111,23 @@ export interface SemanticFinding {
   matched_text: string;
   risk_reason?: string;
   manual_review?: boolean;
+  system_action?: string[];
 }
 
 export interface ManualReviewIssue {
   issue_type: string;
+  rule_id?: string;
+  semantic_rule_id?: string;
   question: string;
   required_evidence: string;
   recommended_contact: string;
+}
+
+export interface ComplianceStats {
+  applicable_rule_count: number;
+  matched_rule_count: number;
+  matched_span_count: number;
+  semantic_finding_count: number;
 }
 
 export interface ComplianceResult {
@@ -124,13 +141,15 @@ export interface ComplianceResult {
   manual_review_required: boolean;
   matched_rules: MatchedRule[];
   semantic_findings: SemanticFinding[];
-  platform_findings: any[];
+  semantic_analysis_failed?: boolean;
+  platform_findings: Array<{ type?: string; risk_level?: string; message?: string; [key: string]: any }>;
   manual_review_issues: ManualReviewIssue[];
   suggested_revision: string;
   review_summary: string;
   disclaimer: string;
   highlights: HighlightSpan[];
   platform_rules_incomplete?: boolean;
+  stats?: ComplianceStats;
 }
 
 export interface VersionResult {
@@ -153,6 +172,8 @@ export interface GenerateResult {
   brand?: string;
   model: string;
   demo_mode: boolean;
+  requested_versions?: number;
+  returned_versions?: number;
   versions: VersionResult[];
   disclaimer: string;
 }
@@ -190,4 +211,34 @@ export interface Settings {
   save_history?: boolean;
   max_history?: number;
   history_retention_days?: number;
+}
+
+export interface TestSuiteDetail {
+  test_id: string;
+  passed: boolean;
+  input_text: string;
+  platform: string;
+  content_type: string;
+  expected_rule_ids?: string[];
+  actual_rule_ids?: string[];
+  missing_rule_ids?: string[];
+  expected_risk_level?: string;
+  actual_risk_level?: string;
+  expected_action?: string;
+  actual_action?: string;
+  problems: string[];
+  error?: string;
+}
+
+export interface TestSuiteResult {
+  total: number;
+  passed: number;
+  failed: number;
+  pass_rate: number;
+  failure_type_counts: Record<string, number>;
+  category_metrics: Array<{ category: string; total: number; passed: number; pass_rate: number }>;
+  details: TestSuiteDetail[];
+  details_truncated: boolean;
+  engine_mode: string;
+  note: string;
 }
