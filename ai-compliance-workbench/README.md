@@ -87,7 +87,7 @@ python scripts/sync_compliance_library.py --source "../医美内容合规规则�
 python scripts/sync_compliance_library.py --source "../医美内容合规规则库_v1.1/02_系统调用数据" --apply
 ```
 
-同步会先备份运行时数据，使用明确的文件白名单复制，并生成包含数量与 SHA-256 的 `sync_manifest.json`。
+同步会先备份运行时数据，使用明确的文件白名单复制，并生成包含数量与 SHA-256 的 `sync_manifest.json`。不要手工复制零散文件，也不要把补充或历史备份目录作为运行时数据。
 
 ## 验证
 
@@ -113,5 +113,7 @@ npm run build
 - `data/brand_profiles`、`data/prompts`：只读配置
 - `data/workbench.db`：本地历史和设置，不进入版本控制
 - `.env`：本地密钥和配置，不进入版本控制
+
+维护用规则库是权威来源，`data/compliance` 仅作为 Web 运行时副本。更新时必须依次执行来源校验、同步、运行时校验、规则回归和人工抽检，并保持已有规则及来源 ID 稳定。
 
 当前版本不包含登录、多租户、审批流和操作审计，只适合内网单机或小团队使用。
