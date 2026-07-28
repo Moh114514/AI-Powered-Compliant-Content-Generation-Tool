@@ -1,43 +1,83 @@
-"""生成服务：组装 平台Prompt + 品牌配置 + Provider + 合规检测。
-流程：用户输入 → 加载平台Prompt → 加载品牌配置 → 筛选规则(引擎内) → 调用生成 → 关键词/正则/语义检测 → 聚合 → 返回版本列表。
-"""
+"""内容生成服务：组装平台 Prompt、品牌配置、Provider 与合规检测。"""
+from __future__ import annotations
+
 import datetime
+
+from app.core import config
 from app.core.data_loader import get_store
-from app.services.prompts.loader import load_prompt_template
 from app.services.brands.loader import get_brand
 from app.services.compliance.engine import run_compliance_check
 from app.services.llm.provider import build_provider
+from app.services.prompts.loader import load_prompt_template
 
 
-def _now():
+def _now() -> str:
     return datetime.datetime.now().isoformat(timespec="seconds")
+
+
+def _detection_settings(settings: dict) -> dict:
+    """生成/调整阶段只检测，不自动再调用一次改写模型。"""
+    copied = dict(settings or {})
+    copied["auto_generate_revision"] = False
+    copied["enable_semantic_detection"] = bool(
+        copied.get("enable_semantic_detection", True)
+        and copied.get("auto_semantic_check", True)
+    )
+    return copied
+
+
+def _validate_scene(platform: str, content_type: str) -> None:
+    if platform not in config.PLATFORMS:
+        raise ValueError(f"不支持的发布平台：{platform}")
+    supported = config.CONTENT_TYPES.get(platform, [])
+    if content_type not in supported:
+        raise ValueError(f"“{content_type}”不属于“{platform}”的可选内容类型。")
 
 
 def generate(request: dict, settings: dict) -> dict:
     store = get_store()
-    platform = request.get("platform")
-    content_type = request.get("content_type")
-    brand_id = request.get("brand")
-    use_brand = request.get("use_brand_profile", True)
-    versions = int(request.get("versions") or settings.get("default_versions", 3) or 3)
+    platform = str(request.get("platform") or "")
+    content_type = str(request.get("content_type") or "")
+    _validate_scene(platform, content_type)
 
-    brand_profile = get_brand(brand_id) if use_brand else None
+    topic = str(request.get("topic") or "").strip()
+    selling_points = str(request.get("selling_points") or "").strip()
+    if not topic and not selling_points:
+        raise ValueError("请至少填写主题或核心卖点。")
+
+    brand_id = request.get("brand")
+    use_brand = bool(request.get("use_brand_profile", True))
+    versions = max(1, min(int(request.get("versions") or settings.get("default_versions", 3) or 3), 5))
+    brand_profile = get_brand(brand_id) if use_brand and brand_id else None
     prompt_template = load_prompt_template(platform)
     provider = build_provider(settings)
 
     copies = provider.generate(
-        platform=platform, content_type=content_type, inputs=request,
-        prompt_template=prompt_template, brand_profile=brand_profile, versions=versions,
+        platform=platform,
+        content_type=content_type,
+        inputs=request,
+        prompt_template=prompt_template,
+        brand_profile=brand_profile,
+        versions=versions,
     )
+    copies = [str(text).strip() for text in copies if str(text).strip()]
+    if not copies:
+        raise ValueError("模型没有返回可用文案，请检查模型配置或稍后重试。")
 
+    detection_settings = _detection_settings(settings)
     result_versions = []
-    for i, text in enumerate(copies, 1):
+    for index, text in enumerate(copies, 1):
         compliance = run_compliance_check(
-            text=text, platform=platform, content_type=content_type,
-            brand=brand_id, store=store, provider=provider, settings=settings,
+            text=text,
+            platform=platform,
+            content_type=content_type,
+            brand=brand_id,
+            store=store,
+            provider=provider,
+            settings=detection_settings,
         )
         result_versions.append({
-            "version_index": i,
+            "version_index": index,
             "text": text,
             "platform": platform,
             "content_type": content_type,
@@ -56,39 +96,91 @@ def generate(request: dict, settings: dict) -> dict:
         "brand": brand_id,
         "model": provider.name,
         "demo_mode": provider.name == "mock",
+        "requested_versions": versions,
+        "returned_versions": len(result_versions),
         "versions": result_versions,
-        "disclaimer": compliance_disclaimer(),
+        "disclaimer": config.DISCLAIMER,
     }
 
 
 def rewrite(request: dict, settings: dict) -> dict:
     store = get_store()
-    text = request.get("text", "")
-    platform = request.get("platform")
-    content_type = request.get("content_type")
+    text = str(request.get("text") or "").strip()
+    platform = str(request.get("platform") or "")
+    content_type = str(request.get("content_type") or "")
+    _validate_scene(platform, content_type)
+    if not text:
+        raise ValueError("待改写文本不能为空。")
+
     provider = build_provider(settings)
-    compliance = run_compliance_check(
-        text=text, platform=platform, content_type=content_type,
-        brand=request.get("brand"), store=store, provider=provider, settings=settings,
+    detection_settings = _detection_settings(settings)
+    original_compliance = run_compliance_check(
+        text=text,
+        platform=platform,
+        content_type=content_type,
+        brand=request.get("brand"),
+        store=store,
+        provider=provider,
+        settings=detection_settings,
     )
-    rev = provider.rewrite(
-        text=text, matched_rules=compliance["matched_rules"],
-        platform=platform, content_type=content_type,
-    )
-    rev["compliance"] = compliance
-    rev["demo_mode"] = provider.name == "mock"
-    rev["disclaimer"] = compliance_disclaimer()
-    return rev
+
+    if not original_compliance["matched_rules"] and not original_compliance["semantic_findings"]:
+        return {
+            "suggested_revision": text,
+            "auto_rewrite": True,
+            "unresolved_items": [],
+            "original_compliance": original_compliance,
+            "revised_compliance": original_compliance,
+            "demo_mode": provider.name == "mock",
+            "disclaimer": config.DISCLAIMER,
+            "message": "未发现需要自动改写的明显风险。",
+        }
+
+    revision = provider.rewrite(
+        text=text,
+        matched_rules=original_compliance["matched_rules"],
+        platform=platform,
+        content_type=content_type,
+    ) or {}
+    suggested = str(revision.get("suggested_revision") or "").strip()
+    revised_compliance = None
+    if suggested:
+        revised_compliance = run_compliance_check(
+            text=suggested,
+            platform=platform,
+            content_type=content_type,
+            brand=request.get("brand"),
+            store=store,
+            provider=provider,
+            settings=detection_settings,
+        )
+
+    return {
+        "suggested_revision": suggested,
+        "auto_rewrite": bool(revision.get("auto_rewrite", False)),
+        "unresolved_items": revision.get("unresolved_items", []),
+        "original_compliance": original_compliance,
+        "revised_compliance": revised_compliance,
+        "compliance": original_compliance,
+        "demo_mode": provider.name == "mock",
+        "disclaimer": config.DISCLAIMER,
+    }
 
 
 def adjust(request: dict, settings: dict) -> dict:
     store = get_store()
-    text = request.get("text", "")
-    platform = request.get("platform")
-    content_type = request.get("content_type")
-    adjust_type = request.get("adjust_type", "缩短")
-    provider = build_provider(settings)
+    text = str(request.get("text") or "").strip()
+    platform = str(request.get("platform") or "")
+    content_type = str(request.get("content_type") or "")
+    _validate_scene(platform, content_type)
+    if not text:
+        raise ValueError("待调整文本不能为空。")
 
+    adjust_type = str(request.get("adjust_type") or "缩短")
+    if adjust_type not in {"缩短", "扩写", "调整语气"}:
+        raise ValueError(f"不支持的调整类型：{adjust_type}")
+
+    provider = build_provider(settings)
     inputs = {
         "topic": request.get("topic", ""),
         "selling_points": text,
@@ -100,20 +192,33 @@ def adjust(request: dict, settings: dict) -> dict:
     }
     if adjust_type == "缩短":
         inputs["length"] = "短"
+        inputs["extra_requirements"] = "保留核心事实，删除重复内容，不新增任何事实主张。"
     elif adjust_type == "扩写":
         inputs["length"] = "长"
-    # 调整语气：在补充要求中提示
-    inputs["extra_requirements"] = (inputs["extra_requirements"] + f"；语气调整为：{request.get('tone', '专业温和')}").strip("；")
+        inputs["extra_requirements"] = "仅扩展流程、注意事项和适用条件，不编造数据、资质或效果。"
+    else:
+        inputs["extra_requirements"] = (
+            str(inputs.get("extra_requirements") or "")
+            + f"；仅调整为{inputs['tone']}语气，不改变事实含义。"
+        ).strip("；")
 
     copies = provider.generate(
-        platform=platform, content_type=content_type, inputs=inputs,
+        platform=platform,
+        content_type=content_type,
+        inputs=inputs,
         prompt_template=load_prompt_template(platform),
-        brand_profile=get_brand(request.get("brand")), versions=1,
+        brand_profile=get_brand(request.get("brand")) if request.get("brand") else None,
+        versions=1,
     )
-    new_text = copies[0] if copies else text
+    new_text = str(copies[0]).strip() if copies else text
     compliance = run_compliance_check(
-        text=new_text, platform=platform, content_type=content_type,
-        brand=request.get("brand"), store=store, provider=provider, settings=settings,
+        text=new_text,
+        platform=platform,
+        content_type=content_type,
+        brand=request.get("brand"),
+        store=store,
+        provider=provider,
+        settings=_detection_settings(settings),
     )
     return {
         "text": new_text,
@@ -122,10 +227,9 @@ def adjust(request: dict, settings: dict) -> dict:
         "model": provider.name,
         "demo_mode": provider.name == "mock",
         "compliance": compliance,
-        "disclaimer": compliance_disclaimer(),
+        "disclaimer": config.DISCLAIMER,
     }
 
 
 def compliance_disclaimer() -> str:
-    from app.core import config
     return config.DISCLAIMER

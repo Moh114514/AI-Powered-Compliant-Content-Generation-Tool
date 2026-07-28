@@ -1,0 +1,38 @@
+[
+  {
+    "case_lead_id": "CL0001",
+    "lead_title": "深圳某凡医美未经审查发布广告案",
+    "lead_source": "媒体报道/信用中国",
+    "publication_date": "2026-02-11",
+    "url": null,
+    "claimed_event": "未经审查擅自发布医疗美容广告",
+    "verification_gap": "需取得深圳市市场监管局行政处罚决定书原件",
+    "recommended_verification_action": "向深圳市市场监管局申请信息公开或查询信用中国公示",
+    "status": "open",
+    "notes": "罚款10040元"
+  },
+  {
+    "case_lead_id": "CL0002",
+    "lead_title": "天津伊美尔未经审查发布广告+员工冒充患者案",
+    "lead_source": "媒体报道",
+    "publication_date": null,
+    "url": null,
+    "claimed_event": "未经审查发布医疗广告且47岁员工冒充51岁患者宣传效果",
+    "verification_gap": "需取得天津市市场监管部门行政处罚决定书",
+    "recommended_verification_action": "查询天津市市场监管局行政处罚公示",
+    "status": "open",
+    "notes": "罚款5万元"
+  },
+  {
+    "case_lead_id": "CL0003",
+    "lead_title": "甘肃靖远美甲店发布激光脱毛信息案",
+    "lead_source": "媒体报道",
+    "publication_date": null,
+    "url": null,
+    "claimed_event": "生活美容资质发布激光脱毛信息，被认定擅自发布医疗广告",
+    "verification_gap": "需取得靖远县市场监管部门行政处罚决定书",
+    "recommended_verification_action": "查询甘肃省市场监管局行政处罚公示",
+    "status": "open",
+    "notes": "医疗美容与生活美容边界典型案例"
+  }
+]

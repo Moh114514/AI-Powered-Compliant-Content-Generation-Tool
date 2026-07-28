@@ -1,0 +1,4 @@
+- README.md：安装和运行
+- HARDENING_NOTES.md：修复说明
+- ACCEPTANCE_CHECKLIST.md：验收清单
+- KNOWN_LIMITATIONS.md：已知限制

@@ -1,57 +1,90 @@
-import type { ApiResponse } from "../types";
+import type {
+  ApiResponse,
+  Brand,
+  ComplianceResult,
+  GenerateResult,
+  HistoryRecord,
+  RuleDetail,
+  Settings,
+  SourceDetail,
+  TestSuiteResult,
+} from "../types";
 
-const BASE = "/api";
+const BASE = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
+const DEFAULT_TIMEOUT_MS = 70_000;
 
-async function request<T>(path: string, init?: RequestInit): Promise<ApiResponse<T>> {
-  const res = await fetch(BASE + path, {
-    headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
-    ...init,
-  });
-  let body: any = null;
+function failure<T>(message: string, errorCode = "NETWORK_ERROR"): ApiResponse<T> {
+  return { success: false, data: null, message, request_id: "", error_code: errorCode };
+}
+
+async function request<T>(path: string, init?: RequestInit, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<ApiResponse<T>> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
-    body = await res.json();
-  } catch {
-    body = null;
+    const headers = new Headers(init?.headers || {});
+    if (init?.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+    const response = await fetch(BASE + path, { ...init, headers, signal: controller.signal });
+    const text = await response.text();
+    let body: any = null;
+    if (text) {
+      try {
+        body = JSON.parse(text);
+      } catch {
+        return failure<T>(`服务器返回了无法解析的数据（HTTP ${response.status}）`, "INVALID_RESPONSE");
+      }
+    }
+    if (!response.ok) {
+      return failure<T>(body?.message || `请求失败（HTTP ${response.status}）`, body?.error_code || "HTTP_ERROR");
+    }
+    if (!body || typeof body.success !== "boolean") {
+      return failure<T>("服务器响应结构不完整", "INVALID_RESPONSE");
+    }
+    return body as ApiResponse<T>;
+  } catch (error: any) {
+    if (error?.name === "AbortError") return failure<T>("请求超时，请检查后端或模型服务是否正常", "REQUEST_TIMEOUT");
+    return failure<T>(`无法连接到后端服务：${error?.message || "未知网络错误"}`);
+  } finally {
+    window.clearTimeout(timer);
   }
-  if (!res.ok) {
-    const msg = body?.message || `请求失败（HTTP ${res.status}）`;
-    return { success: false, data: null, message: msg, request_id: "", error_code: body?.error_code };
-  }
-  return body as ApiResponse<T>;
 }
 
 export const api = {
-  health: () => request("/health"),
-  status: () => request<any>("/status"),
+  health: () => request<any>("/health", undefined, 10_000),
+  status: () => request<any>("/status", undefined, 10_000),
 
   brands: () => request<Brand[]>("/brands"),
-  brand: (id: string) => request<Brand>(`/brands/${id}`),
+  brand: (id: string) => request<Brand>(`/brands/${encodeURIComponent(id)}`),
 
   platforms: () => request<string[]>("/platforms"),
   contentTypes: () => request<Record<string, string[]>>("/content-types"),
   promptTemplates: () => request<any[]>("/prompt-templates"),
 
-  generate: (payload: any) => request<GenerateResult>("/generation/generate", { method: "POST", body: JSON.stringify(payload) }),
-  rewrite: (payload: any) => request<any>("/generation/rewrite", { method: "POST", body: JSON.stringify(payload) }),
-  adjust: (payload: any) => request<any>("/generation/adjust", { method: "POST", body: JSON.stringify(payload) }),
+  generate: (payload: any) => request<GenerateResult>("/generation/generate", { method: "POST", body: JSON.stringify(payload) }, 120_000),
+  rewrite: (payload: any) => request<any>("/generation/rewrite", { method: "POST", body: JSON.stringify(payload) }, 120_000),
+  adjust: (payload: any) => request<any>("/generation/adjust", { method: "POST", body: JSON.stringify(payload) }, 120_000),
 
-  check: (payload: any) => request<ComplianceResult>("/compliance/check", { method: "POST", body: JSON.stringify(payload) }),
+  check: (payload: any) => request<ComplianceResult>("/compliance/check", { method: "POST", body: JSON.stringify(payload) }, 120_000),
   rules: (params: Record<string, any>) => {
-    const qs = new URLSearchParams();
-    Object.entries(params).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== "") qs.append(k, String(v));
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") query.append(key, String(value));
     });
-    return request<{ total: number; rules: any[] }>(`/compliance/rules?${qs.toString()}`);
+    return request<{ total: number; offset: number; limit: number; rules: any[] }>(`/compliance/rules?${query.toString()}`);
   },
-  ruleDetail: (id: string) => request<RuleDetail>(`/compliance/rules/${id}`),
-  sourceDetail: (id: string) => request<SourceDetail>(`/compliance/sources/${id}`),
+  ruleDetail: (id: string) => request<RuleDetail>(`/compliance/rules/${encodeURIComponent(id)}`),
+  sourceDetail: (id: string) => request<SourceDetail>(`/compliance/sources/${encodeURIComponent(id)}`),
   reloadRules: () => request<any>("/compliance/reload", { method: "POST" }),
   validateRules: () => request<any>("/compliance/validate", { method: "POST" }),
+  testSuite: (limit?: number, includePassed = false) => {
+    const query = new URLSearchParams({ include_passed: String(includePassed) });
+    if (limit) query.set("limit", String(limit));
+    return request<TestSuiteResult>(`/compliance/test-suite?${query.toString()}`, { method: "POST" }, 180_000);
+  },
 
   history: (limit = 100) => request<HistoryRecord[]>(`/history?limit=${limit}`),
-  historyOne: (id: string) => request<HistoryRecord>(`/history/${id}`),
+  historyOne: (id: string) => request<HistoryRecord>(`/history/${encodeURIComponent(id)}`),
   addHistory: (payload: any) => request<any>("/history", { method: "POST", body: JSON.stringify(payload) }),
-  deleteHistory: (id: string) => request<any>(`/history/${id}`, { method: "DELETE" }),
+  deleteHistory: (id: string) => request<any>(`/history/${encodeURIComponent(id)}`, { method: "DELETE" }),
   clearHistory: () => request<any>("/history", { method: "DELETE" }),
 
   settings: () => request<Settings>("/settings"),

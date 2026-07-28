@@ -1,2 +1,36 @@
-.workbuddy
-医美内容合规规则库_v1.0
+# Agent / IDE
+.workbuddy/
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Node / Vite
+node_modules/
+dist/
+.vite/
+
+# Local secrets and runtime data
+.env
+.env.local
+*.db
+*.db-shm
+*.db-wal
+
+# Test and build caches
+coverage/
+htmlcov/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local rule-library upgrade artifacts
+**/_backup_before_*/
+**/supplements/
