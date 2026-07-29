@@ -7,9 +7,17 @@ from __future__ import annotations
 
 import json
 import re
+from dataclasses import dataclass
 
 from app.core import config
 from app.core.data_loader import get_store
+
+
+@dataclass(frozen=True)
+class ChatResult:
+    content: str
+    finish_reason: str
+    request_id: str
 
 
 class LLMProvider:
@@ -264,37 +272,104 @@ class OpenAICompatibleProvider(LLMProvider):
                 self._client = False
         return self._client if self._client is not False else None
 
-    def _chat(self, system_prompt: str, user_prompt: str) -> str:
+    def _is_deepseek(self) -> bool:
+        return "api.deepseek.com" in self.base_url.lower() or self.model.lower().startswith("deepseek")
+
+    def _chat_result(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        *,
+        json_mode: bool = False,
+        max_tokens: int | None = None,
+    ) -> ChatResult:
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+        request_max_tokens = int(max_tokens or self.max_tokens)
         client = self._get_client()
         if client is not None:
-            response = client.chat.completions.create(
-                model=self.model,
-                temperature=self.temperature,
-                max_tokens=self.max_tokens,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
+            kwargs = {
+                "model": self.model,
+                "temperature": self.temperature,
+                "max_tokens": request_max_tokens,
+                "messages": messages,
+            }
+            if json_mode:
+                kwargs["response_format"] = {"type": "json_object"}
+            if self._is_deepseek():
+                kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
+            response = client.chat.completions.create(**kwargs)
+            if not getattr(response, "choices", None):
+                return ChatResult("", "missing_choices", str(getattr(response, "id", "") or ""))
+            choice = response.choices[0]
+            return ChatResult(
+                str(getattr(choice.message, "content", "") or ""),
+                str(getattr(choice, "finish_reason", "") or ""),
+                str(getattr(response, "id", "") or ""),
             )
-            return response.choices[0].message.content or ""
 
         import requests
+        payload = {
+            "model": self.model,
+            "temperature": self.temperature,
+            "max_tokens": request_max_tokens,
+            "messages": messages,
+        }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
+        if self._is_deepseek():
+            payload["thinking"] = {"type": "disabled"}
         response = requests.post(
             f"{self.base_url}/chat/completions",
             headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
-            json={
-                "model": self.model,
-                "temperature": self.temperature,
-                "max_tokens": self.max_tokens,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-            },
+            json=payload,
             timeout=60,
         )
         response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        body = response.json()
+        choices = body.get("choices") or []
+        if not choices:
+            return ChatResult("", "missing_choices", str(body.get("id") or ""))
+        choice = choices[0] or {}
+        message = choice.get("message") or {}
+        return ChatResult(
+            str(message.get("content") or ""),
+            str(choice.get("finish_reason") or ""),
+            str(body.get("id") or ""),
+        )
+
+    def _chat(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        *,
+        json_mode: bool = False,
+        max_tokens: int | None = None,
+    ) -> str:
+        result = self._chat_result(
+            system_prompt,
+            user_prompt,
+            json_mode=json_mode,
+            max_tokens=max_tokens,
+        )
+        if not result.content.strip():
+            detail = self._empty_response_reason(result)
+            raise ValueError(detail)
+        return result.content
+
+    @staticmethod
+    def _empty_response_reason(result: ChatResult) -> str:
+        labels = {
+            "length": "输出达到 Token 上限",
+            "content_filter": "输出被内容安全策略过滤",
+            "insufficient_system_resource": "模型服务资源不足",
+            "missing_choices": "响应缺少 choices",
+        }
+        reason = labels.get(result.finish_reason, "模型返回空内容")
+        request = f"，请求 ID：{result.request_id}" if result.request_id else ""
+        return f"{reason}{request}"
 
     def generate(self, platform, content_type, inputs, prompt_template, brand_profile, versions) -> list[str]:
         profile = brand_profile or {}
@@ -333,26 +408,46 @@ class OpenAICompatibleProvider(LLMProvider):
             "严格返回 JSON 对象："
             "{\"semantic_findings\":[],\"needs_manual_review\":false,\"manual_review_reason\":\"\"}。"
         )
-        raw = self._chat(system_prompt, user_prompt)
-        try:
-            data = json.loads(self._extract_json(raw))
-            findings = data.get("semantic_findings", [])
-            if not isinstance(findings, list):
-                raise ValueError("semantic_findings 不是数组")
-            return {
-                "semantic_findings": findings,
-                "needs_manual_review": bool(data.get("needs_manual_review", False)),
-                "manual_review_reason": str(data.get("manual_review_reason") or ""),
-                "analysis_failed": False,
-            }
-        except Exception as exc:
-            return {
-                "semantic_findings": [],
-                "needs_manual_review": True,
-                "manual_review_reason": "模型语义检测结果无法解析，不能据此直接判断内容安全。",
-                "analysis_failed": True,
-                "failure_reason": f"语义检测解析失败：{exc}",
-            }
+        failure_reason = ""
+        for attempt in range(2):
+            retry_instruction = (
+                "\n上次响应为空或格式错误。请只返回一个完整 JSON 对象，不要输出解释或 Markdown。"
+                if attempt else ""
+            )
+            try:
+                result = self._chat_result(
+                    system_prompt,
+                    user_prompt + retry_instruction,
+                    json_mode=True,
+                    max_tokens=4096,
+                )
+                if not result.content.strip():
+                    failure_reason = self._empty_response_reason(result)
+                    continue
+                data = json.loads(self._extract_json(result.content))
+                if not isinstance(data, dict):
+                    raise ValueError("响应根节点不是 JSON 对象")
+                findings = data.get("semantic_findings", [])
+                if not isinstance(findings, list):
+                    raise ValueError("semantic_findings 不是数组")
+                return {
+                    "semantic_findings": findings,
+                    "needs_manual_review": bool(data.get("needs_manual_review", False)),
+                    "manual_review_reason": str(data.get("manual_review_reason") or ""),
+                    "analysis_failed": False,
+                }
+            except (json.JSONDecodeError, TypeError, ValueError) as exc:
+                failure_reason = f"模型返回的语义结果不是有效 JSON：{exc}"
+            except Exception as exc:
+                failure_reason = f"语义模型调用失败：{exc}"
+                break
+        return {
+            "semantic_findings": [],
+            "needs_manual_review": True,
+            "manual_review_reason": "模型语义检测结果无法解析，不能据此直接判断内容安全。",
+            "analysis_failed": True,
+            "failure_reason": failure_reason or "语义检测未返回可用结果。",
+        }
 
     def rewrite(self, text, matched_rules, platform, content_type) -> dict:
         prompt_path = config.PROMPTS_DIR / "compliance_rewrite.md"
@@ -364,6 +459,7 @@ class OpenAICompatibleProvider(LLMProvider):
         raw = self._chat(
             system_prompt,
             f"原文：{text}\n平台：{platform}\n内容类型：{content_type}\n命中规则：\n{rules_text}\n严格返回JSON。",
+            json_mode=True,
         )
         try:
             data = json.loads(self._extract_json(raw))
@@ -395,6 +491,7 @@ class OpenAICompatibleProvider(LLMProvider):
             system_prompt,
             f"调整类型：{adjust_type}\n平台：{platform}\n内容类型：{content_type}\n"
             f"要求：{requirements[adjust_type]}\n待调整文案：\n{text}",
+            json_mode=True,
         )
         try:
             data = json.loads(self._extract_json(raw))

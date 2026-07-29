@@ -198,6 +198,8 @@ export interface BannedWordHit {
   context_classification: "promotional" | "neutral" | "ambiguous" | string;
   requires_review: boolean;
   system_action?: string[];
+  occurrence_count?: number;
+  spans?: Array<{ start: number; end: number; matched_text: string }>;
 }
 
 export interface ManualReviewIssue {
@@ -215,6 +217,8 @@ export interface ComplianceStats {
   matched_rule_count: number;
   matched_span_count: number;
   banned_word_hit_count?: number;
+  banned_word_unique_count?: number;
+  banned_word_occurrence_count?: number;
   semantic_finding_count: number;
 }
 
@@ -233,6 +237,7 @@ export interface ComplianceResult {
   banned_word_hits?: BannedWordHit[];
   semantic_findings: SemanticFinding[];
   semantic_analysis_failed?: boolean;
+  semantic_failure_reason?: string;
   platform_findings: Array<{ type?: string; risk_level?: string; message?: string; [key: string]: any }>;
   manual_review_issues: ManualReviewIssue[];
   suggested_revision: string;

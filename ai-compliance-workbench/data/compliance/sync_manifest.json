@@ -1,5 +1,5 @@
 {
-  "synced_at": "2026-07-29T08:52:36.362700+00:00",
+  "synced_at": "2026-07-29T09:56:20.892437+00:00",
   "source_directory": "../医美内容合规规则库_v1.1/02_系统调用数据",
   "destination_directory": "data/compliance",
   "library_version": "v1.2-dev",
@@ -71,8 +71,8 @@
       "size_bytes": 99527
     },
     "rule_variants.json": {
-      "sha256": "69accded53b882389ff83755da6f0dce91ceaa9522a640fd5f241a6341d02e70",
-      "size_bytes": 284928
+      "sha256": "25ebad855a91150f1871bc64b118ca59c524e2bf864a0c362ae6ded8710bec20",
+      "size_bytes": 285078
     },
     "rules.json": {
       "sha256": "48b43159e18fb6db61297ab3f95741c300b333117380af8acb85ff01479673e9",
@@ -107,5 +107,5 @@
       "size_bytes": 55545
     }
   },
-  "backup_directory": "data/_backup_before_compliance_sync_20260729_165236"
+  "backup_directory": "data/_backup_before_compliance_sync_20260729_175620"
 }

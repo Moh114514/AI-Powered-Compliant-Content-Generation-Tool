@@ -83,6 +83,36 @@ def test_exact_duplicate_terms_merge_sources_and_longest_span_wins():
     assert not any(item["matched_text"] == "水光" for item in longest)
 
 
+def test_repeated_sensitive_term_is_grouped_but_keeps_all_spans():
+    text = "以下仅作项目原理科普，抗衰应结合个人情况评估。" * 26
+    result = check(text)
+    hits = [item for item in result["banned_word_hits"] if "BW0031" in item["source_ids"]]
+
+    assert len(hits) == 1
+    assert hits[0]["occurrence_count"] == 26
+    assert len(hits[0]["spans"]) == 26
+    assert len([item for item in result["highlights"] if item.get("hit_id") == hits[0]["hit_id"]]) == 26
+    assert len([
+        item for item in result["manual_review_issues"]
+        if item.get("banned_word_hit_id") == hits[0]["hit_id"]
+    ]) == 1
+    assert result["review_summary"].count("抗衰：") == 1
+    assert result["stats"]["banned_word_unique_count"] == len(result["banned_word_hits"])
+    assert result["stats"]["banned_word_occurrence_count"] >= 26
+
+
+def test_ordinary_ordinals_are_not_treated_as_rank_claims():
+    result = check("第一步了解原理，第一层关注风险，第一句话说明注意事项。")
+    assert not any("BW0122" in item["source_ids"] for item in result["banned_word_hits"])
+    assert not any(item["rule_id"] == "R-A01-002" for item in result["matched_rules"])
+
+
+def test_rank_claims_still_match_first_rule():
+    result = check("我们是全网排名第一的医美机构。")
+    assert any("BW0122" in item["source_ids"] for item in result["banned_word_hits"])
+    assert any(item["rule_id"] == "R-A01-002" for item in result["matched_rules"])
+
+
 def test_xhs_library_is_platform_scoped():
     assert check("加V领取资料。", platform="朋友圈", content_type="项目介绍")["banned_word_hits"] == []
     assert check("加V领取资料。", platform="小红书", content_type="项目介绍")["banned_word_hits"]
@@ -132,7 +162,7 @@ def test_status_and_api_contract_include_banned_word_data():
         for field in (
             "hit_id", "matched_text", "canonical_word", "start", "end", "domain",
             "risk_level", "reason", "replacements", "sources", "source_ids",
-            "context_classification", "requires_review",
+            "context_classification", "requires_review", "occurrence_count", "spans",
         ):
             assert field in hit
 

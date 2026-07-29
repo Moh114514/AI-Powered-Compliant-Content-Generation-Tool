@@ -24,7 +24,12 @@ _PROMOTIONAL_MARKERS = (
     "限时", "福利", "活动", "推荐", "种草", "体验", "效果", "改善", "变美",
     "年轻", "保证", "承诺", "全网", "排名", "第一", "首选",
 )
+_DOCUMENT_NEUTRAL_MARKERS = (
+    "项目原理", "科普说明", "理性了解", "客观介绍", "对比分析", "风险告知",
+    "注意事项", "适用情况", "专业评估", "不构成诊疗建议", "不能替代面诊",
+)
 _STRICT_DOMAINS = {"引流", "极限词", "功效承诺"}
+_RISK_PRIORITY = {"none": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
 _RISKY_SUPERLATIVES = (
     "最好", "最佳", "最高", "最低", "最强", "最大", "最小", "最优", "最先",
     "最早", "最晚", "最便宜", "最有效", "最安全", "最先进", "最专业",
@@ -149,6 +154,19 @@ def _is_single_superlative_match(normalized_text: str, start: int, end: int, ter
     return not (before.isascii() and before.isalnum()) and not (after.isascii() and after.isalnum())
 
 
+def _is_contextual_term_match(normalized_text: str, start: int, end: int, term: str) -> bool:
+    if not _is_single_superlative_match(normalized_text, start, end, term):
+        return False
+    if term != "第一":
+        return True
+    after = normalized_text[end:min(len(normalized_text), end + 5)]
+    ordinary_ordinal_suffixes = (
+        "步", "层", "句", "次", "阶段", "部分", "点", "种", "章", "节", "页",
+        "轮", "天", "周", "个月", "年", "件事", "个问题", "个原因",
+    )
+    return not any(after.startswith(suffix) for suffix in ordinary_ordinal_suffixes)
+
+
 def _has_local_negation(text: str, start: int, end: int) -> bool:
     before = text[max(0, start - 7):start]
     after = text[end:min(len(text), end + 7)]
@@ -169,9 +187,20 @@ def _classify_context(
         original[max(0, start - 32):start]
         + original[end:min(len(original), end + 32)]
     )
+    paragraph_start = max(original.rfind("\n", 0, start), original.rfind("。", 0, start)) + 1
+    paragraph_end_candidates = [
+        position for position in (original.find("\n", end), original.find("。", end))
+        if position >= 0
+    ]
+    paragraph_end = min(paragraph_end_candidates) if paragraph_end_candidates else len(original)
+    paragraph = original[paragraph_start:paragraph_end]
     if _has_local_negation(original, start, end):
         return "neutral", "medium", ["mandatory_human_review"], True
-    has_neutral = any(marker in window for marker in _NEUTRAL_MARKERS)
+    has_neutral = (
+        any(marker in window for marker in _NEUTRAL_MARKERS)
+        or any(marker in paragraph for marker in _DOCUMENT_NEUTRAL_MARKERS)
+        or any(marker in original for marker in _DOCUMENT_NEUTRAL_MARKERS)
+    )
     has_promotional = any(marker in window for marker in _PROMOTIONAL_MARKERS)
     if has_neutral and not has_promotional:
         return "neutral", "medium", ["mandatory_human_review"], True
@@ -241,14 +270,14 @@ def match_banned_words(
                 break
             end = start + len(needle)
             offset = end
-            if _is_single_superlative_match(normalized_text, start, end, needle):
+            if _is_contextual_term_match(normalized_text, start, end, needle):
                 candidates.append({
                     **term_entry,
                     "norm_start": start,
                     "norm_end": end,
                 })
 
-    hits: list[dict] = []
+    grouped_hits: dict[tuple[str, ...], dict] = {}
     highlights: list[dict] = []
     for ordinal, candidate in enumerate(_dedupe_overlaps(candidates), 1):
         start, end = map_span(index_map, candidate["norm_start"], candidate["norm_end"])
@@ -279,26 +308,42 @@ def match_banned_words(
         context, risk_level, actions, requires_review = _classify_context(
             original, start, end, domains, source_risks
         )
-        hit_id = f"xhs-bw:{'+'.join(source_ids)}:{start}:{end}"
+        group_key = tuple(source_ids) or tuple(canonical_words) or (candidate["normalized_term"],)
+        hit_id = f"xhs-bw:{'+'.join(group_key)}"
         matched_text = original[start:end]
-        hit = {
-            "hit_id": hit_id,
-            "matched_text": matched_text,
-            "canonical_word": " / ".join(canonical_words),
-            "start": start,
-            "end": end,
-            "domain": " / ".join(domains),
-            "risk_level": risk_level,
-            "source_risk_levels": source_risks,
-            "reason": "；".join(reasons),
-            "replacements": replacements,
-            "sources": sources,
-            "source_ids": source_ids,
-            "context_classification": context,
-            "requires_review": requires_review,
-            "system_action": actions,
-        }
-        hits.append(hit)
+        span = {"start": start, "end": end, "matched_text": matched_text}
+        hit = grouped_hits.get(group_key)
+        if hit is None:
+            grouped_hits[group_key] = {
+                "hit_id": hit_id,
+                "matched_text": matched_text,
+                "canonical_word": " / ".join(canonical_words),
+                "start": start,
+                "end": end,
+                "domain": " / ".join(domains),
+                "risk_level": risk_level,
+                "source_risk_levels": source_risks,
+                "reason": "；".join(reasons),
+                "replacements": replacements,
+                "sources": sources,
+                "source_ids": source_ids,
+                "context_classification": context,
+                "requires_review": requires_review,
+                "system_action": list(actions),
+                "occurrence_count": 1,
+                "spans": [span],
+            }
+        else:
+            hit["occurrence_count"] += 1
+            hit["spans"].append(span)
+            if _RISK_PRIORITY.get(risk_level, 0) > _RISK_PRIORITY.get(hit["risk_level"], 0):
+                hit["risk_level"] = risk_level
+            if context == "promotional":
+                hit["context_classification"] = "promotional"
+            elif context == "ambiguous" and hit["context_classification"] != "promotional":
+                hit["context_classification"] = "ambiguous"
+            hit["requires_review"] = bool(hit["requires_review"] or requires_review)
+            hit["system_action"] = list(dict.fromkeys([*hit["system_action"], *actions]))
         highlights.append({
             "rule_id": hit_id,
             "hit_id": hit_id,
@@ -310,22 +355,30 @@ def match_banned_words(
             "source_type": "xhs_banned_word",
             "ordinal": ordinal,
         })
-    return hits, highlights
+    return list(grouped_hits.values()), highlights
 
 
 def as_rewrite_rules(hits: list[dict]) -> list[dict]:
     """把专项命中转换为现有 Provider 可消费的改写约束。"""
     output: list[dict] = []
     for hit in hits:
+        spans = hit.get("spans") or [{
+            "start": hit.get("start", 0),
+            "end": hit.get("end", 0),
+            "matched_text": hit.get("matched_text", ""),
+        }]
         output.append({
             "rule_id": "/".join(hit.get("source_ids") or ["XHS-BW"]),
             "rule_name": f"小红书专项词：{hit.get('canonical_word', '')}",
             "replacement_strategy": hit.get("replacements") or [],
             "auto_rewrite_allowed": True,
-            "spans": [{
-                "start_index": hit.get("start", 0),
-                "end_index": hit.get("end", 0),
-            }],
+            "spans": [
+                {
+                    "start_index": span.get("start", 0),
+                    "end_index": span.get("end", 0),
+                }
+                for span in spans
+            ],
         })
     return output
 

@@ -27,7 +27,9 @@ def build_review_summary(result: dict) -> str:
         lines.append("小红书专项词：")
         for hit in result["banned_word_hits"]:
             suggestion = "；".join(hit.get("replacements") or []) or "请删除或改写"
-            lines.append(f"- {hit.get('matched_text', '')}：{suggestion}")
+            count = int(hit.get("occurrence_count") or 1)
+            suffix = f"（共 {count} 处）" if count > 1 else ""
+            lines.append(f"- {hit.get('matched_text', '')}{suffix}：{suggestion}")
         lines.append("")
     contacts = sorted({iss.get("recommended_contact") for iss in result.get("manual_review_issues", []) if iss.get("recommended_contact")})
     if contacts:
@@ -61,13 +63,13 @@ def build_report_markdown(result: dict) -> str:
         L.append("")
     if r.get("banned_word_hits"):
         L.append("## 小红书违禁/敏感词\n")
-        L.append("| 命中内容 | 标准词 | 风险等级 | 语境 | 替换建议 | 来源 |")
-        L.append("| --- | --- | --- | --- | --- | --- |")
+        L.append("| 命中内容 | 出现次数 | 标准词 | 风险等级 | 语境 | 替换建议 | 来源 |")
+        L.append("| --- | --- | --- | --- | --- | --- | --- |")
         for hit in r["banned_word_hits"]:
             replacements = "；".join(hit.get("replacements") or []) or "请删除或改写"
             sources = "；".join(hit.get("sources") or [])
             L.append(
-                f"| {hit.get('matched_text', '')} | {hit.get('canonical_word', '')} | "
+                f"| {hit.get('matched_text', '')} | {int(hit.get('occurrence_count') or 1)} | {hit.get('canonical_word', '')} | "
                 f"{config.RISK_LABELS.get(hit.get('risk_level'), hit.get('risk_level'))} | "
                 f"{hit.get('context_classification', '')} | {replacements} | {sources} |"
             )

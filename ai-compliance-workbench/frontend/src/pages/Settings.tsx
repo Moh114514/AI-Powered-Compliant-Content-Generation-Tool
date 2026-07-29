@@ -92,7 +92,7 @@ export default function Settings() {
             <Field label="API Base URL"><input className="input" value={settings.api_base || ""} disabled /></Field>
           </>}
           <Field label="温度（0—2）"><input type="number" className="input" value={settings.temperature ?? 0.7} disabled /></Field>
-          <Field label="最大 Token"><input type="number" className="input" value={settings.max_tokens ?? 1200} disabled /></Field>
+          <Field label="最大 Token"><input type="number" className="input" value={settings.max_tokens ?? 4096} disabled /></Field>
           <Note>模型配置由 <code>.env</code> 强制托管，每次启动重新读取；网页设置和历史 SQLite 配置不会覆盖。API Key 不在网页回显。</Note>
           {settings.model_provider !== "mock" && status && (
             <Note>

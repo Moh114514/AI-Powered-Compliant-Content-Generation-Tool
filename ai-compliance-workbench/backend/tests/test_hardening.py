@@ -117,6 +117,7 @@ def test_semantic_failure_never_silently_passes():
         settings={**BASE_SETTINGS, "enable_semantic_detection": True},
     )
     assert result["semantic_analysis_failed"] is True
+    assert "provider unavailable" in result["semantic_failure_reason"]
     assert result["manual_review_required"] is True
     assert result["publish_recommendation"] == "manual_review"
     assert any(issue["issue_type"] == "检测能力降级" for issue in result["manual_review_issues"])

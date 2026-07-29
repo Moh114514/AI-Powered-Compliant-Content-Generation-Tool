@@ -447,6 +447,7 @@ def run_compliance_check(
         "banned_word_hits": banned_word_hits,
         "semantic_findings": semantic_findings,
         "semantic_analysis_failed": semantic_failed,
+        "semantic_failure_reason": semantic_failure_reason,
         "platform_findings": platform_findings,
         "manual_review_issues": manual_review_issues,
         "suggested_revision": suggested_revision,
@@ -459,6 +460,10 @@ def run_compliance_check(
             "matched_rule_count": len(matched_rules),
             "matched_span_count": len(highlights),
             "banned_word_hit_count": len(banned_word_hits),
+            "banned_word_unique_count": len(banned_word_hits),
+            "banned_word_occurrence_count": sum(
+                int(hit.get("occurrence_count") or 1) for hit in banned_word_hits
+            ),
             "semantic_finding_count": len(semantic_findings),
         },
         "timings_ms": {

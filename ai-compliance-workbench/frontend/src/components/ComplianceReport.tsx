@@ -22,7 +22,10 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
     </div>
 
     {result.platform_findings?.map((finding, index) => <Notice key={index} tone="warning">⚠️ {finding.message || "存在平台专项风险。"}</Notice>)}
-    {result.semantic_analysis_failed && <Notice tone="error">语义检测未成功完成。当前结果只可作为确定性规则筛查，不能据此直接认定内容低风险。</Notice>}
+    {result.semantic_analysis_failed && <Notice tone="error">
+      语义检测未成功完成{result.semantic_failure_reason ? `：${result.semantic_failure_reason}` : "。"}
+      当前结果只可作为确定性规则筛查，不能据此直接认定内容低风险。
+    </Notice>}
 
     {result.overall_risk_level === "none" && !result.semantic_analysis_failed && <Notice tone="success">未发现明显高风险表达，但仍需核验主体资质、项目资质、图片和视频素材、数据来源、活动真实性及授权范围。</Notice>}
 
@@ -96,7 +99,7 @@ function BannedWordCard({ hit, selected }: { hit: BannedWordHit; selected: boole
     <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => setOpen((value) => !value)}>
       <RiskBadge meta={meta} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 600, fontSize: 14 }}>“{hit.matched_text}” <span style={{ color: "#6b7280", fontWeight: 400 }}>· {hit.domain}</span></div>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>“{hit.matched_text}” {Number(hit.occurrence_count || 1) > 1 && <span style={{ color: "#6b7280", fontWeight: 400 }}>× {hit.occurrence_count}</span>} <span style={{ color: "#6b7280", fontWeight: 400 }}>· {hit.domain}</span></div>
         <div style={{ fontSize: 12, color: "#6b7280" }}>标准词：{hit.canonical_word} · {contextLabel}</div>
       </div>
       <span style={{ fontSize: 12, color: "#9ca3af" }}>{open ? "收起 ▲" : "展开 ▼"}</span>
