@@ -37,6 +37,7 @@ export interface StatusInfo {
   provider_error?: string;
   api_key_configured?: boolean;
   model_name?: string;
+  model_config_source?: string;
   platforms: string[];
   prompt_version?: string;
   prompt_platform_count?: number;
@@ -47,6 +48,13 @@ export interface StatusInfo {
   prompt_custom_scene_count?: number;
   prompt_override_count?: number;
   default_platform_warning?: string;
+  xhs_banned_words_version?: string;
+  xhs_banned_words_valid?: boolean;
+  xhs_banned_word_count?: number;
+  xhs_banned_variant_count?: number;
+  xhs_banned_unique_term_count?: number;
+  xhs_banned_words_sha256?: string;
+  xhs_banned_words_warnings?: string[];
 }
 
 export interface PromptScene {
@@ -128,11 +136,13 @@ export interface SourceDetail {
 
 export interface HighlightSpan {
   rule_id: string;
+  hit_id?: string;
   variant_id?: string;
   matched_text: string;
   start_index: number;
   end_index: number;
   matching_method: string;
+  source_type?: string;
 }
 
 export interface MatchedRule {
@@ -172,10 +182,29 @@ export interface SemanticFinding {
   system_action?: string[];
 }
 
+export interface BannedWordHit {
+  hit_id: string;
+  matched_text: string;
+  canonical_word: string;
+  start: number;
+  end: number;
+  domain: string;
+  risk_level: string;
+  source_risk_levels?: string[];
+  reason: string;
+  replacements: string[];
+  sources: string[];
+  source_ids: string[];
+  context_classification: "promotional" | "neutral" | "ambiguous" | string;
+  requires_review: boolean;
+  system_action?: string[];
+}
+
 export interface ManualReviewIssue {
   issue_type: string;
   rule_id?: string;
   semantic_rule_id?: string;
+  banned_word_hit_id?: string;
   question: string;
   required_evidence: string;
   recommended_contact: string;
@@ -185,6 +214,7 @@ export interface ComplianceStats {
   applicable_rule_count: number;
   matched_rule_count: number;
   matched_span_count: number;
+  banned_word_hit_count?: number;
   semantic_finding_count: number;
 }
 
@@ -200,6 +230,7 @@ export interface ComplianceResult {
   publish_recommendation: string;
   manual_review_required: boolean;
   matched_rules: MatchedRule[];
+  banned_word_hits?: BannedWordHit[];
   semantic_findings: SemanticFinding[];
   semantic_analysis_failed?: boolean;
   platform_findings: Array<{ type?: string; risk_level?: string; message?: string; [key: string]: any }>;

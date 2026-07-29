@@ -51,6 +51,8 @@ OPTIONAL_FILES = (
     "compliance_rules.schema.json",
 )
 
+AUXILIARY_FILES = ("xhs_banned_words.json",)
+
 V12_MINIMUMS = {
     "sources.json": 20,
     "rules.json": 150,
@@ -115,6 +117,47 @@ def duplicate_values(records: list[dict], field: str) -> list[str]:
     return sorted(duplicates)
 
 
+def validate_xhs_banned_words(data: Any) -> dict:
+    errors: list[str] = []
+    records = as_list(data)
+    if not isinstance(data, list):
+        errors.append("xhs_banned_words.json 顶层必须是数组")
+    ids: set[str] = set()
+    unique_terms: set[str] = set()
+    variant_count = 0
+    for index, item in enumerate(records, 1):
+        item_id = str(item.get("id") or "").strip()
+        word = str(item.get("word") or "").strip()
+        if not item_id or not word:
+            errors.append(f"xhs_banned_words.json 第 {index} 条缺少 id/word")
+        if item_id in ids:
+            errors.append(f"xhs_banned_words.json 存在重复 id：{item_id}")
+        ids.add(item_id)
+        if str(item.get("risk_level") or "") not in {"违禁", "敏感"}:
+            errors.append(f"xhs_banned_words.json {item_id or index} 风险等级无效")
+        if not str(item.get("replacement") or "").strip():
+            errors.append(f"xhs_banned_words.json {item_id or index} 缺少 replacement")
+        variants = item.get("variants") or []
+        if not isinstance(variants, list):
+            errors.append(f"xhs_banned_words.json {item_id or index} 的 variants 必须是数组")
+            variants = []
+        variant_count += len(variants)
+        unique_terms.update(
+            str(term or "").strip().lower()
+            for term in [word, *variants]
+            if str(term or "").strip()
+        )
+    return {
+        "valid": not errors,
+        "errors": errors,
+        "counts": {
+            "xhs_banned_words.json": len(records),
+            "xhs_banned_word_variants": variant_count,
+            "xhs_banned_unique_terms": len(unique_terms),
+        },
+    }
+
+
 def validate_source(source: Path, enforce_v12: bool) -> dict:
     errors: list[str] = []
     warnings: list[str] = []
@@ -132,7 +175,7 @@ def validate_source(source: Path, enforce_v12: bool) -> dict:
     if errors:
         return {"valid": False, "errors": errors, "warnings": warnings, "counts": counts}
 
-    for filename in (*REQUIRED_FILES, *OPTIONAL_FILES):
+    for filename in (*REQUIRED_FILES, *OPTIONAL_FILES, *AUXILIARY_FILES):
         path = source / filename
         if not path.is_file():
             continue
@@ -143,6 +186,11 @@ def validate_source(source: Path, enforce_v12: bool) -> dict:
             continue
         if filename not in {"metadata.json", "risk_scoring.json", "compliance_rules.schema.json"}:
             counts[filename] = len(as_list(loaded[filename]))
+
+    if "xhs_banned_words.json" in loaded:
+        banned_validation = validate_xhs_banned_words(loaded["xhs_banned_words.json"])
+        errors.extend(banned_validation["errors"])
+        counts.update(banned_validation["counts"])
 
     for filename, field in ID_FIELDS.items():
         if filename not in loaded:
@@ -236,14 +284,20 @@ def validate_source(source: Path, enforce_v12: bool) -> dict:
 
 
 def runtime_files(source: Path) -> list[Path]:
-    allowed = set(REQUIRED_FILES) | set(OPTIONAL_FILES)
+    allowed = set(REQUIRED_FILES) | set(OPTIONAL_FILES) | set(AUXILIARY_FILES)
     return sorted(
         path for path in source.iterdir()
         if path.is_file() and path.name in allowed
     )
 
 
-def apply_sync(source: Path, destination: Path, validation: dict, no_backup: bool) -> Path:
+def apply_sync(
+    source: Path,
+    destination: Path,
+    validation: dict,
+    no_backup: bool,
+    auxiliary_files: list[Path] | None = None,
+) -> Path:
     timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     destination.mkdir(parents=True, exist_ok=True)
 
@@ -255,8 +309,15 @@ def apply_sync(source: Path, destination: Path, validation: dict, no_backup: boo
                 shutil.copy2(path, backup_dir / path.name)
 
     files = runtime_files(source)
+    for path in auxiliary_files or []:
+        if path.is_file() and path.name in AUXILIARY_FILES and all(
+            existing.name != path.name for existing in files
+        ):
+            files.append(path)
+    files = sorted(files, key=lambda path: path.name)
     source_names = {path.name for path in files}
     managed_names = set(REQUIRED_FILES) | set(OPTIONAL_FILES) | {"sync_manifest.json"}
+    managed_names.update(name for name in AUXILIARY_FILES if name in source_names)
 
     for existing in destination.iterdir():
         if existing.is_file() and existing.name in managed_names and existing.name not in source_names:
@@ -329,6 +390,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="同步前不生成本地备份，不推荐。",
     )
+    parser.add_argument(
+        "--xhs-banned-words",
+        type=Path,
+        default=None,
+        help="小红书专项词库 JSON；默认读取 02_系统调用数据 同级的 07_小红书违禁词库。",
+    )
     return parser
 
 
@@ -336,7 +403,24 @@ def main() -> int:
     args = build_parser().parse_args()
     source = args.source.expanduser().resolve()
     destination = args.destination.expanduser().resolve()
+    xhs_source = (
+        args.xhs_banned_words.expanduser().resolve()
+        if args.xhs_banned_words
+        else (source.parent / "07_小红书违禁词库" / "xhs_banned_words.json").resolve()
+    )
     validation = validate_source(source, enforce_v12=not args.allow_pre_v1_2)
+    auxiliary_files: list[Path] = []
+    if xhs_source.is_file() and not (source / "xhs_banned_words.json").is_file():
+        banned_data = read_json(xhs_source)
+        xhs_validation = validate_xhs_banned_words(banned_data)
+        validation["errors"].extend(xhs_validation["errors"])
+        auxiliary_files.append(xhs_source)
+        validation["counts"].update(xhs_validation["counts"])
+        validation["valid"] = not validation["errors"]
+    elif not (source / "xhs_banned_words.json").is_file():
+        validation["warnings"].append(
+            f"未找到小红书专项词库：{xhs_source}；应用同步时将保留目标目录中的现有词库。"
+        )
 
     print(json.dumps(validation, ensure_ascii=False, indent=2))
     if not validation["valid"]:
@@ -347,7 +431,13 @@ def main() -> int:
         print("\n校验通过。当前为只检查模式；添加 --apply 后执行同步。")
         return 0
 
-    backup_dir = apply_sync(source, destination, validation, args.no_backup)
+    backup_dir = apply_sync(
+        source,
+        destination,
+        validation,
+        args.no_backup,
+        auxiliary_files=auxiliary_files,
+    )
     post_validation = validate_source(destination, enforce_v12=not args.allow_pre_v1_2)
     if not post_validation["valid"]:
         print(json.dumps(post_validation, ensure_ascii=False, indent=2), file=sys.stderr)

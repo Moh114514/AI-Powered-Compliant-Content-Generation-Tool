@@ -84,6 +84,11 @@ class DataStore:
     test_cases: list = field(default_factory=list)
     visual_manual_checks: list = field(default_factory=list)
     risk_scoring: dict = field(default_factory=dict)
+    xhs_banned_words: list = field(default_factory=list)
+    xhs_banned_terms: list = field(default_factory=list)
+    xhs_banned_word_stats: dict = field(default_factory=dict)
+    xhs_banned_words_sha256: str = ""
+    xhs_banned_words_version: str = ""
 
     rules_by_id: dict = field(default_factory=dict)
     sources_by_id: dict = field(default_factory=dict)
@@ -130,6 +135,23 @@ def load_data() -> DataStore:
         store.visual_manual_checks = _as_list(_read_optional(directory, "visual_manual_checks.json", []))
         risk_scoring = _read_optional(directory, "risk_scoring.json", {})
         store.risk_scoring = risk_scoring if isinstance(risk_scoring, dict) else {}
+        banned_path = os.path.join(directory, "xhs_banned_words.json")
+        banned_present = os.path.isfile(banned_path)
+        banned_data = _read_optional(directory, "xhs_banned_words.json", [])
+        store.xhs_banned_words = banned_data if isinstance(banned_data, list) else []
+        from app.services.compliance.banned_words import (
+            VERSION as XHS_BANNED_WORDS_VERSION,
+            build_term_index,
+            file_sha256,
+            validate_records,
+        )
+        store.xhs_banned_word_stats = validate_records(
+            banned_data,
+            file_present=banned_present,
+        )
+        store.xhs_banned_terms = build_term_index(store.xhs_banned_words)
+        store.xhs_banned_words_sha256 = file_sha256(config.COMPLIANCE_DIR / "xhs_banned_words.json") if banned_present else ""
+        store.xhs_banned_words_version = XHS_BANNED_WORDS_VERSION
 
         store.rules_by_id = {rule["rule_id"]: rule for rule in store.rules if rule.get("rule_id")}
         store.sources_by_id = {source["source_id"]: source for source in store.sources if source.get("source_id")}
@@ -178,6 +200,9 @@ def validate_store(store: DataStore) -> dict:
     """执行结构、引用、正则与基础质量校验。"""
     errors: list[str] = []
     warnings: list[str] = []
+    banned_validation = store.xhs_banned_word_stats or {}
+    errors.extend(banned_validation.get("errors", []))
+    warnings.extend(banned_validation.get("warnings", []))
 
     rule_ids = [rule.get("rule_id") for rule in store.rules]
     source_ids = [source.get("source_id") for source in store.sources]
@@ -286,4 +311,7 @@ def validate_store(store: DataStore) -> dict:
         "test_case_count": len(store.test_cases),
         "visual_check_count": len(store.visual_manual_checks),
         "pending_review_count": pending_review_count,
+        "xhs_banned_word_count": banned_validation.get("record_count", 0),
+        "xhs_banned_variant_count": banned_validation.get("variant_count", 0),
+        "xhs_banned_unique_term_count": banned_validation.get("unique_term_count", 0),
     }

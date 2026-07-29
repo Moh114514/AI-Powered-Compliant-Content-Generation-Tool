@@ -68,6 +68,13 @@ CREATE TABLE IF NOT EXISTS prompt_overrides (
 """
 
 _ALLOWED_SETTING_KEYS = set(config.DEFAULT_SETTINGS)
+ENV_MANAGED_MODEL_KEYS = {
+    "model_provider",
+    "model_name",
+    "api_base",
+    "temperature",
+    "max_tokens",
+}
 _CONN: sqlite3.Connection | None = None
 _LOCK = threading.RLock()
 
@@ -121,6 +128,14 @@ def load_settings() -> dict:
     overrides = {row["key"]: _coerce(row["value"]) for row in rows if row["key"] in _ALLOWED_SETTING_KEYS}
     merged = dict(config.DEFAULT_SETTINGS)
     merged.update(overrides)
+    # 模型连接配置由 .env 强制托管，历史 SQLite 值不得覆盖。
+    merged.update({
+        "model_provider": "openai_compatible" if config.get_llm_api_key() else "mock",
+        "model_name": config.LLM_MODEL,
+        "api_base": config.LLM_BASE_URL,
+        "temperature": config.LLM_TEMPERATURE,
+        "max_tokens": config.LLM_MAX_TOKENS,
+    })
     try:
         from app.services.prompts.catalog import active_platform_names
         active_platforms = active_platform_names()
@@ -165,7 +180,11 @@ def _sanitize_setting(key: str, value: Any) -> Any:
 def save_settings(patch: dict) -> dict:
     if not isinstance(patch, dict):
         raise ValueError("设置内容必须是对象。")
-    sanitized = {key: _sanitize_setting(key, value) for key, value in patch.items()}
+    sanitized = {
+        key: _sanitize_setting(key, value)
+        for key, value in patch.items()
+        if key not in ENV_MANAGED_MODEL_KEYS
+    }
     with _LOCK:
         connection = _get_conn()
         for key, value in sanitized.items():

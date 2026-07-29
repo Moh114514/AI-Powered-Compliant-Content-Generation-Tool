@@ -161,6 +161,9 @@ def reload_rules():
             "validation_error_count": store.validation.get("error_count"),
             "validation_warning_count": store.validation.get("warning_count"),
             "pending_review_count": store.validation.get("pending_review_count", 0),
+            "xhs_banned_word_count": len(store.xhs_banned_words),
+            "xhs_banned_variant_count": store.xhs_banned_word_stats.get("variant_count", 0),
+            "xhs_banned_unique_term_count": store.xhs_banned_word_stats.get("unique_term_count", 0),
         })
     except Exception as exc:
         return fail(f"重新加载失败：{exc}", "COMPLIANCE_DATA_INVALID")

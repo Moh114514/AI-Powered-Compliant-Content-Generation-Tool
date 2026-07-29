@@ -4,16 +4,20 @@ from __future__ import annotations
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.api.routers import compliance, export, generation, history, platforms, prompts, settings, system
+from app.core import config
 from app.core.data_loader import load_data
 from app.repositories import db
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    config.prepare_runtime_files()
     db.init_db()
     app.state.compliance_load_error = None
     try:
@@ -57,12 +61,27 @@ app.include_router(history.router)
 app.include_router(settings.router)
 app.include_router(export.router)
 
+_frontend_index = config.FRONTEND_DIST_DIR / "index.html"
+_frontend_assets = config.FRONTEND_DIST_DIR / "assets"
+if _frontend_assets.exists():
+    app.mount("/assets", StaticFiles(directory=str(_frontend_assets)), name="frontend-assets")
+
 
 @app.get("/")
 def root():
+    if _frontend_index.exists():
+        return FileResponse(_frontend_index)
     return {
         "name": "AI医美内容合规工作台",
         "version": app.version,
         "docs": "/docs",
         "api": "/api/status",
     }
+
+
+if _frontend_index.exists():
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def frontend_spa(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API endpoint not found")
+        return FileResponse(_frontend_index)

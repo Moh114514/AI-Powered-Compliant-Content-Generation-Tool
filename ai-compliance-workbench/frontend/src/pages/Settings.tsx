@@ -82,18 +82,18 @@ export default function Settings() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }} className="set-grid">
         <Section title="模型配置">
           <Field label="Provider">
-            <select className="select" value={settings.model_provider || "mock"} onChange={(event) => set("model_provider", event.target.value)}>
+            <select className="select" value={settings.model_provider || "mock"} disabled>
               <option value="mock">Mock（演示模式，无需 API Key）</option>
               <option value="openai_compatible">OpenAI 兼容接口</option>
             </select>
           </Field>
           {settings.model_provider !== "mock" && <>
-            <Field label="模型名称"><input className="input" value={settings.model_name || ""} onChange={(event) => set("model_name", event.target.value)} /></Field>
-            <Field label="API Base URL"><input className="input" value={settings.api_base || ""} onChange={(event) => set("api_base", event.target.value)} /></Field>
+            <Field label="模型名称"><input className="input" value={settings.model_name || ""} disabled /></Field>
+            <Field label="API Base URL"><input className="input" value={settings.api_base || ""} disabled /></Field>
           </>}
-          <Field label="温度（0—2）"><input type="number" min={0} max={2} step="0.1" className="input" value={settings.temperature ?? 0.7} onChange={(event) => set("temperature", Number(event.target.value))} /></Field>
-          <Field label="最大 Token"><input type="number" min={128} max={32000} className="input" value={settings.max_tokens ?? 1200} onChange={(event) => set("max_tokens", Number(event.target.value))} /></Field>
-          <Note>API Key 仅通过项目根目录 <code>.env</code> 中的 <code>LLM_API_KEY</code> 配置，不在网页保存。</Note>
+          <Field label="温度（0—2）"><input type="number" className="input" value={settings.temperature ?? 0.7} disabled /></Field>
+          <Field label="最大 Token"><input type="number" className="input" value={settings.max_tokens ?? 1200} disabled /></Field>
+          <Note>模型配置由 <code>.env</code> 强制托管，每次启动重新读取；网页设置和历史 SQLite 配置不会覆盖。API Key 不在网页回显。</Note>
           {settings.model_provider !== "mock" && status && (
             <Note>
               当前状态：{status.provider_ready
@@ -152,6 +152,8 @@ export default function Settings() {
           <Info label="测试样本" value={`${status.test_case_count ?? 0} 条`} />
           <Info label="视觉检查项" value={`${status.visual_check_count ?? 0} 条`} />
           <Info label="待人工复核规则" value={`${status.pending_review_count ?? 0} 条`} />
+          <Info label="小红书专项词" value={`${status.xhs_banned_word_count ?? 0} 条（${status.xhs_banned_unique_term_count ?? 0} 个词及变体）`} />
+          <Info label="专项词库版本" value={status.xhs_banned_words_version || "未加载"} />
           <Info label="校验" value={status.validation_valid ? `通过（${status.validation_warning_count ?? 0} 条警告）` : `异常（${status.validation_error_count}）`} />
           <Info label="运行模式" value={status.demo_mode ? "演示模式" : status.provider_ready === false ? "真实模型未就绪" : "真实模型已就绪"} />
           <Info label="当前模型" value={status.demo_mode ? "Mock" : status.model_name || "—"} />
@@ -160,6 +162,9 @@ export default function Settings() {
           <Info label="提示词覆盖" value={`${status.prompt_override_count ?? 0} 项`} />
           <Info label="最近加载" value={status.loaded_at || "—"} />
         </div> : <div style={{ color: "#6b7280" }}>正在读取状态……</div>}
+        {!!status?.xhs_banned_words_warnings?.length && <div style={{ marginTop: 10, color: "#92400e", fontSize: 12 }}>
+          {status.xhs_banned_words_warnings.join("；")}
+        </div>}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
           <button className="btn" onClick={reloadRules} disabled={busy !== null}><RefreshCw size={16} /> {busy === "reload" ? "加载中…" : "重新加载规则库"}</button>
           <button className="btn" onClick={validate} disabled={busy !== null}><CheckCircle size={16} /> {busy === "validate" ? "校验中…" : "运行数据校验"}</button>

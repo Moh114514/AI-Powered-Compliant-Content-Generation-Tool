@@ -23,6 +23,12 @@ def build_review_summary(result: dict) -> str:
         for m in result["matched_rules"]:
             lines.append(f"- {m['rule_id']} {m['rule_name']}")
         lines.append("")
+    if result.get("banned_word_hits"):
+        lines.append("小红书专项词：")
+        for hit in result["banned_word_hits"]:
+            suggestion = "；".join(hit.get("replacements") or []) or "请删除或改写"
+            lines.append(f"- {hit.get('matched_text', '')}：{suggestion}")
+        lines.append("")
     contacts = sorted({iss.get("recommended_contact") for iss in result.get("manual_review_issues", []) if iss.get("recommended_contact")})
     if contacts:
         lines.append("建议对接：" + "、".join(contacts) + "。")
@@ -52,6 +58,19 @@ def build_report_markdown(result: dict) -> str:
         for m in r["matched_rules"]:
             acts = "、".join(config.SYSTEM_ACTION_LABELS.get(a, a) for a in m.get("system_action", []))
             L.append(f"| {m['rule_id']} | {m['rule_name']} | {config.RISK_LABELS.get(m['risk_level'], m['risk_level'])} | {m['matched_text']} | {acts} |")
+        L.append("")
+    if r.get("banned_word_hits"):
+        L.append("## 小红书违禁/敏感词\n")
+        L.append("| 命中内容 | 标准词 | 风险等级 | 语境 | 替换建议 | 来源 |")
+        L.append("| --- | --- | --- | --- | --- | --- |")
+        for hit in r["banned_word_hits"]:
+            replacements = "；".join(hit.get("replacements") or []) or "请删除或改写"
+            sources = "；".join(hit.get("sources") or [])
+            L.append(
+                f"| {hit.get('matched_text', '')} | {hit.get('canonical_word', '')} | "
+                f"{config.RISK_LABELS.get(hit.get('risk_level'), hit.get('risk_level'))} | "
+                f"{hit.get('context_classification', '')} | {replacements} | {sources} |"
+            )
         L.append("")
     if r.get("semantic_findings"):
         L.append("## 语义风险\n")

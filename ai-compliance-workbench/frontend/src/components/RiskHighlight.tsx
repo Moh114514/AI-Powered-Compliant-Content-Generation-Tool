@@ -19,7 +19,7 @@ export function RiskHighlight({
           <mark
             key={i}
             className="risk-hit"
-            title={`命中：${s.hit.matched_text}（${s.hit.rule_id}）`}
+            title={`命中：${s.hit.matched_text}（${s.hit.source_type === "xhs_banned_word" ? "小红书专项词" : s.hit.rule_id}）`}
             onClick={() => onSelect && onSelect(s.hit!)}
             style={{ cursor: onSelect ? "pointer" : "default" }}
           >

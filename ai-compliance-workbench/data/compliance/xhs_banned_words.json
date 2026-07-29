@@ -1,0 +1,2027 @@
+[
+  {
+    "id": "BW0001",
+    "word": "超声刀",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "射频紧致类项目（需机构资质，禁止无资质宣传）",
+    "reason": "医美器械名称，平台严管无资质宣传",
+    "variants": [
+      "超生刀",
+      "超声🔪",
+      "超声波刀"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0002",
+    "word": "热玛吉",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "射频抗衰项目（需机构资质）",
+    "reason": "医美器械，无资质禁止宣传",
+    "variants": [
+      "热玛吉五代",
+      "thermage"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0003",
+    "word": "超声炮",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "超声抗衰项目（需机构资质）",
+    "reason": "医美器械，无资质禁止宣传",
+    "variants": [
+      "半岛超声炮"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0004",
+    "word": "水光针",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "中胚层疗法（需机构资质）",
+    "reason": "注射类医美，属医疗行为",
+    "variants": [
+      "水光",
+      "无针水光"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0005",
+    "word": "瘦脸针",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "咬肌放松（需机构资质，处方药）",
+    "reason": "A型肉毒素注射，属医疗行为",
+    "variants": [
+      "保妥适",
+      "衡力"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0006",
+    "word": "美白针",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（禁止无资质宣传，属违规注射）",
+    "reason": "注射类美白，平台严管",
+    "variants": [
+      "谷胱甘肽针"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0007",
+    "word": "溶脂针",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "体态管理（需机构资质）",
+    "reason": "注射溶脂，属医疗行为",
+    "variants": [
+      "溶脂"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0008",
+    "word": "微整",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "轻医美（需机构资质）",
+    "reason": "微型整形，属医疗行为",
+    "variants": [
+      "微整形"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0009",
+    "word": "整形",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "医美手术项目（需机构资质）",
+    "reason": "整形手术，属医疗行为",
+    "variants": [
+      "整形手术"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0010",
+    "word": "线雕",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "埋线提升（需机构资质）",
+    "reason": "埋线提升，属医疗行为",
+    "variants": [
+      "埋线"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0011",
+    "word": "埋线",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "线雕提升（需机构资质）",
+    "reason": "埋线类医美，属医疗行为",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0012",
+    "word": "自体脂肪",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "脂肪移植（需机构资质）",
+    "reason": "脂肪填充，属医疗行为",
+    "variants": [
+      "自体脂肪填充"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0013",
+    "word": "光子嫩肤",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "强脉冲光（需机构资质描述）",
+    "reason": "光电类医美项目",
+    "variants": [
+      "强脉冲光"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0014",
+    "word": "皮秒",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "激光净肤（需机构资质）",
+    "reason": "激光类医美项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0015",
+    "word": "点阵激光",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "点阵焕肤（需机构资质）",
+    "reason": "激光类医美项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0016",
+    "word": "黄金微针",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "射频微针（需机构资质）",
+    "reason": "微创类医美项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0017",
+    "word": "热拉提",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "射频紧致（需机构资质）",
+    "reason": "医美器械项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0018",
+    "word": "欧洲之星",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "Fotona（需机构资质）",
+    "reason": "医美器械品牌项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0019",
+    "word": "7D聚拉提",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "超声抗衰（需机构资质）",
+    "reason": "医美器械项目",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0020",
+    "word": "医美级",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "专业线/院线级（无资质禁用）",
+    "reason": "普通商品禁用医美宣称",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0021",
+    "word": "医药级",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用医药宣称）",
+    "reason": "普通商品禁用医药级宣称",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0022",
+    "word": "院线同款",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "暗示医美/院线功效",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0023",
+    "word": "医用平替",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "暗示医用功效",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0024",
+    "word": "医用",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "（普通商品禁用医用宣称）",
+    "reason": "普通商品禁用医用级宣称",
+    "variants": [
+      "医用级"
+    ],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0025",
+    "word": "医疗器械平替",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "暗示医疗器械功效",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0026",
+    "word": "注射类美容",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（属医疗行为，需资质）",
+    "reason": "注射类项目属医疗行为",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0027",
+    "word": "无菌敷料",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "医用敷料（需械字号）",
+    "reason": "医用敷料需合规标注",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0028",
+    "word": "医美原液",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "暗示医美成分",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0029",
+    "word": "医美同款",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "暗示医美同源",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0030",
+    "word": "医疗级",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "普通商品禁用医疗级宣称",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0031",
+    "word": "抗衰老",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "抗初老/紧致（避免医疗宣称）",
+    "reason": "普通护肤品避免医疗功效宣称",
+    "variants": [
+      "抗衰"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0032",
+    "word": "除皱",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "淡化纹路/肌肤维稳",
+    "reason": "普通商品禁用医疗功效宣称",
+    "variants": [
+      "去皱",
+      "祛皱"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0033",
+    "word": "溶脂",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "体态管理",
+    "reason": "普通商品禁用溶脂宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0034",
+    "word": "燃烧脂肪",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "体态管理",
+    "reason": "普通商品禁用燃脂宣称",
+    "variants": [
+      "燃脂"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0035",
+    "word": "丰胸",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "体态管理（普通商品禁用）",
+    "reason": "普通商品禁用丰胸宣称",
+    "variants": [
+      "丰乳"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0036",
+    "word": "瘦脸",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "面部轮廓管理（需资质）",
+    "reason": "普通商品禁用瘦脸宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0037",
+    "word": "瘦腿",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "体态管理（普通商品禁用）",
+    "reason": "普通商品禁用瘦腿宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0038",
+    "word": "减肥",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "体重管理/健康饮食",
+    "reason": "普通商品禁用减肥宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0039",
+    "word": "瘦身",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "体态管理",
+    "reason": "普通商品禁用瘦身宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0040",
+    "word": "祛疤",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "淡化印记/肌肤修护",
+    "reason": "普通商品禁用祛疤宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0041",
+    "word": "祛斑",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "匀净肤色/淡化色沉",
+    "reason": "普通商品禁用祛斑宣称",
+    "variants": [
+      "淡斑"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0042",
+    "word": "祛痘",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "舒缓痘肌/控油",
+    "reason": "普通商品禁用祛痘医疗宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0043",
+    "word": "美白",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "提亮肤色/改善暗沉",
+    "reason": "普通商品禁用美白医疗功效宣称",
+    "variants": [
+      "美白嫩肤"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0044",
+    "word": "处方药",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（禁止无资质宣传）",
+    "reason": "处方药须合规渠道",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0045",
+    "word": "消炎抑菌",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "舒缓泛红（普通美妆禁用医疗词）",
+    "reason": "普通美妆禁用消炎医疗词",
+    "variants": [
+      "消炎"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0046",
+    "word": "干细胞",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（成分违规）",
+    "reason": "普通商品禁用干细胞宣称",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0047",
+    "word": "胎盘素",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（成分违规）",
+    "reason": "普通商品禁用胎盘素宣称",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0048",
+    "word": "激素",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（成分违规）",
+    "reason": "普通商品禁用激素宣称",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0049",
+    "word": "抗生素",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（成分违规）",
+    "reason": "普通商品禁用抗生素宣称",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0050",
+    "word": "药用成分",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（普通商品禁用）",
+    "reason": "普通商品禁用药用成分宣称",
+    "variants": [
+      "药用"
+    ],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0051",
+    "word": "药妆",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "（概念违规）",
+    "reason": "药妆为非规范宣称",
+    "variants": [],
+    "source": "小红书医美治理专项公告(S-XHS-01/02/03)"
+  },
+  {
+    "id": "BW0052",
+    "word": "婴儿可用",
+    "domain": "医美",
+    "risk_level": "违禁",
+    "replacement": "需婴幼儿化妆品专项备案",
+    "reason": "2026新规：禁标婴儿可用",
+    "variants": [],
+    "source": "2026小红书完整违禁词汇总(opp2.com)"
+  },
+  {
+    "id": "BW0053",
+    "word": "孕妇可用",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "需提供专项检测报告",
+    "reason": "2026新规：孕妇可用需报告",
+    "variants": [],
+    "source": "2026小红书完整违禁词汇总(opp2.com)"
+  },
+  {
+    "id": "BW0054",
+    "word": "无菌",
+    "domain": "医美",
+    "risk_level": "敏感",
+    "replacement": "普通商品慎用（需资质）",
+    "reason": "普通食品/商品禁用无菌宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0055",
+    "word": "治疗",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "改善/舒缓（避免医疗宣称）",
+    "reason": "普通商品禁用治疗宣称",
+    "variants": [
+      "医治",
+      "疗效"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0056",
+    "word": "治愈",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止治愈承诺）",
+    "reason": "普通商品禁用治愈宣称",
+    "variants": [
+      "痊愈",
+      "康复"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0057",
+    "word": "根治",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止根治承诺）",
+    "reason": "普通商品禁用根治宣称",
+    "variants": [
+      "根除",
+      "断根",
+      "药到病除"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0058",
+    "word": "消炎",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "舒缓/镇定",
+    "reason": "普通商品禁用消炎医疗词",
+    "variants": [
+      "杀菌",
+      "消肿",
+      "止痛"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0059",
+    "word": "抗病毒",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止抗病毒宣称）",
+    "reason": "普通商品禁用抗病毒宣称",
+    "variants": [
+      "防癌",
+      "抗癌"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0060",
+    "word": "降血糖",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止降糖宣称）",
+    "reason": "普通商品禁用降血糖宣称",
+    "variants": [
+      "降血压",
+      "降血脂",
+      "降糖"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0061",
+    "word": "养胃治病",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止治病宣称）",
+    "reason": "普通商品禁用治病宣称",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0062",
+    "word": "处方",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止处方宣称）",
+    "reason": "普通商品禁用处方宣称",
+    "variants": [
+      "临床验证",
+      "医学证明"
+    ],
+    "source": "三品一械广告规则(check51)"
+  },
+  {
+    "id": "BW0063",
+    "word": "医生推荐",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止医师推荐证明）",
+    "reason": "禁止利用医师名义推荐",
+    "variants": [
+      "专家认证",
+      "权威机构"
+    ],
+    "source": "三品一械广告规则(check51)"
+  },
+  {
+    "id": "BW0064",
+    "word": "FDA认证",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "（须真实可查）",
+    "reason": "认证宣称须有依据",
+    "variants": [
+      "药监局批准"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0065",
+    "word": "壮阳",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止壮阳宣称）",
+    "reason": "普通商品禁用壮阳宣称",
+    "variants": [
+      "补肾"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0066",
+    "word": "排毒",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止排毒宣称）",
+    "reason": "普通商品禁用排毒宣称",
+    "variants": [
+      "清除自由基"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0067",
+    "word": "修复激素脸",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止医疗功效宣称）",
+    "reason": "普通商品禁用修复激素脸",
+    "variants": [
+      "修复受损肌肤"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0068",
+    "word": "增强免疫力",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "仅蓝帽子保健食品可标注",
+    "reason": "普通食品禁用增强免疫宣称",
+    "variants": [
+      "提高记忆力",
+      "健脑"
+    ],
+    "source": "2026小红书完整违禁词汇总(opp2.com)"
+  },
+  {
+    "id": "BW0069",
+    "word": "延年益寿",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止延年益寿宣称）",
+    "reason": "普通商品禁用延年益寿宣称",
+    "variants": [
+      "调理三高",
+      "祛湿治病"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0070",
+    "word": "止咳化痰",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止止咳化痰宣称）",
+    "reason": "普通商品禁用止咳化痰宣称",
+    "variants": [
+      "护肝排毒"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0071",
+    "word": "防脱发",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "养护发丝",
+    "reason": "普通化妆品禁用防脱发医疗功效",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0072",
+    "word": "改善睡眠",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "放松舒缓",
+    "reason": "普通商品禁用改善睡眠医疗宣称",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0073",
+    "word": "一洗白",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止一洗白宣称）",
+    "reason": "普通商品禁用一洗白医疗功效",
+    "variants": [
+      "速白",
+      "秒白"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0074",
+    "word": "治愈率",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止治愈率宣称）",
+    "reason": "普通商品禁用治愈率数据",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0075",
+    "word": "恢复健康",
+    "domain": "医疗",
+    "risk_level": "违禁",
+    "replacement": "（禁止恢复健康宣称）",
+    "reason": "普通商品禁用恢复健康宣称",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0076",
+    "word": "抗菌",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "（普通商品慎用）",
+    "reason": "普通商品禁用抗菌医疗宣称",
+    "variants": [
+      "抗感染"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0077",
+    "word": "手癣",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "（疾病名，普通商品禁用关联宣称）",
+    "reason": "普通商品宣传缓解=医疗夸大",
+    "variants": [
+      "脚气",
+      "牛皮癣"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0078",
+    "word": "哮喘",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "（疾病名，普通商品禁用关联宣称）",
+    "reason": "普通商品宣传缓解=医疗夸大",
+    "variants": [
+      "便秘",
+      "高血压"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0079",
+    "word": "糖尿病",
+    "domain": "医疗",
+    "risk_level": "敏感",
+    "replacement": "（疾病名，普通商品禁用关联宣称）",
+    "reason": "普通商品宣传缓解=医疗夸大",
+    "variants": [
+      "皮炎",
+      "湿疹"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0080",
+    "word": "微信",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除，使用小红书官方留资/店铺组件）",
+    "reason": "站外导流直接封号",
+    "variants": [
+      "V信",
+      "薇信",
+      "wx",
+      "vx",
+      "威❤️信",
+      "薇❤️信",
+      "微信号",
+      "加微信",
+      "客服微信"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0081",
+    "word": "V信",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "微信变体，属站外导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0082",
+    "word": "薇信",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "微信变体，属站外导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0083",
+    "word": "wx",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "微信拼音缩写，属站外导流",
+    "variants": [
+      "vx"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0084",
+    "word": "vx",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "微信拼音缩写，属站外导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0085",
+    "word": "私聊",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "评论区互动",
+    "reason": "暗示站外私下交易",
+    "variants": [
+      "私信我",
+      "加我",
+      "联系我"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0086",
+    "word": "扣扣",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "QQ变体，属站外导流",
+    "variants": [
+      "QQ"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0087",
+    "word": "QQ",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外联系方式",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0088",
+    "word": "电话",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外联系方式",
+    "variants": [
+      "手机号"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0089",
+    "word": "手机号",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外联系方式",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0090",
+    "word": "二维码",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "图片/内容含二维码属导流",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0091",
+    "word": "链接",
+    "domain": "引流",
+    "risk_level": "敏感",
+    "replacement": "（删除站外链接）",
+    "reason": "站外链接/网址属导流",
+    "variants": [
+      "网址",
+      "站外链接"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0092",
+    "word": "小窗",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私信导流",
+    "variants": [
+      "戳我",
+      "点我头像"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0093",
+    "word": "看我主页",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "引导跳转站外/私域",
+    "variants": [
+      "看主页",
+      "个人简介有"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0094",
+    "word": "想要的姐妹私我",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（改为评论区互动）",
+    "reason": "暗示私信导流",
+    "variants": [
+      "需要的评论区扣1"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0095",
+    "word": "进群",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "引导加群属站外导流",
+    "variants": [
+      "资源分享"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0096",
+    "word": "淘宝",
+    "domain": "引流",
+    "risk_level": "敏感",
+    "replacement": "（使用小红书店铺）",
+    "reason": "站外电商平台导流",
+    "variants": [
+      "京东",
+      "闲鱼",
+      "淘口令",
+      "微店"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0097",
+    "word": "代购",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私域交易",
+    "variants": [
+      "拼单",
+      "转卖",
+      "代购私单"
+    ],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0098",
+    "word": "扫码领福利",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "诱导扫码导流",
+    "variants": [
+      "加V",
+      "线下门店私联"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0099",
+    "word": "私信领取",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私信导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0100",
+    "word": "找我购买",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除，用官方组件）",
+    "reason": "品牌号禁止商业导流信息",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0101",
+    "word": "可代购",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "品牌号禁止代购信息",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0102",
+    "word": "微信链接",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外导流",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0103",
+    "word": "购买方式水印",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "图片水印含购买方式",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0104",
+    "word": "引流",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除，平台内完成转化）",
+    "reason": "站外引流行为",
+    "variants": [
+      "导流",
+      "私域"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0105",
+    "word": "公众号",
+    "domain": "引流",
+    "risk_level": "敏感",
+    "replacement": "（删除）",
+    "reason": "引导到站外公众号",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0106",
+    "word": "闲鱼",
+    "domain": "引流",
+    "risk_level": "敏感",
+    "replacement": "（删除）",
+    "reason": "站外二手平台导流",
+    "variants": [
+      "淘宝",
+      "京东"
+    ],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0107",
+    "word": "淘口令",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外电商口令导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0108",
+    "word": "微店",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外店铺导流",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0109",
+    "word": "拼单",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私下交易",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0110",
+    "word": "转卖",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私下交易",
+    "variants": [],
+    "source": "小红书《品牌号社区运营规范》"
+  },
+  {
+    "id": "BW0111",
+    "word": "线下门店私联",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "引导线下私联",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0112",
+    "word": "代购私单",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私单交易",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0113",
+    "word": "站外链接",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "发布其他平台链接/口令/截图",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0114",
+    "word": "加V",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "微信变体导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0115",
+    "word": "看主页",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "引导看主页导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0116",
+    "word": "个人简介有",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "简介暗示站外信息",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0117",
+    "word": "需要的评论区扣1",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（改为正常互动）",
+    "reason": "诱导私信导流",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0118",
+    "word": "资源分享",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "暗示私域资源",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0119",
+    "word": "客服微信",
+    "domain": "引流",
+    "risk_level": "违禁",
+    "replacement": "（删除）",
+    "reason": "站外联系方式",
+    "variants": [],
+    "source": "小红书《交易导流违规管理细则》(2025-03-12)"
+  },
+  {
+    "id": "BW0120",
+    "word": "最",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "很/挺/比较",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "蕞",
+      "zui",
+      "ZEUI",
+      "最D"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0121",
+    "word": "最佳",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "很好用/口碑很好",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "最优",
+      "最好",
+      "最强"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0122",
+    "word": "第一",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "口碑很好/强烈推荐",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "唯一",
+      "首个",
+      "独家",
+      "独一无二"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0123",
+    "word": "顶级",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（避免绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "极致",
+      "绝对",
+      "无敌",
+      "No.1"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0124",
+    "word": "全网最低",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（避免虚假价格对比）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "史上最低价",
+      "全网最佳",
+      "全民最爱"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0125",
+    "word": "国家级",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化/权威虚构）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "世界级",
+      "全球级",
+      "宇宙级",
+      "极品"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0126",
+    "word": "质量免检",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（过时违规表述）",
+    "reason": "虚构权威标签",
+    "variants": [
+      "免抽检",
+      "中国驰名商标",
+      "特供",
+      "专供"
+    ],
+    "source": "新《广告法》极限词规定+小红书社区规范"
+  },
+  {
+    "id": "BW0127",
+    "word": "史无前例",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "空前绝后",
+      "绝版",
+      "万能"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0128",
+    "word": "100%",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "亲测有效/很多人反馈",
+    "reason": "无法考证数据，广告法禁用",
+    "variants": [
+      "百分百",
+      "100分",
+      "满分"
+    ],
+    "source": "新《广告法》极限词规定+小红书社区规范"
+  },
+  {
+    "id": "BW0129",
+    "word": "永久",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化承诺）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "全网首发",
+      "仅此一家",
+      "绝无仅有"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0130",
+    "word": "遥遥领先",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "行业领袖",
+      "世界领先",
+      "引领行业"
+    ],
+    "source": "新《广告法》极限词规定+小红书社区规范"
+  },
+  {
+    "id": "BW0131",
+    "word": "王者",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "虚构品牌地位",
+    "variants": [
+      "王牌",
+      "领袖品牌",
+      "缔造者"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0132",
+    "word": "顶尖",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "顶配",
+      "鼎级",
+      "TOP级"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0133",
+    "word": "最便宜",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化价格）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "最火",
+      "最安全",
+      "最先进",
+      "最舒服",
+      "最大",
+      "最小"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0134",
+    "word": "业界第一",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "全球级",
+      "宇宙级"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0135",
+    "word": "史上最强",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "史上最低价"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0136",
+    "word": "绝无仅有",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [
+      "仅此一家",
+      "独一无二"
+    ],
+    "source": "新《广告法》极限词规定+市场监管总局提醒"
+  },
+  {
+    "id": "BW0137",
+    "word": "万能",
+    "domain": "极限词",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化）",
+    "reason": "广告法禁用绝对化用语",
+    "variants": [],
+    "source": "新《广告法》极限词规定+小红书社区规范"
+  },
+  {
+    "id": "BW0138",
+    "word": "100%有效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "亲测有改善",
+    "reason": "无法考证的效果承诺",
+    "variants": [
+      "百分百见效"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0139",
+    "word": "无效退款",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除保证性承诺）",
+    "reason": "保证性承诺属虚假宣传",
+    "variants": [
+      "包治百病",
+      "假一赔十"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0140",
+    "word": "彻底根治",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止根治承诺）",
+    "reason": "绝对化效果承诺",
+    "variants": [
+      "永不复发",
+      "快速根治"
+    ],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0141",
+    "word": "零风险",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除保证性承诺）",
+    "reason": "零风险保障属虚假宣传",
+    "variants": [
+      "无副作用",
+      "无毒无害"
+    ],
+    "source": "三品一械广告规则(check51)"
+  },
+  {
+    "id": "BW0142",
+    "word": "无副作用",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止安全宣称）",
+    "reason": "三品一械广告禁含安全无毒副作用",
+    "variants": [
+      "无毒副作用"
+    ],
+    "source": "三品一械广告规则(check51)"
+  },
+  {
+    "id": "BW0143",
+    "word": "一次搞定",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除绝对化承诺）",
+    "reason": "绝对化效果承诺",
+    "variants": [
+      "一次通过",
+      "终身保修",
+      "绝对靠谱"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0144",
+    "word": "秒变好",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除速效承诺）",
+    "reason": "速效承诺属虚假宣传",
+    "variants": [
+      "秒变",
+      "立竿见影"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0145",
+    "word": "立即见效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "用了一段时间有变化",
+    "reason": "速效承诺属虚假宣传",
+    "variants": [
+      "当天见效",
+      "立刻改善"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0146",
+    "word": "一用就白",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "提亮肤色",
+    "reason": "速效美白承诺属虚假宣传",
+    "variants": [
+      "一抹就瘦",
+      "一洗白"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0147",
+    "word": "奇迹",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "好物/宝藏",
+    "reason": "夸大宣传用语",
+    "variants": [
+      "神奇",
+      "神器",
+      "黑科技"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0148",
+    "word": "神器",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "好物/宝藏/很喜欢",
+    "reason": "夸大宣传用语",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0149",
+    "word": "三天见效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除时效承诺）",
+    "reason": "具体时效承诺属虚假宣传",
+    "variants": [
+      "七天美白",
+      "一周瘦十斤",
+      "一次根除"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0150",
+    "word": "包治",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止包治承诺）",
+    "reason": "包治百病属虚假宣传",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0151",
+    "word": "永久有效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止绝对化承诺）",
+    "reason": "永久承诺属虚假宣传",
+    "variants": [
+      "永久脱毛"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0152",
+    "word": "无毒无害",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除安全宣称）",
+    "reason": "无法考证的安全宣称",
+    "variants": [],
+    "source": "三品一械广告规则(check51)"
+  },
+  {
+    "id": "BW0153",
+    "word": "零添加",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "配料干净",
+    "reason": "无依据安全宣称",
+    "variants": [
+      "纯天然",
+      "食品级",
+      "无刺激"
+    ],
+    "source": "2026小红书完整违禁词汇总(opp2.com)"
+  },
+  {
+    "id": "BW0154",
+    "word": "纯天然",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "天然原料",
+    "reason": "无依据天然宣称",
+    "variants": [],
+    "source": "2026小红书完整违禁词汇总(opp2.com)"
+  },
+  {
+    "id": "BW0155",
+    "word": "秒白",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "提亮肤色",
+    "reason": "速效美白承诺属虚假宣传",
+    "variants": [
+      "速白",
+      "速效"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0156",
+    "word": "强效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（避免夸大）",
+    "reason": "化妆品虚假宣传用语",
+    "variants": [
+      "全效",
+      "高效"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0157",
+    "word": "消除",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "（避免绝对化）",
+    "reason": "化妆品虚假宣传用语",
+    "variants": [
+      "清除",
+      "化解死细胞"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0158",
+    "word": "去除皱纹",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "淡化纹路",
+    "reason": "化妆品虚假宣传用语",
+    "variants": [
+      "平皱",
+      "去皱"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0159",
+    "word": "修复断裂弹性纤维",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止医疗功效宣称）",
+    "reason": "化妆品虚假医疗宣称",
+    "variants": [
+      "破坏黑色素细胞",
+      "阻断黑色素"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0160",
+    "word": "舒眠",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "放松舒缓",
+    "reason": "普通商品禁用改善睡眠宣称",
+    "variants": [
+      "改善睡眠"
+    ],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0161",
+    "word": "立竿见影",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "用了一段时间有变化",
+    "reason": "速效承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0162",
+    "word": "一抹就瘦",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "体态管理",
+    "reason": "速效瘦身承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0163",
+    "word": "神奇",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "好物",
+    "reason": "夸大宣传用语",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0164",
+    "word": "黑科技",
+    "domain": "功效承诺",
+    "risk_level": "敏感",
+    "replacement": "（避免夸大）",
+    "reason": "夸大宣传用语",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0165",
+    "word": "终身保修",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除绝对化承诺）",
+    "reason": "绝对化承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0166",
+    "word": "绝对靠谱",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（删除绝对化承诺）",
+    "reason": "绝对化承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0167",
+    "word": "永不复发",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止根治承诺）",
+    "reason": "绝对化效果承诺",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0168",
+    "word": "包治百病",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止包治承诺）",
+    "reason": "包治百病属虚假宣传",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0169",
+    "word": "百分百见效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "亲测有改善",
+    "reason": "无法考证的效果承诺",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0170",
+    "word": "快速根治",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止根治承诺）",
+    "reason": "绝对化效果承诺",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0171",
+    "word": "一次根除",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "（禁止根除承诺）",
+    "reason": "绝对化效果承诺",
+    "variants": [],
+    "source": "新广告法+小红书社区规范"
+  },
+  {
+    "id": "BW0172",
+    "word": "当天见效",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "用了一段时间有变化",
+    "reason": "速效承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0173",
+    "word": "一周瘦十斤",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "体态管理",
+    "reason": "速效瘦身承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  },
+  {
+    "id": "BW0174",
+    "word": "七天美白",
+    "domain": "功效承诺",
+    "risk_level": "违禁",
+    "replacement": "提亮肤色",
+    "reason": "速效美白承诺属虚假宣传",
+    "variants": [],
+    "source": "小红书社区规范+第三方运营汇总"
+  }
+]

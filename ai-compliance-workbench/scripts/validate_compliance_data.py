@@ -25,6 +25,12 @@ def main():
     print(f"表达变体：{v['variant_count']} 条")
     print(f"来源：{v['source_count']} 条")
     print(f"语义规则：{v['semantic_count']} 条")
+    print(
+        "小红书专项词："
+        f"{v.get('xhs_banned_word_count', 0)} 条，"
+        f"{v.get('xhs_banned_variant_count', 0)} 个变体，"
+        f"{v.get('xhs_banned_unique_term_count', 0)} 个唯一词及变体"
+    )
     print(f"校验结果：{'通过' if v['valid'] else '存在错误'}")
     if v["errors"]:
         print("错误：")

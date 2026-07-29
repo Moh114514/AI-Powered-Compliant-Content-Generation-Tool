@@ -1,5 +1,5 @@
 {
-  "synced_at": "2026-07-28T07:49:30.709616+00:00",
+  "synced_at": "2026-07-29T08:52:36.362700+00:00",
   "source_directory": "../医美内容合规规则库_v1.1/02_系统调用数据",
   "destination_directory": "data/compliance",
   "library_version": "v1.2-dev",
@@ -20,7 +20,10 @@
     "test_cases.json": 320,
     "visual_manual_checks.json": 15,
     "manual_review_issues.json": 5,
-    "changelog.json": 13
+    "changelog.json": 13,
+    "xhs_banned_words.json": 174,
+    "xhs_banned_word_variants": 193,
+    "xhs_banned_unique_terms": 311
   },
   "files": {
     "ad_classification_rules.json": {
@@ -98,7 +101,11 @@
     "visual_manual_checks.json": {
       "sha256": "22a6f3b46ab881194e07da863534a3a8cded5fcb091e26a0cffaf5b1497c09ab",
       "size_bytes": 6965
+    },
+    "xhs_banned_words.json": {
+      "sha256": "083021168de410d6900137b7e86033c1e9960a22d5125d7ec90fdd54f08d2ba1",
+      "size_bytes": 55545
     }
   },
-  "backup_directory": "data/_backup_before_compliance_sync_20260728_154930"
+  "backup_directory": "data/_backup_before_compliance_sync_20260729_165236"
 }

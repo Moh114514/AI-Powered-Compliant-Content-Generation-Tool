@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { ComplianceResult } from "../types";
+import type { BannedWordHit, ComplianceResult } from "../types";
 import { copyText } from "../utils/misc";
 import { REVIEW_RECOMMENDATION_LABEL, riskMeta, statusOf } from "../utils/risk";
 import { ReviewSummaryBox } from "./ReviewSummaryBox";
@@ -28,8 +28,15 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
 
     <div className="card">
       <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 6 }}>原文风险高亮</div>
-      <div style={{ fontSize: 14, lineHeight: 1.9 }}><RiskHighlight text={result.input_text} spans={result.highlights || []} onSelect={(span) => setSelectedRule(span.rule_id)} /></div>
+      <div style={{ fontSize: 14, lineHeight: 1.9 }}><RiskHighlight text={result.input_text} spans={result.highlights || []} onSelect={(span) => setSelectedRule(span.hit_id || span.rule_id)} /></div>
     </div>
+
+    {!!result.banned_word_hits?.length && <section>
+      <div style={{ fontSize: 13, fontWeight: 600, margin: "4px 0 8px" }}>小红书违禁/敏感词（{result.banned_word_hits.length}）</div>
+      <div style={{ display: "grid", gap: 8 }}>
+        {result.banned_word_hits.map((hit) => <BannedWordCard key={hit.hit_id} hit={hit} selected={selectedRule === hit.hit_id} />)}
+      </div>
+    </section>}
 
     <section>
       <div style={{ fontSize: 13, fontWeight: 600, margin: "4px 0 8px" }}>确定性规则（{result.matched_rules.length}）</div>
@@ -64,6 +71,50 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
     <div style={{ fontSize: 12, color: "#9ca3af", borderTop: "1px dashed #e5e7eb", paddingTop: 8 }}>
       {result.disclaimer}<br />当前版本以文本检测为主，不自动验证图片、视频画面、证件真伪或授权文件真实性。
     </div>
+  </div>;
+}
+
+function BannedWordCard({ hit, selected }: { hit: BannedWordHit; selected: boolean }) {
+  const [open, setOpen] = useState(false);
+  const meta = riskMeta(hit.risk_level);
+  const contextLabel = hit.context_classification === "promotional"
+    ? "营销风险语境"
+    : hit.context_classification === "neutral"
+      ? "中性语境，需复核"
+      : "语境不明确，需复核";
+  const suggestions = hit.replacements || [];
+  const instructionOnly = suggestions.length > 0 && suggestions.every((item) => /删除|禁止|避免/.test(item));
+  const copySuggestion = async () => {
+    const text = suggestions.join("；") || "建议删除或整体改写该表达";
+    alert((await copyText(text)) ? "替换建议已复制" : "复制失败");
+  };
+  return <div className="card" style={{
+    padding: 12,
+    borderColor: selected ? meta.border : "#e5e7eb",
+    boxShadow: selected ? `0 0 0 2px ${meta.bg}` : "none",
+  }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={() => setOpen((value) => !value)}>
+      <RiskBadge meta={meta} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontWeight: 600, fontSize: 14 }}>“{hit.matched_text}” <span style={{ color: "#6b7280", fontWeight: 400 }}>· {hit.domain}</span></div>
+        <div style={{ fontSize: 12, color: "#6b7280" }}>标准词：{hit.canonical_word} · {contextLabel}</div>
+      </div>
+      <span style={{ fontSize: 12, color: "#9ca3af" }}>{open ? "收起 ▲" : "展开 ▼"}</span>
+    </div>
+    <div style={{ marginTop: 8, background: "#f8fafc", borderRadius: 6, padding: "8px 10px", fontSize: 13 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
+        <b>{instructionOnly ? "删除/整体改写建议" : "推荐替代表达"}</b>
+        <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={copySuggestion}>复制建议</button>
+      </div>
+      <div style={{ marginTop: 4, color: "#374151" }}>{suggestions.join("；") || "建议删除或整体改写该表达"}</div>
+      {instructionOnly && <div style={{ color: "#9a3412", fontSize: 12, marginTop: 3 }}>这是操作说明，不应把括号内文字直接替换进原文。</div>}
+    </div>
+    {open && <div style={{ marginTop: 8, display: "grid", gap: 5, fontSize: 12, color: "#4b5563" }}>
+      <div><span style={{ color: "#9ca3af" }}>风险原因：</span>{hit.reason || "—"}</div>
+      <div><span style={{ color: "#9ca3af" }}>词库等级：</span>{(hit.source_risk_levels || []).join("、") || "—"}</div>
+      <div><span style={{ color: "#9ca3af" }}>来源编号：</span>{hit.source_ids.join("、") || "—"}</div>
+      <div><span style={{ color: "#9ca3af" }}>资料来源：</span>{hit.sources.join("、") || "—"}</div>
+    </div>}
   </div>;
 }
 

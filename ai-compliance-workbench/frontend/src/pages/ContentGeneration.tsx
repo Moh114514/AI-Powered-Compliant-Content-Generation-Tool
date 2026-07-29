@@ -1,14 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, Copy, FileText, Save, Sparkles, Trash2, Wand2 } from "lucide-react";
+import { ChevronDown, Copy, FileText, Save, Sparkles, Square, Trash2, Wand2 } from "lucide-react";
 import { api } from "../api/client";
 import { ComplianceReport } from "../components/ComplianceReport";
+import { OperationProgress } from "../components/OperationProgress";
 import { RiskBadge } from "../components/RiskBadge";
+import { useElapsedSeconds } from "../hooks/useElapsedSeconds";
 import type { Brand, GenerateResult, VersionResult } from "../types";
 import { copyText, downloadText } from "../utils/misc";
 import { statusOf } from "../utils/risk";
 
 const DEMO = {
-  brand: "guangnian18",
+  brand: "光年拾捌",
   platform: "小红书",
   content_type: "项目介绍",
   topic: "夏季光电抗衰体验周",
@@ -73,6 +75,9 @@ export default function ContentGeneration() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [rewriteModal, setRewriteModal] = useState<{ text: string; rev: any } | null>(null);
+  const generationController = useRef<AbortController | null>(null);
+  const generating = busy === "generate";
+  const elapsedSeconds = useElapsedSeconds(generating);
 
   useEffect(() => {
     async function initialize() {
@@ -88,9 +93,13 @@ export default function ContentGeneration() {
       if (initialDraft.restored) return;
       setForm((current) => {
         const settings = settingsResponse.success ? settingsResponse.data : {};
+        const configuredBrand = settings.default_brand || current.brand;
+        const knownBrand = brandResponse.success
+          ? brandResponse.data.find((item) => item.brand_id === configuredBrand || item.brand_name === configuredBrand)
+          : undefined;
         return {
           ...current,
-          brand: settings.default_brand || current.brand,
+          brand: knownBrand?.brand_name || configuredBrand,
           platform: settings.default_platform || current.platform,
           versions: settings.default_versions || current.versions,
           tone: settings.default_tone || current.tone,
@@ -100,6 +109,8 @@ export default function ContentGeneration() {
     }
     void initialize();
   }, []);
+
+  useEffect(() => () => generationController.current?.abort(), []);
 
   useEffect(() => {
     try {
@@ -136,9 +147,18 @@ export default function ContentGeneration() {
     setBusy("generate");
     setError(null);
     setNotice(null);
-    const response = await api.generate(form);
-    setBusy(null);
+    const controller = new AbortController();
+    generationController.current = controller;
+    const response = await api.generate(form, controller.signal);
+    if (generationController.current === controller) {
+      generationController.current = null;
+      setBusy(null);
+    }
     if (!response.success) {
+      if (response.error_code === "REQUEST_CANCELLED") {
+        setNotice("已停止本次生成与检测，原有内容未被覆盖。");
+        return;
+      }
       setError(response.message || "生成失败");
       return;
     }
@@ -156,6 +176,10 @@ export default function ContentGeneration() {
       );
     }
     if (messages.length) setNotice(messages.join("；") + "。");
+  }
+
+  function stopGeneration() {
+    generationController.current?.abort();
   }
 
   function onClear() {
@@ -216,7 +240,7 @@ export default function ContentGeneration() {
       char_count: response.data.text.length,
       compliance,
       overall_risk_level: compliance.overall_risk_level,
-      matched_count: compliance.matched_rules.length,
+      matched_count: compliance.matched_rules.length + (compliance.banned_word_hits?.length ?? 0),
       manual_review_required: compliance.manual_review_required,
     });
     setNotice(`已基于当前版本完成${adjustType}，未混入原始表单中的主题或活动信息。`);
@@ -251,10 +275,14 @@ export default function ContentGeneration() {
     <p style={{ margin: "0 0 16px", color: "#6b7280", fontSize: 13 }}>选择品牌和发布场景，生成文案后自动进行确定性与语义风险检测。</p>
     {error && <Message tone="error">⚠️ {error}</Message>}
     {notice && <Message tone="success">{notice}</Message>}
+    {generating && <OperationProgress label="系统正在生成文案并执行合规检测" elapsedSeconds={elapsedSeconds} />}
 
     <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 420px) 1fr", gap: 16, alignItems: "start" }} className="gen-grid">
       <div className="card"><div style={{ display: "grid", gap: 10 }}>
-        <Field label="品牌"><select className="select" value={form.brand} onChange={(event) => setField("brand", event.target.value)}>{brands.map((brand) => <option key={brand.brand_id} value={brand.brand_id}>{brand.brand_name}{brand.is_demo ? "（演示）" : ""}</option>)}</select></Field>
+        <Field label="品牌" hint="可选择已有品牌，也可直接输入名称">
+          <input className="input" list="generation-brand-options" maxLength={100} value={form.brand} onChange={(event) => setField("brand", event.target.value)} placeholder="请输入品牌名称" />
+          <datalist id="generation-brand-options">{brands.map((brand) => <option key={brand.brand_id} value={brand.brand_name}>{brand.is_demo ? "演示品牌" : "已有品牌"}</option>)}</datalist>
+        </Field>
         <Field label="发布平台"><select className="select" value={form.platform} onChange={(event) => changePlatform(event.target.value)}>{platforms.map((platform) => <option key={platform}>{platform}</option>)}</select></Field>
         <Field label="内容类型"><select className="select" value={form.content_type} onChange={(event) => setField("content_type", event.target.value)}>{contentTypeOptions.map((type) => <option key={type}>{type}</option>)}</select></Field>
         <Field label="主题" hint="主题和核心卖点至少填写一项"><input className="input" maxLength={300} value={form.topic} onChange={(event) => setField("topic", event.target.value)} placeholder="例如：夏季光电抗衰体验周" /></Field>
@@ -270,6 +298,7 @@ export default function ContentGeneration() {
         <Field label="生成版本数量"><select className="select" value={form.versions} onChange={(event) => setField("versions", Number(event.target.value))}>{[1, 2, 3, 4, 5].map((number) => <option key={number} value={number}>{number} 个</option>)}</select></Field>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 4 }}>
           <button className="btn btn-primary" onClick={onGenerate} disabled={busy !== null}><Sparkles size={16} /> {busy === "generate" ? "生成与检测中…" : "生成并检测"}</button>
+          {generating && <button className="btn btn-danger" onClick={stopGeneration}><Square size={15} /> 停止</button>}
           <button className="btn" onClick={() => { setForm({ ...DEMO }); setResult(null); }} disabled={busy !== null}><FileText size={16} /> 加载风险示例</button>
           <button className="btn" onClick={onClear} disabled={busy !== null}><Trash2 size={16} /> 清空</button>
           <button className="btn" onClick={onSaveHistory} disabled={!result || busy !== null}><Save size={16} /> {busy === "save" ? "保存中…" : result?.history_saved ? "另存当前版本" : "保存到最近记录"}</button>
@@ -319,7 +348,7 @@ function RewriteModal({ text, rev, onClose }: { text: string; rev: any; onClose:
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}><h3 style={{ margin: 0, fontSize: 16 }}>一键合规改写</h3><button className="btn" onClick={onClose}>关闭</button></div>
       <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>原文</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 10, marginBottom: 12 }}>{text}</div>
       <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>建议修改稿</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: 10, marginBottom: 12 }}>{rev.suggested_revision || "（无可自动生成的改写稿，需人工复核）"}</div>
-      {revisedCompliance && <div style={{ marginBottom: 12 }}><b style={{ fontSize: 13 }}>改写后复检：</b> {revisedCompliance.overall_risk_level}，命中 {revisedCompliance.matched_rules?.length ?? 0} 条规则{revisedCompliance.manual_review_required ? "，仍需人工复核" : ""}。</div>}
+      {revisedCompliance && <div style={{ marginBottom: 12 }}><b style={{ fontSize: 13 }}>改写后复检：</b> {revisedCompliance.overall_risk_level}，命中 {(revisedCompliance.matched_rules?.length ?? 0) + (revisedCompliance.banned_word_hits?.length ?? 0)} 项风险{revisedCompliance.manual_review_required ? "，仍需人工复核" : ""}。</div>}
       {!!rev.unresolved_items?.length && <div style={{ fontSize: 13, color: "#6d28d9", marginBottom: 12 }}>仍需处理：{rev.unresolved_items.join("；")}</div>}
       <div style={{ display: "flex", gap: 8 }}><button className="btn btn-primary" disabled={!rev.suggested_revision} onClick={async () => alert((await copyText(rev.suggested_revision || "")) ? "已复制" : "复制失败")}><Copy size={14} />复制修改稿</button><button className="btn" disabled={!rev.suggested_revision} onClick={() => downloadText("合规改写稿.txt", rev.suggested_revision || "", "text/plain")}>下载 TXT</button></div>
     </div>

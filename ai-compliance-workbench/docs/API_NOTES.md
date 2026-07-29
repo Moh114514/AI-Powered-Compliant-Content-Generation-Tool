@@ -23,7 +23,9 @@
 }
 ```
 
-`/api/status`、`/api/compliance/validate` 和 `/api/compliance/reload` 均包含 `pending_review_count`。v1.2 当前值为 56。`/api/status` 还返回 `configured_provider`、`active_provider`、`provider_ready`、`api_key_configured` 和实际 `model_name`。
+`/api/status`、`/api/compliance/validate` 和 `/api/compliance/reload` 均包含 `pending_review_count`。v1.2 当前值为 56。`/api/status` 还返回模型状态，以及小红书专项词库的版本、条目数、变体数、唯一词数、SHA-256 和加载警告。
+
+小红书或映射到小红书规则画像的平台执行检测时，结果包含 `banned_word_hits`。每项提供 `hit_id`、命中区间、标准词、领域、风险等级、原因、替换建议、来源、语境分类和人工复核标记。该字段是向后兼容的新增字段；旧调用方可忽略。
 
 语义检测失败时不返回“通过”，而是：
 

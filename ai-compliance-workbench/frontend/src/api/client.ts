@@ -22,6 +22,14 @@ function failure<T>(message: string, errorCode = "NETWORK_ERROR"): ApiResponse<T
 
 async function request<T>(path: string, init?: RequestInit, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<ApiResponse<T>> {
   const controller = new AbortController();
+  const callerSignal = init?.signal;
+  let cancelledByCaller = Boolean(callerSignal?.aborted);
+  const cancelFromCaller = () => {
+    cancelledByCaller = true;
+    controller.abort();
+  };
+  if (callerSignal?.aborted) controller.abort();
+  else callerSignal?.addEventListener("abort", cancelFromCaller, { once: true });
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
     const headers = new Headers(init?.headers || {});
@@ -44,10 +52,14 @@ async function request<T>(path: string, init?: RequestInit, timeoutMs = DEFAULT_
     }
     return body as ApiResponse<T>;
   } catch (error: any) {
+    if (error?.name === "AbortError" && cancelledByCaller) {
+      return failure<T>("已停止本次操作", "REQUEST_CANCELLED");
+    }
     if (error?.name === "AbortError") return failure<T>("请求超时，请检查后端或模型服务是否正常", "REQUEST_TIMEOUT");
     return failure<T>(`无法连接到后端服务：${error?.message || "未知网络错误"}`);
   } finally {
     window.clearTimeout(timer);
+    callerSignal?.removeEventListener("abort", cancelFromCaller);
   }
 }
 
@@ -77,11 +89,11 @@ export const api = {
   resetScenePrompt: (id: string) => request<PromptScene>(`/prompt-scenes/${encodeURIComponent(id)}/prompt`, { method: "DELETE" }),
   promptAiDraft: (payload: any) => request<{ draft: string; target_type: string; provider: string; model: string; saved: boolean }>("/prompt-templates/ai-draft", { method: "POST", body: JSON.stringify(payload) }, 120_000),
 
-  generate: (payload: any) => request<GenerateResult>("/generation/generate", { method: "POST", body: JSON.stringify(payload) }, 120_000),
+  generate: (payload: any, signal?: AbortSignal) => request<GenerateResult>("/generation/generate", { method: "POST", body: JSON.stringify(payload), signal }, 120_000),
   rewrite: (payload: any) => request<any>("/generation/rewrite", { method: "POST", body: JSON.stringify(payload) }, 200_000),
   adjust: (payload: any) => request<any>("/generation/adjust", { method: "POST", body: JSON.stringify(payload) }, 150_000),
 
-  check: (payload: any) => request<ComplianceResult>("/compliance/check", { method: "POST", body: JSON.stringify(payload) }, 120_000),
+  check: (payload: any, signal?: AbortSignal) => request<ComplianceResult>("/compliance/check", { method: "POST", body: JSON.stringify(payload), signal }, 120_000),
   rules: (params: Record<string, any>) => {
     const query = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
