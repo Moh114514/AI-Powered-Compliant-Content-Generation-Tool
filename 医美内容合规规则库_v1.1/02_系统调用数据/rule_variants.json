@@ -39,7 +39,10 @@
     "language": "zh-CN",
     "confidence": "高",
     "review_status": "已审核",
-    "notes": null
+    "notes": null,
+    "exclude_context_regex": [
+      "最佳(?:舒适度)?档位"
+    ]
   },
   {
     "variant_id": "V000004",
@@ -978,7 +981,10 @@
     "language": "zh-CN",
     "confidence": "高",
     "review_status": "已审核",
-    "notes": null
+    "notes": null,
+    "exclude_context_regex": [
+      "不是所有人都适合"
+    ]
   },
   {
     "variant_id": "V000071",
@@ -2532,7 +2538,10 @@
     "language": "zh-CN",
     "confidence": "高",
     "review_status": "已审核",
-    "notes": null
+    "notes": null,
+    "exclude_context_regex": [
+      ".{0,12}(?:医院|大学|研究所).{0,12}签订合作协议[^。]{0,30}合作期限"
+    ]
   },
   {
     "variant_id": "V000182",
@@ -2546,7 +2555,10 @@
     "language": "zh-CN",
     "confidence": "高",
     "review_status": "已审核",
-    "notes": null
+    "notes": null,
+    "exclude_context_regex": [
+      ".{0,12}大学.{0,3}附属.{0,5}医院签订合作协议[^。]{0,30}合作期限"
+    ]
   },
   {
     "variant_id": "V000183",
@@ -3554,7 +3566,10 @@
     "language": "zh-CN",
     "confidence": "高",
     "review_status": "待法务复核",
-    "notes": "v1.2覆盖补充；需结合平台和上下文"
+    "notes": "v1.2覆盖补充；需结合平台和上下文",
+    "exclude_context_regex": [
+      "预约(?:一次)?免费面诊"
+    ]
   },
   {
     "variant_id": "V100021",
@@ -7278,7 +7293,10 @@
     "language": "zh-CN",
     "confidence": "中",
     "review_status": "待法务复核",
-    "notes": "v1.2覆盖补充；需结合平台和上下文"
+    "notes": "v1.2覆盖补充；需结合平台和上下文",
+    "exclude_context_regex": [
+      "(?:请|须|需|应)?如实告知[^。；，,]{0,12}过敏史"
+    ]
   },
   {
     "variant_id": "V100287",

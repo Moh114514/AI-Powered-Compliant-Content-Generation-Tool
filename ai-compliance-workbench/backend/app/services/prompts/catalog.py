@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import re
 import uuid
+from copy import deepcopy
+from functools import lru_cache
 from typing import Any
 
 from app.core import config
@@ -42,10 +44,11 @@ def _clean_prompt(value: Any, required: bool = True) -> str:
 def seed_builtins() -> None:
     defaults = load_builtin_defaults()
     db.seed_prompt_catalog(defaults)
+    invalidate_catalog_cache()
 
 
-def get_catalog(include_inactive: bool = True) -> dict:
-    seed_builtins()
+@lru_cache(maxsize=2)
+def _load_catalog_cached(include_inactive: bool) -> dict:
     defaults = load_builtin_defaults()
     rows = db.load_prompt_catalog(include_inactive=include_inactive)
     base_override = db.get_prompt_override("base", "global")
@@ -86,14 +89,28 @@ def get_catalog(include_inactive: bool = True) -> dict:
     }
 
 
+def invalidate_catalog_cache() -> None:
+    _load_catalog_cached.cache_clear()
+
+
+def get_catalog(include_inactive: bool = True) -> dict:
+    """Return a defensive copy of the read-only in-memory catalog snapshot."""
+    return deepcopy(_load_catalog_cached(bool(include_inactive)))
+
+
+def _catalog_snapshot(include_inactive: bool = True) -> dict:
+    """Internal immutable snapshot; callers must never mutate the returned object."""
+    return _load_catalog_cached(bool(include_inactive))
+
+
 def active_platform_names() -> list[str]:
-    return [item["name"] for item in get_catalog(False)["platforms"] if item["scenes"]]
+    return [item["name"] for item in _catalog_snapshot(False)["platforms"] if item["scenes"]]
 
 
 def active_content_types() -> dict[str, list[str]]:
     return {
         item["name"]: [scene["name"] for scene in item["scenes"] if scene["active"]]
-        for item in get_catalog(False)["platforms"] if item["scenes"]
+        for item in _catalog_snapshot(False)["platforms"] if item["scenes"]
     }
 
 
@@ -105,7 +122,7 @@ def resolve_scene(
     *,
     include_inactive: bool = False,
 ) -> tuple[dict, dict]:
-    catalog = get_catalog(include_inactive)
+    catalog = _catalog_snapshot(include_inactive)
     selected_platform = next(
         (
             item for item in catalog["platforms"]
@@ -146,7 +163,7 @@ def rule_mapping(platform: str, content_type: str) -> tuple[list[str] | None, li
 
 def platform_rule_mapping(platform: str) -> list[str] | None:
     item = next(
-        (entry for entry in get_catalog(True)["platforms"] if entry["name"] == platform),
+        (entry for entry in _catalog_snapshot(True)["platforms"] if entry["name"] == platform),
         None,
     )
     if not item:
@@ -154,7 +171,7 @@ def platform_rule_mapping(platform: str) -> list[str] | None:
     return [] if item["rule_profile"] == "通用" else [item["rule_profile"]]
 
 
-def _compliance_guardrail(platform: str, content_type: str, limit: int = 7000) -> str:
+def _compliance_guardrail(platform: str, content_type: str, limit: int = 4500) -> str:
     from app.services.compliance.engine import get_applicable_rules
 
     rules, _ = get_applicable_rules(get_store(), platform, content_type)
@@ -183,7 +200,7 @@ def _compliance_guardrail(platform: str, content_type: str, limit: int = 7000) -
 
 
 def compose_prompt(platform: str, content_type: str, platform_id: str | None = None, scene_id: str | None = None) -> tuple[str, dict, dict]:
-    catalog = get_catalog(True)
+    catalog = _catalog_snapshot(True)
     platform_item, scene = resolve_scene(
         platform, content_type, platform_id, scene_id, include_inactive=False
     )
@@ -199,11 +216,13 @@ def compose_prompt(platform: str, content_type: str, platform_id: str | None = N
 
 def save_base_prompt(prompt: str) -> dict:
     db.set_prompt_override("base", "global", _clean_prompt(prompt))
+    invalidate_catalog_cache()
     return get_catalog()
 
 
 def reset_base_prompt() -> dict:
     db.delete_prompt_override("base", "global")
+    invalidate_catalog_cache()
     return get_catalog()
 
 
@@ -217,6 +236,7 @@ def create_platform(payload: dict) -> dict:
         platform_id, name, str(payload.get("description") or "").strip(),
         _clean_prompt(payload.get("prompt_text")), profile, int(payload.get("sort_order") or 100),
     )
+    invalidate_catalog_cache()
     return next(item for item in get_catalog()["platforms"] if item["id"] == platform_id)
 
 
@@ -238,6 +258,7 @@ def update_platform(platform_id: str, payload: dict) -> dict:
         db.set_prompt_override("platform", platform_id, _clean_prompt(payload["prompt_text"]))
     if fields:
         db.update_prompt_platform(platform_id, fields)
+    invalidate_catalog_cache()
     return next(item for item in get_catalog()["platforms"] if item["id"] == platform_id)
 
 
@@ -249,6 +270,7 @@ def reset_platform_prompt(platform_id: str) -> dict:
         db.delete_prompt_override("platform", platform_id)
     else:
         raise ValueError("自定义平台没有可恢复的系统默认提示词。")
+    invalidate_catalog_cache()
     return next(item for item in get_catalog()["platforms"] if item["id"] == platform_id)
 
 
@@ -259,6 +281,7 @@ def set_platform_active(platform_id: str, active: bool) -> dict:
     if current["is_builtin"] and not active:
         raise ValueError("系统内置平台不能停用。")
     db.update_prompt_platform(platform_id, {"active": bool(active)})
+    invalidate_catalog_cache()
     return next(item for item in get_catalog()["platforms"] if item["id"] == platform_id)
 
 
@@ -274,6 +297,7 @@ def create_scene(platform_id: str, payload: dict) -> dict:
         str(payload.get("description") or "").strip(), _clean_prompt(payload.get("prompt_text")),
         rule_type, int(payload.get("sort_order") or 100),
     )
+    invalidate_catalog_cache()
     _, scene = resolve_scene(platform_id=platform_id, scene_id=scene_id, include_inactive=True)
     return scene
 
@@ -296,6 +320,7 @@ def update_scene(scene_id: str, payload: dict) -> dict:
         db.set_prompt_override("scene", scene_id, _clean_prompt(payload["prompt_text"]))
     if fields:
         db.update_prompt_scene(scene_id, fields)
+    invalidate_catalog_cache()
     platform = db.get_prompt_platform(current["platform_id"])
     _, scene = resolve_scene(platform_id=platform["id"], scene_id=scene_id, include_inactive=True)
     return scene
@@ -308,6 +333,7 @@ def reset_scene_prompt(scene_id: str) -> dict:
     if not current["is_builtin"]:
         raise ValueError("自定义场景没有可恢复的系统默认提示词。")
     db.delete_prompt_override("scene", scene_id)
+    invalidate_catalog_cache()
     _, scene = resolve_scene(platform_id=current["platform_id"], scene_id=scene_id, include_inactive=True)
     return scene
 
@@ -319,12 +345,14 @@ def set_scene_active(scene_id: str, active: bool) -> dict:
     if current["is_builtin"] and not active:
         raise ValueError("系统内置场景不能停用。")
     db.update_prompt_scene(scene_id, {"active": bool(active)})
+    invalidate_catalog_cache()
     _, scene = resolve_scene(platform_id=current["platform_id"], scene_id=scene_id, include_inactive=True)
     return scene
 
 
 def reset_all_builtin_prompts() -> dict:
     db.delete_builtin_prompt_overrides()
+    invalidate_catalog_cache()
     return get_catalog()
 
 

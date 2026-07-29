@@ -150,6 +150,11 @@ export default function ContentGeneration() {
     if ((response.data.returned_versions ?? response.data.versions.length) < (response.data.requested_versions ?? form.versions)) {
       messages.push("模型返回的有效版本少于请求数量，系统已保留实际可用版本");
     }
+    if (response.data.timings_ms) {
+      messages.push(
+        `耗时：模型生成 ${(response.data.timings_ms.model_generation / 1000).toFixed(1)} 秒，合规检测 ${(response.data.timings_ms.compliance_all_versions / 1000).toFixed(1)} 秒`,
+      );
+    }
     if (messages.length) setNotice(messages.join("；") + "。");
   }
 

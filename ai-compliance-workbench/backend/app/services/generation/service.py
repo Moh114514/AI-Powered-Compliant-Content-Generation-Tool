@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import datetime
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 from app.core import config
 from app.core.data_loader import get_store
@@ -31,6 +33,7 @@ def _validate_scene(platform: str, content_type: str, platform_id=None, scene_id
 
 
 def generate(request: dict, settings: dict) -> dict:
+    total_started = time.perf_counter()
     store = get_store()
     platform = str(request.get("platform") or "")
     content_type = str(request.get("content_type") or "")
@@ -48,12 +51,15 @@ def generate(request: dict, settings: dict) -> dict:
     use_brand = bool(request.get("use_brand_profile", True))
     versions = max(1, min(int(request.get("versions") or settings.get("default_versions", 3) or 3), 5))
     brand_profile = get_brand(brand_id) if use_brand and brand_id else None
+    prompt_started = time.perf_counter()
     prompt_template, platform_item, scene = compose_prompt(
         platform, content_type, platform_item["id"], scene["id"]
     )
+    prompt_ms = round((time.perf_counter() - prompt_started) * 1000, 2)
     provider = build_provider(settings)
     model_name = str(getattr(provider, "model", provider.name))
 
+    generation_started = time.perf_counter()
     copies = provider.generate(
         platform=platform,
         content_type=content_type,
@@ -62,14 +68,14 @@ def generate(request: dict, settings: dict) -> dict:
         brand_profile=brand_profile,
         versions=versions,
     )
+    model_generation_ms = round((time.perf_counter() - generation_started) * 1000, 2)
     copies = [str(text).strip() for text in copies if str(text).strip()]
     if not copies:
         raise ValueError("模型没有返回可用文案，请检查模型配置或稍后重试。")
 
     detection_settings = _detection_settings(settings)
-    result_versions = []
-    for index, text in enumerate(copies, 1):
-        compliance = run_compliance_check(
+    def check_copy(text: str) -> dict:
+        return run_compliance_check(
             text=text,
             platform=platform,
             content_type=content_type,
@@ -78,6 +84,20 @@ def generate(request: dict, settings: dict) -> dict:
             provider=provider,
             settings=detection_settings,
         )
+
+    compliance_started = time.perf_counter()
+    if len(copies) > 1:
+        with ThreadPoolExecutor(
+            max_workers=min(len(copies), 3),
+            thread_name_prefix="compliance",
+        ) as executor:
+            compliance_results = list(executor.map(check_copy, copies))
+    else:
+        compliance_results = [check_copy(copies[0])]
+    compliance_ms = round((time.perf_counter() - compliance_started) * 1000, 2)
+
+    result_versions = []
+    for index, (text, compliance) in enumerate(zip(copies, compliance_results), 1):
         result_versions.append({
             "version_index": index,
             "text": text,
@@ -107,6 +127,12 @@ def generate(request: dict, settings: dict) -> dict:
         "requested_versions": versions,
         "returned_versions": len(result_versions),
         "versions": result_versions,
+        "timings_ms": {
+            "prompt_assembly": prompt_ms,
+            "model_generation": model_generation_ms,
+            "compliance_all_versions": compliance_ms,
+            "total": round((time.perf_counter() - total_started) * 1000, 2),
+        },
         "disclaimer": config.DISCLAIMER,
     }
 

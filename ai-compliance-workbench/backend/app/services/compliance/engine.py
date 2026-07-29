@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import time
 from typing import Any
 
 from app.core import config
@@ -129,28 +130,54 @@ def _dedup_matches(matches: list[dict]) -> list[dict]:
     )
 
 
-def _normalize_semantic_findings(findings: Any) -> list[dict]:
+def _normalize_semantic_findings(
+    findings: Any,
+    semantic_by_id: dict[str, dict],
+) -> tuple[list[dict], list[str]]:
     if not isinstance(findings, list):
-        return []
+        return [], []
     normalized: list[dict] = []
+    unknown_ids: list[str] = []
+    seen: set[tuple[str, str]] = set()
     for finding in findings:
         if not isinstance(finding, dict):
             continue
-        risk_level = str(finding.get("risk_level") or "medium").lower()
+        semantic_id = str(finding.get("semantic_rule_id") or "")
+        canonical = semantic_by_id.get(semantic_id)
+        if not canonical:
+            if semantic_id:
+                unknown_ids.append(semantic_id)
+            continue
+        dedup_key = (semantic_id, str(finding.get("matched_text") or ""))
+        if dedup_key in seen:
+            continue
+        seen.add(dedup_key)
+        risk_level = str(
+            canonical.get("expected_risk_level")
+            or finding.get("risk_level")
+            or "medium"
+        ).lower()
         if risk_level not in config.RISK_PRIORITY:
             risk_level = "medium"
-        manual_review = bool(finding.get("manual_review", risk_level in {"critical", "high"}))
-        actions = _norm_actions(finding.get("system_action"))
+        actions = _norm_actions(canonical.get("system_action") or finding.get("system_action"))
+        manual_review = bool(
+            finding.get(
+                "manual_review",
+                risk_level in {"critical", "high"} or "mandatory_human_review" in actions,
+            )
+        )
         if manual_review and actions == ["pass"]:
             actions = ["mandatory_human_review"]
         normalized.append({
             **finding,
+            "semantic_rule_id": semantic_id,
+            "semantic_rule_name": canonical.get("semantic_rule_name") or finding.get("semantic_rule_name") or "",
             "risk_level": risk_level,
             "manual_review": manual_review,
             "system_action": actions,
             "risk_reason": finding.get("risk_reason") or "检测到需要结合上下文判断的语义风险。",
         })
-    return normalized
+    return normalized, list(dict.fromkeys(unknown_ids))
 
 
 def _highest_risk(matched_rules: list[dict], semantic_findings: list[dict]) -> str:
@@ -179,6 +206,7 @@ def run_compliance_check(
     provider=None,
     settings: dict | None = None,
 ) -> dict:
+    total_started = time.perf_counter()
     store = store or _store()
     settings = settings or {}
     original = text or ""
@@ -190,6 +218,7 @@ def run_compliance_check(
     enable_semantic = bool(settings.get("enable_semantic_detection", True))
     auto_revision = bool(settings.get("auto_generate_revision", False))
 
+    deterministic_started = time.perf_counter()
     normalized_text, index_map = normalize_text(original)
     applicable_rules, platform_incomplete = _filter_applicable_rules(store, platform, content_type)
 
@@ -273,7 +302,9 @@ def run_compliance_check(
 
     matched_rules = list(grouped.values())
 
+    deterministic_ms = round((time.perf_counter() - deterministic_started) * 1000, 2)
     semantic_findings: list[dict] = []
+    semantic_ms = 0.0
     semantic_failed = False
     semantic_failure_reason = ""
     needs_manual_review = False
@@ -286,6 +317,7 @@ def run_compliance_check(
             if not applicable_platform or any(mapped in applicable_platform for mapped in mapped_platforms):
                 semantic_rules.append(semantic_rule)
         try:
+            semantic_started = time.perf_counter()
             semantic_result = provider.semantic_check(
                 text=original,
                 platform=platform,
@@ -293,12 +325,28 @@ def run_compliance_check(
                 semantic_rules=semantic_rules,
                 matched_rules=matched_rules,
             ) or {}
-            semantic_findings = _normalize_semantic_findings(semantic_result.get("semantic_findings"))
+            semantic_ms = round((time.perf_counter() - semantic_started) * 1000, 2)
+            semantic_catalog = store.semantic_by_id or {
+                str(item.get("semantic_rule_id") or ""): item
+                for item in store.semantic_rules
+                if item.get("semantic_rule_id")
+            }
+            semantic_findings, unknown_semantic_ids = _normalize_semantic_findings(
+                semantic_result.get("semantic_findings"),
+                semantic_catalog,
+            )
             needs_manual_review = bool(semantic_result.get("needs_manual_review", False))
             manual_review_reason = str(semantic_result.get("manual_review_reason") or "")
             semantic_failed = bool(semantic_result.get("analysis_failed", False))
             semantic_failure_reason = str(semantic_result.get("failure_reason") or "")
+            if unknown_semantic_ids:
+                semantic_failed = True
+                unknown_text = "、".join(unknown_semantic_ids)
+                semantic_failure_reason = (
+                    f"模型返回了规则库中不存在的语义规则 ID：{unknown_text}。"
+                )
         except Exception as exc:
+            semantic_ms = round((time.perf_counter() - semantic_started) * 1000, 2) if "semantic_started" in locals() else 0.0
             semantic_failed = True
             semantic_failure_reason = f"语义检测失败：{exc}"
 
@@ -342,16 +390,20 @@ def run_compliance_check(
     )
 
     suggested_revision = ""
+    rewrite_ms = 0.0
     if auto_revision and provider is not None and matched_rules:
         try:
+            rewrite_started = time.perf_counter()
             revision = provider.rewrite(
                 text=original,
                 matched_rules=matched_rules,
                 platform=platform,
                 content_type=content_type,
             ) or {}
+            rewrite_ms = round((time.perf_counter() - rewrite_started) * 1000, 2)
             suggested_revision = str(revision.get("suggested_revision") or "")
         except Exception:
+            rewrite_ms = round((time.perf_counter() - rewrite_started) * 1000, 2) if "rewrite_started" in locals() else 0.0
             suggested_revision = ""
 
     result = {
@@ -384,6 +436,12 @@ def run_compliance_check(
             "matched_rule_count": len(matched_rules),
             "matched_span_count": len(highlights),
             "semantic_finding_count": len(semantic_findings),
+        },
+        "timings_ms": {
+            "deterministic": deterministic_ms,
+            "semantic": semantic_ms,
+            "rewrite": rewrite_ms,
+            "total": round((time.perf_counter() - total_started) * 1000, 2),
         },
     }
     result["review_summary"] = _build_review_summary(result)

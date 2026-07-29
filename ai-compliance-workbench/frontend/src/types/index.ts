@@ -210,6 +210,7 @@ export interface ComplianceResult {
   highlights: HighlightSpan[];
   platform_rules_incomplete?: boolean;
   stats?: ComplianceStats;
+  timings_ms?: { deterministic: number; semantic: number; rewrite: number; total: number };
   history_saved?: boolean;
   history_record_id?: string;
   history_error?: string;
@@ -244,6 +245,7 @@ export interface GenerateResult {
   requested_versions?: number;
   returned_versions?: number;
   versions: VersionResult[];
+  timings_ms?: { prompt_assembly: number; model_generation: number; compliance_all_versions: number; total: number };
   disclaimer: string;
   history_saved?: boolean;
   history_record_id?: string;
@@ -312,5 +314,14 @@ export interface TestSuiteResult {
   details: TestSuiteDetail[];
   details_truncated: boolean;
   engine_mode: string;
+  quality_metrics?: {
+    risk_detection_recall: number;
+    high_risk_false_positive_rate: number;
+    expected_rule_id_recall: number;
+    risk_level_accuracy: number;
+    action_accuracy: number;
+    expected_risky_cases: number;
+    expected_clean_cases: number;
+  };
   note: string;
 }

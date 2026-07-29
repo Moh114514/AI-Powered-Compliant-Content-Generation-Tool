@@ -64,6 +64,14 @@ def run_test_suite(store, *, limit: int | None = None, include_passed: bool = Fa
     category_totals: Counter[str] = Counter()
     category_passed: Counter[str] = Counter()
     failed_rows = 0
+    expected_risky_cases = 0
+    detected_risky_cases = 0
+    expected_clean_cases = 0
+    false_positive_cases = 0
+    expected_rule_total = 0
+    matched_expected_rule_total = 0
+    risk_level_correct = 0
+    action_correct = 0
 
     for case in cases:
         test_id = str(case.get("test_id") or "")
@@ -116,6 +124,18 @@ def run_test_suite(store, *, limit: int | None = None, include_passed: bool = Fa
             if not action_ok:
                 problems.append("action_mismatch")
             passed = not problems
+            if expected_ids or expected_risk in {"critical", "high", "medium"}:
+                expected_risky_cases += 1
+                if actual_risk in {"critical", "high", "medium"}:
+                    detected_risky_cases += 1
+            else:
+                expected_clean_cases += 1
+                if actual_risk in {"critical", "high"}:
+                    false_positive_cases += 1
+            expected_rule_total += len(expected_ids)
+            matched_expected_rule_total += len(expected_ids & actual_ids)
+            risk_level_correct += int(risk_ok)
+            action_correct += int(action_ok)
             if passed:
                 category_passed[category] += 1
             else:
@@ -176,5 +196,14 @@ def run_test_suite(store, *, limit: int | None = None, include_passed: bool = Fa
         "details": details[:200],
         "details_truncated": len(details) > 200,
         "engine_mode": "deterministic+mock_semantic",
+        "quality_metrics": {
+            "risk_detection_recall": round(detected_risky_cases / expected_risky_cases, 4) if expected_risky_cases else 1.0,
+            "high_risk_false_positive_rate": round(false_positive_cases / expected_clean_cases, 4) if expected_clean_cases else 0.0,
+            "expected_rule_id_recall": round(matched_expected_rule_total / expected_rule_total, 4) if expected_rule_total else 1.0,
+            "risk_level_accuracy": round(risk_level_correct / total, 4) if total else 1.0,
+            "action_accuracy": round(action_correct / total, 4) if total else 1.0,
+            "expected_risky_cases": expected_risky_cases,
+            "expected_clean_cases": expected_clean_cases,
+        },
         "note": "该结果用于规则回归测试，不等同于法务准确率认证。",
     }

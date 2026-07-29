@@ -120,6 +120,39 @@ def test_first_still_matches_when_used_as_rank_claim(text, store, provider):
     assert any(item["rule_id"] == "R-A01-002" for item in res["matched_rules"])
 
 
+@pytest.mark.parametrize(("text", "platform", "content_type", "rule_id"), [
+    ("不是所有人都适合注射玻尿酸，需经医生评估", "抖音", "适应证提示", "R-A01-005"),
+    ("术前请如实告知过敏史、用药史及既往手术史", "微信", "术前提醒", "R-A15-104"),
+    ("如需了解项目是否适合您，可先预约一次免费面诊", "微信", "预约引导", "R-A08-103"),
+    ("请根据皮肤耐受度选择最佳舒适度档位", "微信", "使用提示", "R-A01-001"),
+    (
+        "本院与XX大学附属医院签订合作协议，合作期限：2024-2027",
+        "小红书",
+        "合作展示",
+        "R-A06-007",
+    ),
+])
+def test_reviewed_safe_context_does_not_trigger_keyword_rule(
+    text, platform, content_type, rule_id, store, provider
+):
+    res = _check(text, platform=platform, content_type=content_type, store=store, provider=provider)
+    assert not any(item["rule_id"] == rule_id for item in res["matched_rules"])
+
+
+@pytest.mark.parametrize(("text", "rule_id"), [
+    ("我们的项目所有人都适合，无需评估。", "R-A01-005"),
+    ("这项治疗可以带来最佳效果。", "R-A01-001"),
+    ("限时免费面诊，先到先得。", "R-A08-103"),
+    ("公开展示顾客过敏史作为案例。", "R-A15-104"),
+    ("本院与XX大学附属医院战略合作。", "R-A06-007"),
+])
+def test_context_exclusions_do_not_hide_real_risk(text, rule_id, store, provider):
+    platform = "微信" if rule_id == "R-A15-104" else "小红书"
+    content_type = "图文" if rule_id == "R-A15-104" else "项目介绍"
+    res = _check(text, platform=platform, content_type=content_type, store=store, provider=provider)
+    assert any(item["rule_id"] == rule_id for item in res["matched_rules"])
+
+
 # 5. 正则匹配
 def test_regex_match(store, provider):
     v = next((x for x in store.variants if x.get("regex_pattern")), None)

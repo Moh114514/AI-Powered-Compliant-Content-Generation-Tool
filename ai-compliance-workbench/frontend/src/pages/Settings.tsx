@@ -190,6 +190,12 @@ function TestSuiteBox({ result }: { result: TestSuiteResult }) {
   return <div style={{ marginTop: 10, fontSize: 13, background: result.failed === 0 ? "#f0fdf4" : "#fffbeb", border: `1px solid ${result.failed === 0 ? "#bbf7d0" : "#fde68a"}`, borderRadius: 8, padding: 10 }}>
     <b>回归测试：{result.passed}/{result.total} 通过（{rate}）</b>
     <div style={{ marginTop: 4, color: "#6b7280" }}>{result.note}</div>
+    {result.quality_metrics && <div style={{ marginTop: 6, color: "#374151" }}>
+      风险召回率 {(result.quality_metrics.risk_detection_recall * 100).toFixed(1)}% ·
+      高风险误报率 {(result.quality_metrics.high_risk_false_positive_rate * 100).toFixed(1)}% ·
+      规则 ID 召回率 {(result.quality_metrics.expected_rule_id_recall * 100).toFixed(1)}% ·
+      风险等级准确率 {(result.quality_metrics.risk_level_accuracy * 100).toFixed(1)}%
+    </div>}
     {result.failed > 0 && <details style={{ marginTop: 8 }}>
       <summary style={{ cursor: "pointer" }}>查看失败样本（展示 {result.details.length} 条）</summary>
       <div style={{ display: "grid", gap: 6, marginTop: 8 }}>

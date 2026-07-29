@@ -1,7 +1,9 @@
 import pytest
+import time
 
 from app.core import config
 from app.repositories import db
+from app.services.generation import service as generation_service
 from app.services.prompts import catalog
 from app.services.prompts.defaults import load_builtin_defaults
 
@@ -94,3 +96,53 @@ def test_ai_draft_is_returned_without_being_saved(prompt_db, monkeypatch):
     assert result["draft"] == "这是一份尚未保存的候选提示词。"
     assert result["saved"] is False
     assert catalog.get_catalog()["base_prompt"]["effective"] == before
+
+
+def test_catalog_reads_do_not_reseed_database(prompt_db, monkeypatch):
+    calls = []
+    monkeypatch.setattr(db, "seed_prompt_catalog", lambda defaults: calls.append(defaults))
+    catalog.invalidate_catalog_cache()
+    catalog.get_catalog()
+    catalog.get_catalog()
+    assert calls == []
+
+
+def test_multi_version_compliance_checks_run_concurrently(monkeypatch):
+    class Provider:
+        name = "fake"
+        model = "fake-model"
+
+        def generate(self, **kwargs):
+            return ["版本一", "版本二", "版本三"]
+
+    monkeypatch.setattr(
+        generation_service,
+        "_validate_scene",
+        lambda *args, **kwargs: ({"id": "p", "name": "平台"}, {"id": "s", "name": "场景"}),
+    )
+    monkeypatch.setattr(
+        generation_service,
+        "compose_prompt",
+        lambda *args, **kwargs: ("prompt", {"id": "p", "name": "平台"}, {"id": "s", "name": "场景"}),
+    )
+    monkeypatch.setattr(generation_service, "build_provider", lambda settings: Provider())
+    monkeypatch.setattr(generation_service, "get_store", lambda: object())
+
+    def slow_check(**kwargs):
+        time.sleep(0.08)
+        return {
+            "overall_risk_level": "none",
+            "matched_rules": [],
+            "manual_review_required": False,
+        }
+
+    monkeypatch.setattr(generation_service, "run_compliance_check", slow_check)
+    started = time.perf_counter()
+    result = generation_service.generate(
+        {"platform": "平台", "content_type": "场景", "topic": "主题", "versions": 3},
+        {"default_versions": 3},
+    )
+    elapsed = time.perf_counter() - started
+    assert elapsed < 0.18
+    assert [item["text"] for item in result["versions"]] == ["版本一", "版本二", "版本三"]
+    assert result["timings_ms"]["compliance_all_versions"] < 180

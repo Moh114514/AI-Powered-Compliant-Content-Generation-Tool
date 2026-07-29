@@ -78,8 +78,8 @@ export const api = {
   promptAiDraft: (payload: any) => request<{ draft: string; target_type: string; provider: string; model: string; saved: boolean }>("/prompt-templates/ai-draft", { method: "POST", body: JSON.stringify(payload) }, 120_000),
 
   generate: (payload: any) => request<GenerateResult>("/generation/generate", { method: "POST", body: JSON.stringify(payload) }, 120_000),
-  rewrite: (payload: any) => request<any>("/generation/rewrite", { method: "POST", body: JSON.stringify(payload) }, 120_000),
-  adjust: (payload: any) => request<any>("/generation/adjust", { method: "POST", body: JSON.stringify(payload) }, 120_000),
+  rewrite: (payload: any) => request<any>("/generation/rewrite", { method: "POST", body: JSON.stringify(payload) }, 200_000),
+  adjust: (payload: any) => request<any>("/generation/adjust", { method: "POST", body: JSON.stringify(payload) }, 150_000),
 
   check: (payload: any) => request<ComplianceResult>("/compliance/check", { method: "POST", body: JSON.stringify(payload) }, 120_000),
   rules: (params: Record<string, any>) => {

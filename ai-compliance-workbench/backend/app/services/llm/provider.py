@@ -38,28 +38,28 @@ class MockProvider(LLMProvider):
         self._semantic_map = self._build_semantic_map()
 
     def _build_semantic_map(self) -> dict[str, str]:
-        semantic_rules = get_store().semantic_rules
-
-        def find(*keywords: str) -> str:
-            for rule in semantic_rules:
-                name = str(rule.get("semantic_rule_name") or "")
-                if any(keyword in name for keyword in keywords):
-                    return str(rule.get("semantic_rule_id") or "")
-            return str(semantic_rules[0].get("semantic_rule_id") or "") if semantic_rules else ""
-
+        available = {str(rule.get("semantic_rule_id") or "") for rule in get_store().semantic_rules}
+        def known(rule_id: str) -> str:
+            return rule_id if rule_id in available else ""
         return {
-            "effect_guarantee": find("保证", "效果"),
-            "absolute_safe": find("无风险", "安全"),
-            "case_to_general": find("个案", "案例", "普遍"),
-            "appearance_anxiety": find("焦虑", "容貌"),
-            "no_treatment_threat": find("不治疗", "后果", "焦虑"),
-            "unverified_data": find("数据", "无法验证"),
-            "disguised_ad": find("变相广告", "广告"),
-            "undiagnosed": find("诊断", "判断"),
-            "evasion": find("谐音", "拆字", "拼音", "规避"),
-            "time_commit": find("时间", "持续"),
-            "rank": find("排名", "绝对化"),
-            "scarcity": find("价格", "诱导", "稀缺"),
+            "effect_guarantee": known("SR0001"),
+            "absolute_safe": known("SR0002"),
+            "case_to_general": known("SR0101"),
+            "appearance_anxiety": known("SR0003"),
+            "no_treatment_threat": known("SR0103"),
+            "unverified_data": known("SR0106"),
+            "disguised_ad": known("SR0107"),
+            "undiagnosed": known("SR0004"),
+            "evasion": known("SR0005"),
+            "time_commit": known("SR0001"),
+            "rank": known("SR0106"),
+            "scarcity": known("SR0114"),
+            "authority_endorsement": known("SR0105"),
+            "medical_as_care": known("SR0111"),
+            "all_people": known("SR0102"),
+            "privacy_ai": known("SR0120"),
+            "hidden_price": known("SR0113"),
+            "platform_evasion": known("SR0124"),
         }
 
     def generate(self, platform, content_type, inputs, prompt_template, brand_profile, versions) -> list[str]:
@@ -119,25 +119,40 @@ class MockProvider(LLMProvider):
 
     def semantic_check(self, text, platform, content_type, semantic_rules, matched_rules) -> dict:
         patterns = [
-            ("effect_guarantee", r"(保证|确保|肯定|一定|必然|百分之百|100%|绝对).{0,12}(效果|见效|恢复|年轻|变美|治好|有效|成功)", "critical"),
+            ("effect_guarantee", r"((保证|确保|肯定|一定|必然|百分之百|100%|绝对).{0,12}(效果|见效|恢复|年轻|变美|治好|有效|成功)|(效果|改善).{0,4}(特别好|非常好|最佳|明显|翻倍)|(一次|刚做完|刚打完).{0,8}(就能|即可|见效|看出)|(彻底根治|一次断根|终身紧致|永远年轻|回到十年前|好太多))", "critical"),
             ("absolute_safe", r"(零风险|绝对安全|无任何风险|无副作用|绝不会出问题|百分之百安全)", "critical"),
             ("rank", r"(全城|全网|全国|全市|行业).{0,8}(最好|最佳|第一|最强|顶尖|领先|TOP\s*1|NO\.?\s*1)", "high"),
-            ("time_commit", r"(\d+|一|三|七)\s*(天|周|月|年).{0,10}(年轻|见效|恢复|变美|瘦|白|治好|逆龄)", "high"),
-            ("scarcity", r"(仅剩\d+|最后一天|错过不再|名额有限|立刻抢|马上交定金)", "high"),
+            ("time_commit", r"((\d+|一|三|五|七)\s*(天|周|月|年).{0,12}(年轻|见效|恢复|变美|瘦|白|治好|逆龄|定型|维持)|保持.{0,4}(\d+|一|两|三|五)年)", "high"),
+            ("scarcity", r"(仅剩\d+|最后一天|错过.{0,10}(不再|等不到)|名额有限|立刻抢|马上交定金|全年最便宜|不会再有)", "high"),
             ("unverified_data", r"\d+(?:\.\d+)?\s*(万|千|%|％).{0,8}(人|用户|顾客|服务|案例|好评|成功|满意)", "high"),
-            ("case_to_general", r"(我朋友|我同事|顾客|客户|姐妹).{0,20}(好了|见效|恢复|成功).{0,20}(都|一定|证明|说明)", "high"),
-            ("appearance_anxiety", r"(丑|黄脸婆|脸垮|显老|没人喜欢|被淘汰).{0,16}(必须|赶紧|快去|不做|医美|项目)", "high"),
+            ("case_to_general", r"((我朋友|我同事|顾客|客户|姐妹|老客户).{0,24}(好了|见效|恢复|成功|效果好).{0,20}(都|普遍|一定|证明|说明|强烈推荐)|(很多|所有).{0,6}(顾客|客户|姐妹).{0,16}(都说|表示|反映))", "high"),
+            ("appearance_anxiety", r"((丑|黄脸婆|脸垮|显老|没人喜欢|被淘汰|被抛弃).{0,16}(必须|赶紧|快去|不做|医美|项目|注定)|女人不保养.{0,12}(不负责|没人爱|被抛弃))", "high"),
             ("no_treatment_threat", r"(不做|不整|不治疗|不改善).{0,12}(越来越|更严重|恶化|毁|垮|没人要)", "high"),
             ("disguised_ad", r"(本文|分享|科普|笔记|探店|日记).{0,30}(购买|下单|预约|到店|私信|二维码|链接)", "medium"),
             ("undiagnosed", r"(你这就是|你属于|你肯定是|看照片就知道|一定适合做|必须做).{0,20}", "critical"),
-            ("evasion", r"(热\W+玛\W+吉|瘦脸[真Z]|bo尿酸|zheng形|整\W+形)", "high"),
+            ("evasion", r"(热\W+玛\W+吉|瘦脸[真Z]|bo尿酸|zheng形|整\W+形|💉.{0,12}(瘦脸针|注射))", "high"),
+            ("all_people", r"((你这种情况|法令纹深|毛孔粗|黑眼圈).{0,12}(适合做|直接做|必须做|建议做|要做起来)|不管什么体质)", "critical"),
+            ("medical_as_care", r"(跟做面膜一样|就像做面膜|无需开刀.{0,12}手术.{0,8}效果|放心把脸交给我们)", "critical"),
+            ("authority_endorsement", r"((CCTV|央视|媒体|奖项|知名医学院|欧盟CE|行业峰会|欧美上市).{0,24}(值得信赖|合作单位|安全|保障|权威|公认|可用)|行业内公认.{0,10}(大咖|专家|权威))", "high"),
+            ("disguised_ad", r"(小红书医美种草|受邀体验|博主亲测|项目团购|私我了解|加V|评论扣1).{0,30}(咨询|预约|详情|推荐|团购|项目)", "medium"),
+            ("platform_evasion", r"(不能直接写|平台不让写|小红书上不能).{0,20}(私我|私信|加V|了解详情)", "high"),
+            ("privacy_ai", r"(患者|顾客|客户).{0,12}(正脸|病历|照片|病例).{0,20}(上传|发给).{0,8}(AI|模型)", "critical"),
+            ("hidden_price", r"\d+(?:\.\d+)?元.{0,20}(材料费|麻醉费|服务费).{0,8}(另收|另付|到店)", "high"),
         ]
         findings: list[dict] = []
         for key, pattern, risk_level in patterns:
             match = re.search(pattern, text, flags=re.IGNORECASE)
             if not match:
                 continue
+            if key == "time_commit":
+                nearby = text[max(0, match.start() - 16):match.end() + 4]
+                if any(qualifier in nearby for qualifier in ("大多数", "通常", "一般", "可能", "约", "因人而异")):
+                    continue
             semantic_id = self._semantic_map.get(key) or ""
+            if not semantic_id or not any(
+                rule.get("semantic_rule_id") == semantic_id for rule in semantic_rules
+            ):
+                continue
             semantic_name = next(
                 (rule.get("semantic_rule_name") for rule in semantic_rules if rule.get("semantic_rule_id") == semantic_id),
                 key,
@@ -312,7 +327,11 @@ class OpenAICompatibleProvider(LLMProvider):
         user_prompt = (
             f"文案：{text}\n平台：{platform}\n内容类型：{content_type}\n"
             f"候选语义规则：\n{rules_text}\n已命中确定性规则：{matched_text}\n"
-            "仅判断候选规则；不确定时标记 needs_manual_review=true。严格返回JSON。"
+            "仅可使用上面列出的 semantic_rule_id，不得创造新 ID。"
+            "每个 semantic_findings 项必须包含 semantic_rule_id、matched_text、risk_reason、manual_review；"
+            "matched_text 必须逐字来自原文。没有充分文本证据时不要命中规则，可设置 needs_manual_review=true 并说明原因。"
+            "严格返回 JSON 对象："
+            "{\"semantic_findings\":[],\"needs_manual_review\":false,\"manual_review_reason\":\"\"}。"
         )
         raw = self._chat(system_prompt, user_prompt)
         try:

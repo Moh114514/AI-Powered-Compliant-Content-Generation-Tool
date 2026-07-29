@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.core.data_loader import DataStore
 from app.main import app
+from app.services.compliance import engine
 from app.services.compliance.engine import run_compliance_check
 from app.services.compliance.evaluator import _risk_matches
 
@@ -134,3 +135,37 @@ def test_regression_suite_endpoint_is_available():
 def test_regression_low_risk_accepts_runtime_none():
     assert _risk_matches("low", "none") is True
     assert _risk_matches("critical", "none") is False
+
+
+def test_semantic_findings_use_canonical_rule_risk_and_action():
+    semantic_catalog = {
+        "SR0001": {
+            "semantic_rule_id": "SR0001",
+            "semantic_rule_name": "明示或暗示保证治疗效果",
+            "expected_risk_level": "critical",
+            "system_action": "block",
+        }
+    }
+    findings, unknown = engine._normalize_semantic_findings(
+        [{
+            "semantic_rule_id": "SR0001",
+            "semantic_rule_name": "错误名称",
+            "risk_level": "low",
+            "system_action": ["pass"],
+            "matched_text": "保证效果",
+        }],
+        semantic_catalog,
+    )
+    assert unknown == []
+    assert findings[0]["semantic_rule_name"] == "明示或暗示保证治疗效果"
+    assert findings[0]["risk_level"] == "critical"
+    assert findings[0]["system_action"] == ["block"]
+
+
+def test_unknown_semantic_rule_ids_are_not_accepted():
+    findings, unknown = engine._normalize_semantic_findings(
+        [{"semantic_rule_id": "SR-HALLUCINATED", "risk_level": "critical"}],
+        {},
+    )
+    assert findings == []
+    assert unknown == ["SR-HALLUCINATED"]
