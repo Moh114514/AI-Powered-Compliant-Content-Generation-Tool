@@ -289,7 +289,7 @@ export default function ContentGeneration() {
         <Field label="发布平台"><select className="select" value={form.platform} onChange={(event) => changePlatform(event.target.value)}>{platforms.map((platform) => <option key={platform}>{platform}</option>)}</select></Field>
         <Field label="内容类型"><select className="select" value={form.content_type} onChange={(event) => setField("content_type", event.target.value)}>{contentTypeOptions.map((type) => <option key={type}>{type}</option>)}</select></Field>
         <Field label="主题" hint="主题和核心卖点至少填写一项"><input className="input" maxLength={300} value={form.topic} onChange={(event) => setField("topic", event.target.value)} placeholder="例如：夏季光电抗衰体验周" /></Field>
-        <Field label="核心卖点" hint={`${form.selling_points.length}/3000`}><textarea className="textarea" maxLength={3000} value={form.selling_points} onChange={(event) => setField("selling_points", event.target.value)} placeholder="请填写真实、可核验的信息，系统会识别高风险表达" /></Field>
+        <Field label="主要内容要点" hint={`${form.selling_points.length}/3000`}><textarea className="textarea" maxLength={3000} value={form.selling_points} onChange={(event) => setField("selling_points", event.target.value)} placeholder="请填写真实、可核验的信息，系统会识别高风险表达" /></Field>
         <Field label="目标人群"><input className="input" maxLength={500} value={form.target_audience} onChange={(event) => setField("target_audience", event.target.value)} /></Field>
         <Field label="活动信息"><input className="input" maxLength={1000} value={form.campaign_info} onChange={(event) => setField("campaign_info", event.target.value)} /></Field>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
