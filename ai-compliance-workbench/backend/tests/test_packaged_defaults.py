@@ -19,6 +19,7 @@ def test_default_model_settings_follow_available_runtime_env():
     assert config.DEFAULT_SETTINGS["api_base"] == config.LLM_BASE_URL
     assert config.DEFAULT_SETTINGS["temperature"] == config.LLM_TEMPERATURE
     assert config.DEFAULT_SETTINGS["max_tokens"] == config.LLM_MAX_TOKENS
+    assert config.DEFAULT_SETTINGS["enable_thinking"] is False
 
     # When a local .env exists, its non-secret model values must be the defaults.
     if values:
@@ -97,10 +98,12 @@ def test_legacy_database_model_overrides_are_ignored(tmp_path, monkeypatch):
         "model_name": "another-ignored-model",
         "api_base": "https://ignored.example/v1",
         "default_versions": 2,
+        "enable_thinking": True,
     })
     assert saved["model_name"] == config.LLM_MODEL
     assert saved["api_base"] == config.LLM_BASE_URL
     assert saved["default_versions"] == 2
+    assert saved["enable_thinking"] is True
 
     runtime_env.write_text("LLM_API_KEY=ci-test-key\n", encoding="utf-8")
     settings_with_env = db.load_settings()

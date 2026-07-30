@@ -166,6 +166,10 @@ def _sanitize_setting(key: str, value: Any) -> Any:
         return max(0.0, min(float(value), 2.0))
     if key == "max_tokens":
         return max(128, min(int(value), 32000))
+    if key == "enable_thinking":
+        if not isinstance(value, bool):
+            raise ValueError("思考模式开关必须是布尔值")
+        return value
     if key == "model_provider" and value not in {"mock", "openai_compatible"}:
         raise ValueError(f"不支持的模型 Provider：{value}")
     if key == "default_platform":

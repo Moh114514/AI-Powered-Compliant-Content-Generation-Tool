@@ -28,8 +28,21 @@ class FakeCompletions:
         return self.responses.pop(0)
 
 
-def provider_with(responses, *, base_url="https://api.deepseek.com", model="deepseek-v4-flash"):
-    provider = OpenAICompatibleProvider("test-key", base_url, model, 0.7, 4096)
+def provider_with(
+    responses,
+    *,
+    base_url="https://api.deepseek.com",
+    model="deepseek-v4-flash",
+    enable_thinking=False,
+):
+    provider = OpenAICompatibleProvider(
+        "test-key",
+        base_url,
+        model,
+        0.7,
+        4096,
+        enable_thinking=enable_thinking,
+    )
     completions = FakeCompletions(responses)
     provider._client = SimpleNamespace(chat=SimpleNamespace(completions=completions))
     return provider, completions
@@ -57,6 +70,37 @@ def test_non_deepseek_does_not_receive_thinking_parameter():
         [response("普通文本")],
         base_url="https://compatible.example/v1",
         model="compatible-model",
+    )
+    assert provider._chat("system", "user") == "普通文本"
+    assert "extra_body" not in completions.calls[0]
+
+
+def test_deepseek_thinking_can_be_enabled_by_user_setting():
+    provider, completions = provider_with(
+        [response("普通文本")],
+        enable_thinking=True,
+    )
+    assert provider._chat("system", "user") == "普通文本"
+    assert completions.calls[0]["extra_body"] == {"thinking": {"type": "enabled"}}
+
+
+def test_alibaba_model_studio_uses_enable_thinking_boolean():
+    provider, completions = provider_with(
+        [response("普通文本")],
+        base_url="https://workspace.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+        model="qwen3.7-flash",
+        enable_thinking=True,
+    )
+    assert provider._chat("system", "user") == "普通文本"
+    assert completions.calls[0]["extra_body"] == {"enable_thinking": True}
+
+
+def test_unknown_compatible_provider_ignores_thinking_setting():
+    provider, completions = provider_with(
+        [response("普通文本")],
+        base_url="https://compatible.example/v1",
+        model="compatible-model",
+        enable_thinking=True,
     )
     assert provider._chat("system", "user") == "普通文本"
     assert "extra_body" not in completions.calls[0]

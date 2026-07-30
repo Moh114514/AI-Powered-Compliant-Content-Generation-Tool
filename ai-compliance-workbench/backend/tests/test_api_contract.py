@@ -46,6 +46,7 @@ def test_status_exposes_quality_counts():
             "test_case_count",
             "validation_warning_count",
             "pending_review_count",
+            "thinking_enabled",
         ):
             assert key in payload["data"]
         assert payload["data"]["pending_review_count"] == 56
@@ -103,9 +104,11 @@ def test_real_provider_never_silently_falls_back_to_mock(monkeypatch):
         model_provider="openai_compatible",
         api_base="https://example.invalid/v1",
         model_name="test-model",
+        enable_thinking=True,
     ))
     assert isinstance(provider, OpenAICompatibleProvider)
     assert not isinstance(provider, MockProvider)
+    assert provider.enable_thinking is True
 
 
 def test_generation_is_automatically_saved_when_history_is_enabled(monkeypatch):

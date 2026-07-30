@@ -177,6 +177,7 @@ DEFAULT_SETTINGS = {
     "api_base": LLM_BASE_URL,
     "temperature": LLM_TEMPERATURE,
     "max_tokens": LLM_MAX_TOKENS,
+    "enable_thinking": False,
     "default_brand": "guangnian18",
     "default_platform": "小红书",
     "default_versions": 3,
