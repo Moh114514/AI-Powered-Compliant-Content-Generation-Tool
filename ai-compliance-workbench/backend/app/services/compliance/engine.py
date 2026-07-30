@@ -11,6 +11,7 @@ from typing import Any
 from app.core import config
 from app.core.matching import match_variant
 from app.core.text_normalize import map_span, normalize_text
+from app.services.compliance.banned_words import as_rewrite_rules, match_banned_words
 
 _DISABLED_STATUSES = {"suspended", "superseded", "abolished", "inactive", "disabled"}
 
@@ -133,12 +134,12 @@ def _dedup_matches(matches: list[dict]) -> list[dict]:
 def _normalize_semantic_findings(
     findings: Any,
     semantic_by_id: dict[str, dict],
+    original_text: str = "",
 ) -> tuple[list[dict], list[str]]:
     if not isinstance(findings, list):
         return [], []
-    normalized: list[dict] = []
+    grouped: dict[str, dict] = {}
     unknown_ids: list[str] = []
-    seen: set[tuple[str, str]] = set()
     for finding in findings:
         if not isinstance(finding, dict):
             continue
@@ -148,10 +149,6 @@ def _normalize_semantic_findings(
             if semantic_id:
                 unknown_ids.append(semantic_id)
             continue
-        dedup_key = (semantic_id, str(finding.get("matched_text") or ""))
-        if dedup_key in seen:
-            continue
-        seen.add(dedup_key)
         risk_level = str(
             canonical.get("expected_risk_level")
             or finding.get("risk_level")
@@ -168,27 +165,89 @@ def _normalize_semantic_findings(
         )
         if manual_review and actions == ["pass"]:
             actions = ["mandatory_human_review"]
-        normalized.append({
-            **finding,
-            "semantic_rule_id": semantic_id,
-            "semantic_rule_name": canonical.get("semantic_rule_name") or finding.get("semantic_rule_name") or "",
-            "risk_level": risk_level,
-            "manual_review": manual_review,
-            "system_action": actions,
-            "risk_reason": finding.get("risk_reason") or "检测到需要结合上下文判断的语义风险。",
-        })
+        matched_text = str(finding.get("matched_text") or "").strip()
+        risk_reason = str(finding.get("risk_reason") or "检测到需要结合上下文判断的语义风险。")
+        existing = grouped.get(semantic_id)
+        if existing is None:
+            existing = {
+                **finding,
+                "semantic_rule_id": semantic_id,
+                "semantic_rule_name": canonical.get("semantic_rule_name") or finding.get("semantic_rule_name") or "",
+                "risk_level": risk_level,
+                "manual_review": manual_review,
+                "system_action": actions,
+                "risk_reason": risk_reason,
+                "matched_text": matched_text,
+                "matched_texts": [matched_text] if matched_text else [],
+                "_risk_reasons": [risk_reason],
+            }
+            grouped[semantic_id] = existing
+        else:
+            if matched_text and matched_text not in existing["matched_texts"]:
+                existing["matched_texts"].append(matched_text)
+            if risk_reason not in existing["_risk_reasons"]:
+                existing["_risk_reasons"].append(risk_reason)
+            if config.RISK_PRIORITY.get(risk_level, 0) > config.RISK_PRIORITY.get(existing["risk_level"], 0):
+                existing["risk_level"] = risk_level
+            existing["manual_review"] = bool(existing["manual_review"] or manual_review)
+            existing["system_action"] = list(dict.fromkeys([*existing["system_action"], *actions]))
+
+    normalized: list[dict] = []
+    for finding in grouped.values():
+        spans: list[dict] = []
+        for matched_text in finding["matched_texts"]:
+            offset = 0
+            while matched_text:
+                start = original_text.find(matched_text, offset)
+                if start < 0:
+                    break
+                end = start + len(matched_text)
+                spans.append({"start": start, "end": end, "matched_text": matched_text})
+                offset = end
+        spans.sort(key=lambda span: (span["start"], span["end"]))
+        finding["spans"] = spans
+        finding["occurrence_count"] = len(spans) or max(1, len(finding["matched_texts"]))
+        finding["risk_reason"] = "；".join(finding.pop("_risk_reasons"))
+        normalized.append(finding)
     return normalized, list(dict.fromkeys(unknown_ids))
 
 
-def _highest_risk(matched_rules: list[dict], semantic_findings: list[dict]) -> str:
+def _highest_risk(
+    matched_rules: list[dict],
+    semantic_findings: list[dict],
+    banned_word_hits: list[dict] | None = None,
+) -> str:
     levels = [item.get("risk_level", "none") for item in matched_rules]
     levels.extend(item.get("risk_level", "none") for item in semantic_findings)
+    levels.extend(item.get("risk_level", "none") for item in (banned_word_hits or []))
     return max(levels or ["none"], key=lambda level: config.RISK_PRIORITY.get(level, 0))
 
 
 def _highest_review_level(matched_rules: list[dict]) -> str:
     levels = [item.get("review_level") for item in matched_rules if item.get("review_level")]
     return max(levels, key=lambda level: config.REVIEW_PRIORITY.get(level, 0)) if levels else ""
+
+
+def _count_marked_occurrences(highlights: list[dict]) -> int:
+    """Count visible non-overlapping annotations while preserving all risk records."""
+    selected: list[tuple[int, int]] = []
+    ordered = sorted(
+        highlights,
+        key=lambda item: (
+            -config.RISK_PRIORITY.get(str(item.get("risk_level") or "none"), 0),
+            -(int(item.get("end_index") or 0) - int(item.get("start_index") or 0)),
+            int(item.get("start_index") or 0),
+        ),
+    )
+    for highlight in ordered:
+        start = int(highlight.get("start_index") or 0)
+        end = int(highlight.get("end_index") or start)
+        if end <= start:
+            continue
+        if any(start < kept_end and end > kept_start for kept_start, kept_end in selected):
+            continue
+        selected.append((start, end))
+    return len(selected)
 
 
 def run_compliance_check(
@@ -259,6 +318,7 @@ def run_compliance_check(
             "start_index": original_start,
             "end_index": original_end,
             "matching_method": match.get("method"),
+            "risk_level": rule.get("risk_level", "low"),
         }
         highlights.append(span)
 
@@ -295,12 +355,26 @@ def run_compliance_check(
                 "manual_review_required": bool(rule.get("manual_review_required", False) or pending_review),
                 "review_level": rule.get("review_level", ""),
                 "effective_status": effective_status,
+                "occurrence_count": 1,
                 "spans": [span],
             }
         else:
             grouped[rule_id]["spans"].append(span)
+            grouped[rule_id]["occurrence_count"] = len(grouped[rule_id]["spans"])
 
     matched_rules = list(grouped.values())
+    banned_word_hits: list[dict] = []
+    banned_highlights: list[dict] = []
+    if enable_keyword:
+        banned_word_hits, banned_highlights = match_banned_words(
+            original=original,
+            normalized_text=normalized_text,
+            index_map=index_map,
+            terms=store.xhs_banned_terms,
+            platform=platform,
+            content_type=content_type,
+        )
+        highlights.extend(banned_highlights)
 
     deterministic_ms = round((time.perf_counter() - deterministic_started) * 1000, 2)
     semantic_findings: list[dict] = []
@@ -334,6 +408,7 @@ def run_compliance_check(
             semantic_findings, unknown_semantic_ids = _normalize_semantic_findings(
                 semantic_result.get("semantic_findings"),
                 semantic_catalog,
+                original,
             )
             needs_manual_review = bool(semantic_result.get("needs_manual_review", False))
             manual_review_reason = str(semantic_result.get("manual_review_reason") or "")
@@ -350,7 +425,7 @@ def run_compliance_check(
             semantic_failed = True
             semantic_failure_reason = f"语义检测失败：{exc}"
 
-    overall_risk = _highest_risk(matched_rules, semantic_findings)
+    overall_risk = _highest_risk(matched_rules, semantic_findings, banned_word_hits)
     review_level = _highest_review_level(matched_rules)
 
     actions: list[str] = []
@@ -358,6 +433,8 @@ def run_compliance_check(
         actions.extend(matched_rule.get("system_action", []))
     for finding in semantic_findings:
         actions.extend(finding.get("system_action", []))
+    for hit in banned_word_hits:
+        actions.extend(hit.get("system_action", []))
     if needs_manual_review or semantic_failed:
         actions.append("mandatory_human_review")
     actions = list(dict.fromkeys(actions))
@@ -367,6 +444,7 @@ def run_compliance_check(
     manual_review_required = (
         any(item.get("manual_review_required") for item in matched_rules)
         or any(item.get("manual_review") for item in semantic_findings)
+        or any(item.get("requires_review") for item in banned_word_hits)
         or needs_manual_review
         or semantic_failed
         or "mandatory_human_review" in actions
@@ -387,16 +465,17 @@ def run_compliance_check(
         reason=manual_review_reason,
         semantic_failed=semantic_failed,
         semantic_failure_reason=semantic_failure_reason,
+        banned_word_hits=banned_word_hits,
     )
 
     suggested_revision = ""
     rewrite_ms = 0.0
-    if auto_revision and provider is not None and matched_rules:
+    if auto_revision and provider is not None and (matched_rules or banned_word_hits):
         try:
             rewrite_started = time.perf_counter()
             revision = provider.rewrite(
                 text=original,
-                matched_rules=matched_rules,
+                matched_rules=[*matched_rules, *as_rewrite_rules(banned_word_hits)],
                 platform=platform,
                 content_type=content_type,
             ) or {}
@@ -422,19 +501,31 @@ def run_compliance_check(
         "publish_recommendation": publish_recommendation,
         "manual_review_required": manual_review_required,
         "matched_rules": matched_rules,
+        "banned_word_hits": banned_word_hits,
         "semantic_findings": semantic_findings,
         "semantic_analysis_failed": semantic_failed,
+        "semantic_failure_reason": semantic_failure_reason,
         "platform_findings": platform_findings,
         "manual_review_issues": manual_review_issues,
         "suggested_revision": suggested_revision,
         "review_summary": "",
         "disclaimer": config.DISCLAIMER,
         "highlights": highlights,
+        "offset_encoding": "unicode_codepoint",
         "platform_rules_incomplete": platform_incomplete,
         "stats": {
             "applicable_rule_count": len(applicable_rules),
             "matched_rule_count": len(matched_rules),
             "matched_span_count": len(highlights),
+            "unique_risk_count": (
+                len(matched_rules) + len(banned_word_hits) + len(semantic_findings)
+            ),
+            "marked_occurrence_count": _count_marked_occurrences(highlights),
+            "banned_word_hit_count": len(banned_word_hits),
+            "banned_word_unique_count": len(banned_word_hits),
+            "banned_word_occurrence_count": sum(
+                int(hit.get("occurrence_count") or 1) for hit in banned_word_hits
+            ),
             "semantic_finding_count": len(semantic_findings),
         },
         "timings_ms": {
@@ -456,6 +547,7 @@ def _build_review_issues(
     reason: str,
     semantic_failed: bool,
     semantic_failure_reason: str,
+    banned_word_hits: list[dict] | None = None,
 ) -> list[dict]:
     issues: list[dict] = []
     seen: set[tuple[str, str]] = set()
@@ -493,6 +585,25 @@ def _build_review_issues(
             "question": question,
             "required_evidence": finding.get("required_evidence", ""),
             "recommended_contact": "法务或医疗专业人员",
+        })
+
+    for hit in banned_word_hits or []:
+        if not hit.get("requires_review"):
+            continue
+        question = (
+            f"请确认小红书专项词“{hit.get('matched_text', '')}”在当前语境下是否属于"
+            "科普、否定、风险告知或具备资质的合规说明。"
+        )
+        key = (hit.get("hit_id", ""), question)
+        if key in seen:
+            continue
+        seen.add(key)
+        issues.append({
+            "issue_type": "小红书违禁/敏感词",
+            "banned_word_hit_id": hit.get("hit_id", ""),
+            "question": question,
+            "required_evidence": "",
+            "recommended_contact": "法务或平台运营负责人",
         })
 
     if needs_manual_review and not semantic_findings:
@@ -541,6 +652,14 @@ def _build_review_summary(result: dict) -> str:
     if rules:
         lines.append("命中规则：")
         lines.extend(f"- {rule.get('rule_id')} {rule.get('rule_name')}" for rule in rules)
+        lines.append("")
+    banned_hits = result.get("banned_word_hits") or []
+    if banned_hits:
+        lines.append("小红书专项词：")
+        lines.extend(
+            f"- {hit.get('matched_text')}：{'；'.join(hit.get('replacements') or []) or '请删除或改写'}"
+            for hit in banned_hits
+        )
         lines.append("")
     contacts = sorted({
         issue.get("recommended_contact")

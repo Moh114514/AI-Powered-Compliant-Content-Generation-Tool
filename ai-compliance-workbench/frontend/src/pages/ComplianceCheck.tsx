@@ -1,14 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { FileText, ShieldCheck, Trash2 } from "lucide-react";
+import { FileText, ShieldCheck, Square, Trash2 } from "lucide-react";
 import { api } from "../api/client";
 import { ComplianceReport } from "../components/ComplianceReport";
+import { OperationProgress } from "../components/OperationProgress";
+import { useElapsedSeconds } from "../hooks/useElapsedSeconds";
 import type { Brand, ComplianceResult } from "../types";
 
 const DEMO_RISKY = {
   text: "夏季光电抗衰体验周来啦！我们全城效果最好，零风险，7天让你年轻十岁，限时免费体验，名额有限速来！",
   platform: "小红书",
   content_type: "项目介绍",
-  brand: "guangnian18",
+  brand: "光年拾捌",
   publisher_identity: "医美机构",
   business_domain: "医疗美容",
   content_legal_nature: "medical_advertisement",
@@ -20,7 +22,7 @@ const DEMO_COMPLIANT = {
   text: "夏季光电抗衰体验周开启。本文介绍项目流程、适用人群与注意事项，并说明需到店由专业医师评估个人情况，不承诺统一效果及恢复时间。",
   platform: "小红书",
   content_type: "项目介绍",
-  brand: "guangnian18",
+  brand: "光年拾捌",
   publisher_identity: "医美机构",
   business_domain: "医疗美容",
   content_legal_nature: "service_information",
@@ -52,6 +54,8 @@ export default function ComplianceCheck() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const checkController = useRef<AbortController | null>(null);
+  const elapsedSeconds = useElapsedSeconds(loading);
 
   useEffect(() => {
     async function initialize() {
@@ -64,6 +68,8 @@ export default function ComplianceCheck() {
     }
     void initialize();
   }, []);
+
+  useEffect(() => () => checkController.current?.abort(), []);
 
   useEffect(() => {
     try {
@@ -98,15 +104,28 @@ export default function ComplianceCheck() {
     setLoading(true);
     setError(null);
     setNotice(null);
-    const response = await api.check(form);
-    setLoading(false);
+    const controller = new AbortController();
+    checkController.current = controller;
+    const response = await api.check(form, controller.signal);
+    if (checkController.current === controller) {
+      checkController.current = null;
+      setLoading(false);
+    }
     if (!response.success) {
+      if (response.error_code === "REQUEST_CANCELLED") {
+        setNotice("已停止本次合规检测，原有检测结果未被覆盖。");
+        return;
+      }
       setError(response.message || "检测失败");
       return;
     }
     setResult(response.data);
     if (response.data.history_error) setError(response.data.history_error);
     else if (response.data.history_saved) setNotice("本次检测已自动保存到最近记录。");
+  }
+
+  function stopCheck() {
+    checkController.current?.abort();
   }
 
   function loadExample(example: typeof DEMO_RISKY) {
@@ -121,6 +140,7 @@ export default function ComplianceCheck() {
     <p style={{ margin: "0 0 16px", color: "#6b7280", fontSize: 13 }}>粘贴文案并选择真实发布场景，系统会执行关键词、正则和语义风险检测。</p>
     {error && <div className="card" style={{ marginBottom: 12, color: "#b91c1c", borderColor: "#fecaca", background: "#fef2f2" }}>⚠️ {error}</div>}
     {notice && <div className="card" style={{ marginBottom: 12, color: "#166534", borderColor: "#bbf7d0", background: "#f0fdf4" }}>{notice}</div>}
+    {loading && <OperationProgress label="系统正在执行合规检测" elapsedSeconds={elapsedSeconds} />}
 
     <div className="card" style={{ marginBottom: 16 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -130,7 +150,10 @@ export default function ComplianceCheck() {
         </div>
         <Field label="发布平台"><select className="select" value={form.platform} onChange={(event) => changePlatform(event.target.value)}>{platforms.map((platform) => <option key={platform}>{platform}</option>)}</select></Field>
         <Field label="内容类型"><select className="select" value={form.content_type} onChange={(event) => setField("content_type", event.target.value)}>{contentTypeOptions.map((type) => <option key={type}>{type}</option>)}</select></Field>
-        <Field label="品牌"><select className="select" value={form.brand} onChange={(event) => setField("brand", event.target.value)}>{brands.map((brand) => <option key={brand.brand_id} value={brand.brand_id}>{brand.brand_name}{brand.is_demo ? "（演示）" : ""}</option>)}</select></Field>
+        <Field label="品牌">
+          <input className="input" list="compliance-brand-options" maxLength={100} value={form.brand} onChange={(event) => setField("brand", event.target.value)} placeholder="可选择已有品牌或直接输入名称" />
+          <datalist id="compliance-brand-options">{brands.map((brand) => <option key={brand.brand_id} value={brand.brand_name}>{brand.is_demo ? "演示品牌" : "已有品牌"}</option>)}</datalist>
+        </Field>
         <Field label="发布主体类型"><select className="select" value={form.publisher_identity} onChange={(event) => setField("publisher_identity", event.target.value)}>{["医美机构", "医生个人号", "机构员工个人号", "品牌方", "个人/KOL", "其他"].map((item) => <option key={item}>{item}</option>)}</select></Field>
         <Field label="业务领域"><select className="select" value={form.business_domain} onChange={(event) => setField("business_domain", event.target.value)}>{["医疗美容", "生活美容", "化妆品", "医疗器械", "混合业务"].map((item) => <option key={item}>{item}</option>)}</select></Field>
         <Field label="内容法律性质"><select className="select" value={form.content_legal_nature} onChange={(event) => setField("content_legal_nature", event.target.value)}><option value="medical_advertisement">医疗广告/商业推广</option><option value="service_information">服务信息公开</option><option value="health_education">健康科普</option><option value="diagnosis_communication">诊疗沟通</option><option value="uncertain">不确定</option></select></Field>
@@ -140,6 +163,7 @@ export default function ComplianceCheck() {
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
         <button className="btn btn-primary" onClick={onCheck} disabled={loading || !form.text.trim()}><ShieldCheck size={16} /> {loading ? "检测中…" : "开始检测"}</button>
+        {loading && <button className="btn btn-danger" onClick={stopCheck}><Square size={15} /> 停止</button>}
         <button className="btn" onClick={() => loadExample(DEMO_RISKY)} disabled={loading}><FileText size={16} /> 加载风险示例</button>
         <button className="btn" onClick={() => loadExample(DEMO_COMPLIANT)} disabled={loading}><FileText size={16} /> 加载低风险示例</button>
         <button className="btn" onClick={() => { setForm({ ...DEMO_RISKY, text: "" }); setResult(null); setError(null); setNotice(null); }} disabled={loading}><Trash2 size={16} /> 清空</button>

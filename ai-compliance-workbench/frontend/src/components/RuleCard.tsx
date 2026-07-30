@@ -24,6 +24,7 @@ export function RuleCard({ rule, selected }: { rule: MatchedRule; selected?: boo
           <div style={{ fontWeight: 600, fontSize: 14 }}>{rule.rule_name}</div>
           <div style={{ fontSize: 12, color: "#6b7280" }}>
             {rule.rule_id} · 命中：“{rule.matched_text}”
+            {Number(rule.occurrence_count || 1) > 1 && ` × ${rule.occurrence_count}`}
           </div>
         </div>
         <span style={{ fontSize: 12, color: "#9ca3af" }}>{open ? "收起 ▲" : "展开 ▼"}</span>

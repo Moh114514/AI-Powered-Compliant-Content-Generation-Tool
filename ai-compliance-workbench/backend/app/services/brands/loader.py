@@ -28,11 +28,8 @@ def list_brands() -> list[dict]:
 def get_brand(brand_id: str) -> dict | None:
     if not brand_id:
         return None
-    path = os.path.join(config.BRAND_DIR, f"{brand_id}.json")
-    if os.path.exists(path):
-        try:
-            with open(path, encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return None
+    value = str(brand_id).strip()
+    for brand in list_brands():
+        if value in {str(brand.get("brand_id") or ""), str(brand.get("brand_name") or "")}:
+            return brand
     return None

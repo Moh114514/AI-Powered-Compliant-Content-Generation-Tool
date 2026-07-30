@@ -1,19 +1,65 @@
 """全局配置：路径、运行参数、平台与内容类型定义、风险/动作优先级。"""
 import os
+import shutil
+import sys
 from pathlib import Path
 from dotenv import dotenv_values, load_dotenv
 
 _BACKEND = Path(__file__).resolve().parents[2]
-PROJECT_ROOT = _BACKEND.parent
+IS_BUNDLED = bool(getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"))
+RESOURCE_ROOT = Path(getattr(sys, "_MEIPASS", _BACKEND.parent))
+
+if IS_BUNDLED:
+    _default_user_root = Path(
+        os.getenv("LOCALAPPDATA")
+        or (Path.home() / "AppData" / "Local")
+    ) / "AIComplianceWorkbench"
+    PROJECT_ROOT = Path(os.getenv("AI_COMPLIANCE_USER_DIR") or _default_user_root)
+else:
+    PROJECT_ROOT = _BACKEND.parent
+
 DATA_DIR = PROJECT_ROOT / "data"
 COMPLIANCE_DIR = DATA_DIR / "compliance"
 PROMPTS_DIR = DATA_DIR / "prompts"
 BRAND_DIR = DATA_DIR / "brand_profiles"
 DEMO_DIR = DATA_DIR / "demo"
 DB_PATH = DATA_DIR / "workbench.db"
+ENV_PATH = PROJECT_ROOT / ".env"
+FRONTEND_DIST_DIR = (
+    RESOURCE_ROOT / "frontend_dist"
+    if IS_BUNDLED
+    else PROJECT_ROOT / "frontend" / "dist"
+)
+BUNDLED_DATA_DIR = RESOURCE_ROOT / "data"
+BUNDLED_ENV_PATH = RESOURCE_ROOT / ".env"
 
+
+def _materialize_bundled_env() -> bool:
+    """Install the internal default environment on first bundled launch only."""
+    if not IS_BUNDLED or ENV_PATH.exists() or not BUNDLED_ENV_PATH.is_file():
+        return False
+    PROJECT_ROOT.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(BUNDLED_ENV_PATH, ENV_PATH)
+    return True
+
+
+_materialize_bundled_env()
 _PROCESS_LLM_API_KEY = os.getenv("LLM_API_KEY", "")
-load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(ENV_PATH)
+
+def prepare_runtime_files() -> None:
+    """Materialize bundled read-only assets into the user's writable data folder."""
+    if not IS_BUNDLED:
+        return
+    PROJECT_ROOT.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    if BUNDLED_DATA_DIR.exists():
+        shutil.copytree(BUNDLED_DATA_DIR, DATA_DIR, dirs_exist_ok=True)
+    _materialize_bundled_env()
+    bundled_env_example = RESOURCE_ROOT / ".env.example"
+    user_env_example = PROJECT_ROOT / ".env.example"
+    if bundled_env_example.exists() and not user_env_example.exists():
+        shutil.copy2(bundled_env_example, user_env_example)
 
 PLATFORMS = ["朋友圈", "微信社群", "小红书", "微信公众号", "客服话术"]
 
@@ -115,18 +161,18 @@ LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://api.openai.com/v1")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.7"))
-LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "1200"))
+LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "4096"))
 
 
 def get_llm_api_key() -> str:
     """Return the current key without requiring a backend restart after .env changes."""
     if _PROCESS_LLM_API_KEY:
         return _PROCESS_LLM_API_KEY
-    values = dotenv_values(PROJECT_ROOT / ".env")
+    values = dotenv_values(ENV_PATH)
     return str(values.get("LLM_API_KEY") or "").strip()
 
 DEFAULT_SETTINGS = {
-    "model_provider": "mock",
+    "model_provider": "openai_compatible" if get_llm_api_key() else "mock",
     "model_name": LLM_MODEL,
     "api_base": LLM_BASE_URL,
     "temperature": LLM_TEMPERATURE,

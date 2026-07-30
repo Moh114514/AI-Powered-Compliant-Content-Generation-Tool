@@ -28,6 +28,8 @@ dist/
 coverage/
 htmlcov/
 *.log
+build/
+release/
 
 # OS
 .DS_Store

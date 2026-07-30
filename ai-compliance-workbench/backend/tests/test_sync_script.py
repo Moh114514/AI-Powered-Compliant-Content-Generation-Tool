@@ -23,6 +23,9 @@ def test_current_runtime_library_is_structurally_valid():
     assert result["valid"], result["errors"]
     assert result["counts"]["rules.json"] > 0
     assert result["counts"]["rule_variants.json"] > 0
+    assert result["counts"]["xhs_banned_words.json"] == 174
+    assert result["counts"]["xhs_banned_word_variants"] == 193
+    assert result["counts"]["xhs_banned_unique_terms"] == 311
 
 
 def test_apply_sync_creates_manifest_and_preserves_counts(tmp_path):
@@ -44,6 +47,7 @@ def test_apply_sync_creates_manifest_and_preserves_counts(tmp_path):
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["counts"]["rules.json"] == validation["counts"]["rules.json"]
     assert manifest["files"]["rules.json"]["sha256"]
+    assert manifest["files"]["xhs_banned_words.json"]["sha256"]
     assert not Path(manifest["source_directory"]).is_absolute()
     assert not Path(manifest["destination_directory"]).is_absolute()
     assert not Path(manifest["backup_directory"]).is_absolute()

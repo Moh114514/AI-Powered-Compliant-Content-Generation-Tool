@@ -9,6 +9,7 @@ from app.core import config
 from app.core.data_loader import get_store
 from app.services.brands.loader import get_brand
 from app.services.compliance.engine import run_compliance_check
+from app.services.compliance.banned_words import as_rewrite_rules
 from app.services.llm.provider import build_provider
 from app.services.prompts.catalog import compose_prompt, resolve_scene
 
@@ -47,10 +48,14 @@ def generate(request: dict, settings: dict) -> dict:
     if not topic and not selling_points:
         raise ValueError("请至少填写主题或核心卖点。")
 
-    brand_id = request.get("brand")
+    brand_value = str(request.get("brand") or "").strip()
     use_brand = bool(request.get("use_brand_profile", True))
     versions = max(1, min(int(request.get("versions") or settings.get("default_versions", 3) or 3), 5))
-    brand_profile = get_brand(brand_id) if use_brand and brand_id else None
+    known_brand = get_brand(brand_value) if brand_value else None
+    brand_name = str((known_brand or {}).get("brand_name") or brand_value)
+    brand_profile = dict(known_brand or {}) if use_brand else {}
+    if brand_name:
+        brand_profile["brand_name"] = brand_name
     prompt_started = time.perf_counter()
     prompt_template, platform_item, scene = compose_prompt(
         platform, content_type, platform_item["id"], scene["id"]
@@ -79,7 +84,7 @@ def generate(request: dict, settings: dict) -> dict:
             text=text,
             platform=platform,
             content_type=content_type,
-            brand=brand_id,
+            brand=brand_name,
             store=store,
             provider=provider,
             settings=detection_settings,
@@ -110,7 +115,12 @@ def generate(request: dict, settings: dict) -> dict:
             "model": model_name,
             "provider": provider.name,
             "overall_risk_level": compliance["overall_risk_level"],
-            "matched_count": len(compliance["matched_rules"]),
+            "matched_count": compliance.get("stats", {}).get(
+                "unique_risk_count",
+                len(compliance["matched_rules"])
+                + len(compliance.get("banned_word_hits", []))
+                + len(compliance.get("semantic_findings", [])),
+            ),
             "manual_review_required": compliance["manual_review_required"],
             "compliance": compliance,
         })
@@ -120,7 +130,7 @@ def generate(request: dict, settings: dict) -> dict:
         "content_type": content_type,
         "platform_id": platform_item["id"],
         "scene_id": scene["id"],
-        "brand": brand_id,
+        "brand": brand_name,
         "model": model_name,
         "provider": provider.name,
         "demo_mode": provider.name == "mock",
@@ -162,7 +172,11 @@ def rewrite(request: dict, settings: dict) -> dict:
         settings=detection_settings,
     )
 
-    if not original_compliance["matched_rules"] and not original_compliance["semantic_findings"]:
+    if (
+        not original_compliance["matched_rules"]
+        and not original_compliance.get("banned_word_hits")
+        and not original_compliance["semantic_findings"]
+    ):
         return {
             "suggested_revision": text,
             "auto_rewrite": True,
@@ -180,7 +194,10 @@ def rewrite(request: dict, settings: dict) -> dict:
 
     revision = provider.rewrite(
         text=text,
-        matched_rules=original_compliance["matched_rules"],
+        matched_rules=[
+            *original_compliance["matched_rules"],
+            *as_rewrite_rules(original_compliance.get("banned_word_hits", [])),
+        ],
         platform=platform,
         content_type=content_type,
     ) or {}

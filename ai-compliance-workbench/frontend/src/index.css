@@ -15,12 +15,26 @@ body {
 
 /* 风险高亮标记 */
 mark.risk-hit {
-  background: #fee2e2;
-  color: #b91c1c;
   padding: 0 2px;
   border-radius: 3px;
   cursor: pointer;
+}
+mark.risk-hit-critical,
+mark.risk-hit-high {
+  background: #fee2e2;
+  color: #b91c1c;
   border-bottom: 2px solid #ef4444;
+}
+mark.risk-hit-medium {
+  background: #fef3c7;
+  color: #92400e;
+  border-bottom: 2px solid #f59e0b;
+}
+mark.risk-hit-low,
+mark.risk-hit-none {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border-bottom: 2px solid #3b82f6;
 }
 mark.risk-hit.semantic {
   background: #ede9fe;

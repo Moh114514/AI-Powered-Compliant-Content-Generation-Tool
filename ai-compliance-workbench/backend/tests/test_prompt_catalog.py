@@ -146,3 +146,52 @@ def test_multi_version_compliance_checks_run_concurrently(monkeypatch):
     assert elapsed < 0.18
     assert [item["text"] for item in result["versions"]] == ["版本一", "版本二", "版本三"]
     assert result["timings_ms"]["compliance_all_versions"] < 180
+
+
+def test_custom_brand_name_is_passed_to_generation_provider(monkeypatch):
+    captured = {}
+
+    class Provider:
+        name = "fake"
+        model = "fake-model"
+
+        def generate(self, **kwargs):
+            captured.update(kwargs)
+            return ["自定义品牌文案"]
+
+    monkeypatch.setattr(
+        generation_service,
+        "_validate_scene",
+        lambda *args, **kwargs: ({"id": "p", "name": "平台"}, {"id": "s", "name": "场景"}),
+    )
+    monkeypatch.setattr(
+        generation_service,
+        "compose_prompt",
+        lambda *args, **kwargs: ("prompt", {"id": "p", "name": "平台"}, {"id": "s", "name": "场景"}),
+    )
+    monkeypatch.setattr(generation_service, "build_provider", lambda settings: Provider())
+    monkeypatch.setattr(generation_service, "get_store", lambda: object())
+    monkeypatch.setattr(
+        generation_service,
+        "run_compliance_check",
+        lambda **kwargs: {
+            "overall_risk_level": "none",
+            "matched_rules": [],
+            "manual_review_required": False,
+        },
+    )
+
+    result = generation_service.generate(
+        {
+            "brand": "用户自定义品牌",
+            "platform": "平台",
+            "content_type": "场景",
+            "topic": "主题",
+            "versions": 1,
+            "use_brand_profile": True,
+        },
+        {"default_versions": 1},
+    )
+
+    assert captured["brand_profile"]["brand_name"] == "用户自定义品牌"
+    assert result["brand"] == "用户自定义品牌"

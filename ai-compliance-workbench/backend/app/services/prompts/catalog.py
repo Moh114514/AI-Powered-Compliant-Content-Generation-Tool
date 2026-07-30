@@ -173,8 +173,12 @@ def platform_rule_mapping(platform: str) -> list[str] | None:
 
 def _compliance_guardrail(platform: str, content_type: str, limit: int = 4500) -> str:
     from app.services.compliance.engine import get_applicable_rules
+    from app.services.compliance.banned_words import is_xhs_scope, prompt_guardrail
 
-    rules, _ = get_applicable_rules(get_store(), platform, content_type)
+    store = get_store()
+    rules, _ = get_applicable_rules(store, platform, content_type)
+    xhs_enabled = is_xhs_scope(platform, content_type)
+    rules_limit = min(limit, 3000) if xhs_enabled else limit
     lines = [
         "【动态合规约束（系统锁定）】",
         "以下内容来自当前合规规则库。不得绕过、弱化或用近义表达规避；无法确认事实时删除相关主张。",
@@ -192,10 +196,18 @@ def _compliance_guardrail(platform: str, content_type: str, limit: int = 4500) -
         )
         if strategies:
             line += f"；建议：{'；'.join(str(item) for item in strategies[:2])}"
-        if sum(len(item) + 1 for item in lines) + len(line) > limit:
+        if sum(len(item) + 1 for item in lines) + len(line) > rules_limit:
             lines.append("- 其余适用规则由生成后的完整合规检测继续执行。")
             break
         lines.append(line)
+    if xhs_enabled:
+        remaining = max(0, limit - sum(len(item) + 1 for item in lines) - 2)
+        banned_guardrail = prompt_guardrail(
+            store.xhs_banned_words,
+            limit=min(1400, remaining),
+        )
+        if banned_guardrail:
+            lines.extend(["", banned_guardrail])
     return "\n".join(lines)
 
 

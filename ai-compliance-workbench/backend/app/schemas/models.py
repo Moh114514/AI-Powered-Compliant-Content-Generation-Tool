@@ -11,7 +11,7 @@ def _resolve_scene(platform: str, content_type: str, platform_id: str | None, sc
 
 
 class GenerateRequest(BaseModel):
-    brand: Optional[str] = None
+    brand: Optional[str] = Field(None, max_length=100)
     platform: str
     content_type: str
     platform_id: Optional[str] = None
@@ -42,7 +42,7 @@ class RewriteRequest(BaseModel):
     content_type: str
     platform_id: Optional[str] = None
     scene_id: Optional[str] = None
-    brand: Optional[str] = None
+    brand: Optional[str] = Field(None, max_length=100)
 
     @model_validator(mode="after")
     def validate_request(self):
@@ -58,7 +58,7 @@ class AdjustRequest(BaseModel):
     content_type: str
     platform_id: Optional[str] = None
     scene_id: Optional[str] = None
-    brand: Optional[str] = None
+    brand: Optional[str] = Field(None, max_length=100)
     adjust_type: Literal["缩短", "扩写", "调整语气"] = "缩短"
     topic: str = Field("", max_length=300)
     target_audience: str = Field("", max_length=500)
@@ -81,7 +81,7 @@ class ComplianceCheckRequest(BaseModel):
     content_type: str
     platform_id: Optional[str] = None
     scene_id: Optional[str] = None
-    brand: Optional[str] = None
+    brand: Optional[str] = Field(None, max_length=100)
     publisher_identity: Optional[str] = Field(None, max_length=100)
     business_domain: Optional[str] = Field(None, max_length=100)
     content_legal_nature: Optional[str] = Field(None, max_length=100)
