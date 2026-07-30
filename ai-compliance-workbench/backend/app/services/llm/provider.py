@@ -255,12 +255,21 @@ class MockProvider(LLMProvider):
 class OpenAICompatibleProvider(LLMProvider):
     name = "openai_compatible"
 
-    def __init__(self, api_key, base_url, model, temperature, max_tokens):
+    def __init__(
+        self,
+        api_key,
+        base_url,
+        model,
+        temperature,
+        max_tokens,
+        enable_thinking: bool = False,
+    ):
         self.api_key = api_key
         self.base_url = str(base_url).rstrip("/")
         self.model = model
         self.temperature = float(temperature)
         self.max_tokens = int(max_tokens)
+        self.enable_thinking = bool(enable_thinking)
         self._client = None
 
     def _get_client(self):
@@ -274,6 +283,21 @@ class OpenAICompatibleProvider(LLMProvider):
 
     def _is_deepseek(self) -> bool:
         return "api.deepseek.com" in self.base_url.lower() or self.model.lower().startswith("deepseek")
+
+    def _is_alibaba_model_studio(self) -> bool:
+        host = self.base_url.lower()
+        return "aliyuncs.com" in host or "dashscope.aliyun.com" in host
+
+    def _thinking_request_fields(self) -> dict:
+        if self._is_alibaba_model_studio():
+            return {"enable_thinking": self.enable_thinking}
+        if self._is_deepseek():
+            return {
+                "thinking": {
+                    "type": "enabled" if self.enable_thinking else "disabled",
+                }
+            }
+        return {}
 
     def _chat_result(
         self,
@@ -298,8 +322,9 @@ class OpenAICompatibleProvider(LLMProvider):
             }
             if json_mode:
                 kwargs["response_format"] = {"type": "json_object"}
-            if self._is_deepseek():
-                kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
+            thinking_fields = self._thinking_request_fields()
+            if thinking_fields:
+                kwargs["extra_body"] = thinking_fields
             response = client.chat.completions.create(**kwargs)
             if not getattr(response, "choices", None):
                 return ChatResult("", "missing_choices", str(getattr(response, "id", "") or ""))
@@ -319,8 +344,7 @@ class OpenAICompatibleProvider(LLMProvider):
         }
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
-        if self._is_deepseek():
-            payload["thinking"] = {"type": "disabled"}
+        payload.update(self._thinking_request_fields())
         response = requests.post(
             f"{self.base_url}/chat/completions",
             headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
@@ -558,4 +582,5 @@ def build_provider(settings: dict) -> LLMProvider:
         model=settings.get("model_name") or config.LLM_MODEL,
         temperature=settings.get("temperature", config.LLM_TEMPERATURE),
         max_tokens=settings.get("max_tokens", config.LLM_MAX_TOKENS),
+        enable_thinking=bool(settings.get("enable_thinking", False)),
     )

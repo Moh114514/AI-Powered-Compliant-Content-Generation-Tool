@@ -38,6 +38,7 @@ export interface StatusInfo {
   api_key_configured?: boolean;
   model_name?: string;
   model_config_source?: string;
+  thinking_enabled?: boolean;
   platforms: string[];
   prompt_version?: string;
   prompt_platform_count?: number;
@@ -324,6 +325,7 @@ export interface Settings {
   api_base?: string;
   temperature?: number;
   max_tokens?: number;
+  enable_thinking?: boolean;
   default_brand?: string;
   default_platform?: string;
   default_versions?: number;

@@ -93,7 +93,13 @@ export default function Settings() {
           </>}
           <Field label="温度（0—2）"><input type="number" className="input" value={settings.temperature ?? 0.7} disabled /></Field>
           <Field label="最大 Token"><input type="number" className="input" value={settings.max_tokens ?? 4096} disabled /></Field>
+          <Toggle
+            label="启用模型思考模式"
+            value={!!settings.enable_thinking}
+            onChange={(value) => set("enable_thinking", value)}
+          />
           <Note>模型配置由 <code>.env</code> 强制托管，每次启动重新读取；网页设置和历史 SQLite 配置不会覆盖。API Key 不在网页回显。</Note>
+          <Note>思考模式偏好保存在本地设置中。启用后可能提高复杂任务质量，但会增加等待时间和 Token 消耗；不支持该参数的兼容模型会忽略此开关。</Note>
           {settings.model_provider !== "mock" && status && (
             <Note>
               当前状态：{status.provider_ready

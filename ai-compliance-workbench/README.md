@@ -88,9 +88,10 @@ CORS_ORIGINS=http://localhost:5174,http://127.0.0.1:5174
 ```
 
 当前内部 EXE 已内置构建时的 `.env`，首次运行会写入 `%LOCALAPPDATA%\AIComplianceWorkbench\.env`。设置页的模型字段仅展示当前环境配置，不允许网页覆盖；API Key 不会回显或保存到网页设置。真实模型未就绪时会明确报错，不会静默改用 Mock。
+“启用模型思考模式”是可由用户保存的本地偏好，默认关闭。阿里云 Model Studio 兼容接口使用 `enable_thinking`，DeepSeek 官方接口使用 `thinking.type`；无法识别能力的其他 OpenAI 兼容接口不会收到非标准参数。启用思考模式可能提升复杂任务质量，也会增加等待时间和 Token 消耗。
 设置页中的“AI 生成/优化提示词”也使用这里配置的真实模型；Mock 模式不会伪造提示词草稿。
 
-模型调用失败时，检测结果会标记 `semantic_analysis_failed=true` 并要求人工复核，不会静默降级为低风险。DeepSeek 调用默认关闭思考模式；语义检测启用 JSON Output，并对空内容或非法 JSON 进行一次有限重试。
+模型调用失败时，检测结果会标记 `semantic_analysis_failed=true` 并要求人工复核，不会静默降级为低风险。语义检测启用 JSON Output，并对空内容或非法 JSON 进行一次有限重试。
 
 内容生成与合规检测结果会在开启“保存最近记录”后自动写入本地历史。内容生成、合规检测和规则筛选的页面状态保存在当前浏览器标签页中，切换导航不会清空。
 

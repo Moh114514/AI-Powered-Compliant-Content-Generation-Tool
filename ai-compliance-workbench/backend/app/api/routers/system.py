@@ -69,6 +69,7 @@ def status():
             "api_key_configured": api_key_configured,
             "model_name": settings.get("model_name") or config.LLM_MODEL,
             "model_config_source": "env",
+            "thinking_enabled": bool(settings.get("enable_thinking", False)),
             "platforms": active_platforms,
             "default_platform_warning": default_platform_warning,
             **catalog_stats(),
