@@ -60,6 +60,9 @@ def test_overlapping_rules_are_preserved_and_l1_is_highest():
     assert result["review_level"] == "L1"
     assert result["overall_risk_level"] == "critical"
     assert result["publish_recommendation"] == "block"
+    assert result["stats"]["unique_risk_count"] == 2
+    assert result["stats"]["matched_span_count"] == 2
+    assert result["stats"]["marked_occurrence_count"] == 1
 
 
 def test_pending_review_rule_forces_manual_review():
@@ -161,6 +164,33 @@ def test_semantic_findings_use_canonical_rule_risk_and_action():
     assert findings[0]["semantic_rule_name"] == "明示或暗示保证治疗效果"
     assert findings[0]["risk_level"] == "critical"
     assert findings[0]["system_action"] == ["block"]
+
+
+def test_semantic_findings_are_aggregated_by_rule_identity():
+    semantic_catalog = {
+        "SR0001": {
+            "semantic_rule_id": "SR0001",
+            "semantic_rule_name": "明示或暗示保证治疗效果",
+            "expected_risk_level": "critical",
+            "system_action": "block",
+        }
+    }
+    findings, unknown = engine._normalize_semantic_findings(
+        [
+            {"semantic_rule_id": "SR0001", "matched_text": "保证效果", "risk_reason": "明示保证"},
+            {"semantic_rule_id": "SR0001", "matched_text": "保证效果", "risk_reason": "重复命中"},
+            {"semantic_rule_id": "SR0001", "matched_text": "确保改善", "risk_reason": "暗示保证"},
+        ],
+        semantic_catalog,
+        "保证效果，也确保改善；再次保证效果。",
+    )
+
+    assert unknown == []
+    assert len(findings) == 1
+    assert findings[0]["matched_texts"] == ["保证效果", "确保改善"]
+    assert findings[0]["occurrence_count"] == 3
+    assert len(findings[0]["spans"]) == 3
+    assert findings[0]["risk_reason"] == "明示保证；重复命中；暗示保证"
 
 
 def test_unknown_semantic_rule_ids_are_not_accepted():

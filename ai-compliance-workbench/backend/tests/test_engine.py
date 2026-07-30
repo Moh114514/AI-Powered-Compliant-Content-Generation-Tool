@@ -276,6 +276,7 @@ def test_dedup(store, provider):
     assert cnt == 1
     hit = next(m for m in res["matched_rules"] if m["rule_id"] == v["rule_id"])
     assert len(hit["spans"]) >= 2
+    assert hit["occurrence_count"] == len(hit["spans"])
 
 
 # 13. API 正常响应

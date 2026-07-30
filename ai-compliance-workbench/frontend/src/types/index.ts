@@ -143,6 +143,7 @@ export interface HighlightSpan {
   end_index: number;
   matching_method: string;
   source_type?: string;
+  risk_level?: string;
 }
 
 export interface MatchedRule {
@@ -169,6 +170,7 @@ export interface MatchedRule {
   manual_review_required?: boolean;
   review_level?: string;
   effective_status?: string;
+  occurrence_count?: number;
   spans: HighlightSpan[];
 }
 
@@ -180,6 +182,9 @@ export interface SemanticFinding {
   risk_reason?: string;
   manual_review?: boolean;
   system_action?: string[];
+  occurrence_count?: number;
+  matched_texts?: string[];
+  spans?: Array<{ start: number; end: number; matched_text: string }>;
 }
 
 export interface BannedWordHit {
@@ -193,13 +198,22 @@ export interface BannedWordHit {
   source_risk_levels?: string[];
   reason: string;
   replacements: string[];
+  replacement_options?: string[];
+  replacement_instructions?: string[];
   sources: string[];
   source_ids: string[];
   context_classification: "promotional" | "neutral" | "ambiguous" | string;
   requires_review: boolean;
   system_action?: string[];
   occurrence_count?: number;
-  spans?: Array<{ start: number; end: number; matched_text: string }>;
+  context_counts?: Record<string, number>;
+  spans?: Array<{
+    start: number;
+    end: number;
+    matched_text: string;
+    context_classification?: string;
+    risk_level?: string;
+  }>;
 }
 
 export interface ManualReviewIssue {
@@ -216,6 +230,8 @@ export interface ComplianceStats {
   applicable_rule_count: number;
   matched_rule_count: number;
   matched_span_count: number;
+  unique_risk_count?: number;
+  marked_occurrence_count?: number;
   banned_word_hit_count?: number;
   banned_word_unique_count?: number;
   banned_word_occurrence_count?: number;
@@ -244,6 +260,7 @@ export interface ComplianceResult {
   review_summary: string;
   disclaimer: string;
   highlights: HighlightSpan[];
+  offset_encoding?: "unicode_codepoint" | string;
   platform_rules_incomplete?: boolean;
   stats?: ComplianceStats;
   timings_ms?: { deterministic: number; semantic: number; rewrite: number; total: number };

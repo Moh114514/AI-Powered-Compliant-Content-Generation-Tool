@@ -240,7 +240,10 @@ export default function ContentGeneration() {
       char_count: response.data.text.length,
       compliance,
       overall_risk_level: compliance.overall_risk_level,
-      matched_count: compliance.matched_rules.length + (compliance.banned_word_hits?.length ?? 0),
+      matched_count: compliance.stats?.unique_risk_count
+        ?? compliance.matched_rules.length
+          + (compliance.banned_word_hits?.length ?? 0)
+          + (compliance.semantic_findings?.length ?? 0),
       manual_review_required: compliance.manual_review_required,
     });
     setNotice(`已基于当前版本完成${adjustType}，未混入原始表单中的主题或活动信息。`);
@@ -348,7 +351,7 @@ function RewriteModal({ text, rev, onClose }: { text: string; rev: any; onClose:
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}><h3 style={{ margin: 0, fontSize: 16 }}>一键合规改写</h3><button className="btn" onClick={onClose}>关闭</button></div>
       <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>原文</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: 10, marginBottom: 12 }}>{text}</div>
       <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 6 }}>建议修改稿</div><div style={{ fontSize: 14, whiteSpace: "pre-wrap", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: 10, marginBottom: 12 }}>{rev.suggested_revision || "（无可自动生成的改写稿，需人工复核）"}</div>
-      {revisedCompliance && <div style={{ marginBottom: 12 }}><b style={{ fontSize: 13 }}>改写后复检：</b> {revisedCompliance.overall_risk_level}，命中 {(revisedCompliance.matched_rules?.length ?? 0) + (revisedCompliance.banned_word_hits?.length ?? 0)} 项风险{revisedCompliance.manual_review_required ? "，仍需人工复核" : ""}。</div>}
+      {revisedCompliance && <div style={{ marginBottom: 12 }}><b style={{ fontSize: 13 }}>改写后复检：</b> {revisedCompliance.overall_risk_level}，命中 {revisedCompliance.stats?.unique_risk_count ?? (revisedCompliance.matched_rules?.length ?? 0) + (revisedCompliance.banned_word_hits?.length ?? 0) + (revisedCompliance.semantic_findings?.length ?? 0)} 项风险{revisedCompliance.manual_review_required ? "，仍需人工复核" : ""}。</div>}
       {!!rev.unresolved_items?.length && <div style={{ fontSize: 13, color: "#6d28d9", marginBottom: 12 }}>仍需处理：{rev.unresolved_items.join("；")}</div>}
       <div style={{ display: "flex", gap: 8 }}><button className="btn btn-primary" disabled={!rev.suggested_revision} onClick={async () => alert((await copyText(rev.suggested_revision || "")) ? "已复制" : "复制失败")}><Copy size={14} />复制修改稿</button><button className="btn" disabled={!rev.suggested_revision} onClick={() => downloadText("合规改写稿.txt", rev.suggested_revision || "", "text/plain")}>下载 TXT</button></div>
     </div>

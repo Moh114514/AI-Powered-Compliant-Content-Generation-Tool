@@ -115,7 +115,12 @@ def generate(request: dict, settings: dict) -> dict:
             "model": model_name,
             "provider": provider.name,
             "overall_risk_level": compliance["overall_risk_level"],
-            "matched_count": len(compliance["matched_rules"]) + len(compliance.get("banned_word_hits", [])),
+            "matched_count": compliance.get("stats", {}).get(
+                "unique_risk_count",
+                len(compliance["matched_rules"])
+                + len(compliance.get("banned_word_hits", []))
+                + len(compliance.get("semantic_findings", [])),
+            ),
             "manual_review_required": compliance["manual_review_required"],
             "compliance": compliance,
         })

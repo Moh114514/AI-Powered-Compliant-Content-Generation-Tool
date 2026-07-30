@@ -25,7 +25,9 @@
 
 `/api/status`、`/api/compliance/validate` 和 `/api/compliance/reload` 均包含 `pending_review_count`。v1.2 当前值为 56。`/api/status` 还返回模型状态，以及小红书专项词库的版本、条目数、变体数、唯一词数、SHA-256 和加载警告。
 
-小红书或映射到小红书规则画像的平台执行检测时，结果包含 `banned_word_hits`。结果按标准词聚合，每项提供 `hit_id`、首次命中区间、标准词、领域、风险等级、原因、替换建议、来源、语境分类、人工复核标记，以及 `occurrence_count` 和全部 `spans`。旧调用方仍可读取原有的 `start`、`end`、`matched_text` 字段。
+小红书或映射到小红书规则画像的平台执行检测时，结果包含 `banned_word_hits`。结果按标准词与来源 ID 聚合，每项提供 `hit_id`、首次命中区间、标准词、领域、风险等级、原因、替换建议、来源、语境分类、人工复核标记，以及 `occurrence_count`、`context_counts`、结构化替换建议和全部 `spans`。旧调用方仍可读取原有的 `start`、`end`、`matched_text`、`replacements` 字段。
+
+检测结果中的 `offset_encoding` 为 `unicode_codepoint`。所有 `start`、`end`、`start_index`、`end_index` 坐标均按 Unicode 码点计算；浏览器调用方在使用 JavaScript `slice` 前需要转换为 UTF-16 码元坐标。`stats.unique_risk_count` 表示按规则身份聚合后的风险项数，`stats.marked_occurrence_count` 表示正文文字标注数。
 
 `stats.banned_word_unique_count` 表示不同风险词数量，`stats.banned_word_occurrence_count` 表示正文中的实际出现次数。
 

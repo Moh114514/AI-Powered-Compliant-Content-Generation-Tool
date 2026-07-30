@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Any
 
@@ -39,6 +40,32 @@ _SAFE_SUPERLATIVE_PREFIXES = (
     "最近", "最后", "最初", "最终", "至少", "至多", "最少", "最多", "最新版",
     "最重要", "最常见", "最基本", "最主要",
 )
+
+
+def _structure_replacements(replacements: list[str]) -> tuple[list[str], list[str]]:
+    """Split replacement text from parenthetical usage instructions."""
+    options: list[str] = []
+    instructions: list[str] = []
+    for replacement in replacements:
+        value = str(replacement or "").strip()
+        if not value:
+            continue
+        notes = [
+            (match.group(1) or "").strip()
+            for match in re.finditer(r"[（(]([^（）()]*)[）)]", value)
+        ]
+        instructions.extend(note for note in notes if note)
+        plain = re.sub(r"[（(][^（）()]*[）)]", "", value).strip()
+        if plain:
+            if re.fullmatch(r"(?:删除|禁止使用|禁用|不得使用|避免使用)", plain):
+                instructions.append(plain)
+            else:
+                options.extend(
+                    part.strip()
+                    for part in re.split(r"[/／、]", plain)
+                    if part.strip()
+                )
+    return list(dict.fromkeys(options)), list(dict.fromkeys(instructions))
 
 
 def file_sha256(path: Path) -> str:
@@ -308,10 +335,17 @@ def match_banned_words(
         context, risk_level, actions, requires_review = _classify_context(
             original, start, end, domains, source_risks
         )
+        replacement_options, replacement_instructions = _structure_replacements(replacements)
         group_key = tuple(source_ids) or tuple(canonical_words) or (candidate["normalized_term"],)
         hit_id = f"xhs-bw:{'+'.join(group_key)}"
         matched_text = original[start:end]
-        span = {"start": start, "end": end, "matched_text": matched_text}
+        span = {
+            "start": start,
+            "end": end,
+            "matched_text": matched_text,
+            "context_classification": context,
+            "risk_level": risk_level,
+        }
         hit = grouped_hits.get(group_key)
         if hit is None:
             grouped_hits[group_key] = {
@@ -325,9 +359,12 @@ def match_banned_words(
                 "source_risk_levels": source_risks,
                 "reason": "；".join(reasons),
                 "replacements": replacements,
+                "replacement_options": replacement_options,
+                "replacement_instructions": replacement_instructions,
                 "sources": sources,
                 "source_ids": source_ids,
                 "context_classification": context,
+                "context_counts": {context: 1},
                 "requires_review": requires_review,
                 "system_action": list(actions),
                 "occurrence_count": 1,
@@ -336,12 +373,9 @@ def match_banned_words(
         else:
             hit["occurrence_count"] += 1
             hit["spans"].append(span)
+            hit["context_counts"][context] = hit["context_counts"].get(context, 0) + 1
             if _RISK_PRIORITY.get(risk_level, 0) > _RISK_PRIORITY.get(hit["risk_level"], 0):
                 hit["risk_level"] = risk_level
-            if context == "promotional":
-                hit["context_classification"] = "promotional"
-            elif context == "ambiguous" and hit["context_classification"] != "promotional":
-                hit["context_classification"] = "ambiguous"
             hit["requires_review"] = bool(hit["requires_review"] or requires_review)
             hit["system_action"] = list(dict.fromkeys([*hit["system_action"], *actions]))
         highlights.append({
@@ -353,8 +387,12 @@ def match_banned_words(
             "end_index": end,
             "matching_method": "xhs_banned_word",
             "source_type": "xhs_banned_word",
+            "risk_level": risk_level,
             "ordinal": ordinal,
         })
+    for hit in grouped_hits.values():
+        contexts = [key for key, count in hit["context_counts"].items() if count]
+        hit["context_classification"] = contexts[0] if len(contexts) == 1 else "mixed"
     return list(grouped_hits.values()), highlights
 
 

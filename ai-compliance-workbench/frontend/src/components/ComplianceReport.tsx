@@ -11,6 +11,10 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
   const [selectedRule, setSelectedRule] = useState<string | null>(null);
   const status = statusOf(result);
   const recommendation = REVIEW_RECOMMENDATION_LABEL[result.publish_recommendation] || result.publish_recommendation;
+  const uniqueRiskCount = result.stats?.unique_risk_count
+    ?? result.matched_rules.length + (result.banned_word_hits?.length || 0) + result.semantic_findings.length;
+  const markedOccurrenceCount = result.stats?.marked_occurrence_count
+    ?? result.stats?.matched_span_count ?? result.highlights?.length ?? 0;
 
   return <div style={{ display: "grid", gap: 12 }}>
     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10 }}>
@@ -18,7 +22,7 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
       <span style={{ fontSize: 13, color: "#374151" }}>发布建议：<b>{recommendation}</b></span>
       {result.review_level && <span style={{ fontSize: 12, color: "#6b7280" }}>复核等级 {result.review_level}</span>}
       {result.manual_review_required && <span style={{ fontSize: 12, color: "#6d28d9" }}>· 需人工复核</span>}
-      {result.stats && <span style={{ fontSize: 12, color: "#9ca3af" }}>检查 {result.stats.applicable_rule_count} 条适用规则 · {result.stats.matched_span_count} 处命中</span>}
+      {result.stats && <span style={{ fontSize: 12, color: "#9ca3af" }}>检查 {result.stats.applicable_rule_count} 条规则 · {uniqueRiskCount} 项风险 · {markedOccurrenceCount} 处文字标注</span>}
     </div>
 
     {result.platform_findings?.map((finding, index) => <Notice key={index} tone="warning">⚠️ {finding.message || "存在平台专项风险。"}</Notice>)}
@@ -48,9 +52,9 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
 
     {!!result.semantic_findings?.length && <section>
       <div style={{ fontSize: 13, fontWeight: 600, margin: "4px 0 8px" }}>语义风险（{result.semantic_findings.length}）</div>
-      <div style={{ display: "grid", gap: 6 }}>{result.semantic_findings.map((finding, index) => <div key={`${finding.semantic_rule_id}-${index}`} className="card" style={{ padding: 10, borderLeft: `3px solid ${riskMeta(finding.risk_level).border}` }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}><b style={{ fontSize: 13 }}>{finding.semantic_rule_name}</b><span style={{ fontSize: 12, color: "#6b7280" }}>{riskMeta(finding.risk_level).label}</span></div>
-        {finding.matched_text && <div style={{ fontSize: 12, color: "#6b7280", marginTop: 3 }}>相关文本：“{finding.matched_text}”</div>}
+      <div style={{ display: "grid", gap: 6 }}>{result.semantic_findings.map((finding) => <div key={finding.semantic_rule_id} className="card" style={{ padding: 10, borderLeft: `3px solid ${riskMeta(finding.risk_level).border}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}><b style={{ fontSize: 13 }}>{finding.semantic_rule_name}{Number(finding.occurrence_count || 1) > 1 && <span style={{ color: "#6b7280", fontWeight: 400 }}> × {finding.occurrence_count}</span>}</b><span style={{ fontSize: 12, color: "#6b7280" }}>{riskMeta(finding.risk_level).label}</span></div>
+        {!!(finding.matched_texts?.length || finding.matched_text) && <div style={{ fontSize: 12, color: "#6b7280", marginTop: 3 }}>相关文本：“{(finding.matched_texts || [finding.matched_text]).filter(Boolean).join("”；“")}”</div>}
         {finding.risk_reason && <div style={{ fontSize: 12, marginTop: 3 }}>{finding.risk_reason}</div>}
       </div>)}</div>
     </section>}
@@ -80,15 +84,39 @@ export function ComplianceReport({ result }: { result: ComplianceResult }) {
 function BannedWordCard({ hit, selected }: { hit: BannedWordHit; selected: boolean }) {
   const [open, setOpen] = useState(false);
   const meta = riskMeta(hit.risk_level);
+  const contextNames: Record<string, string> = {
+    promotional: "营销语境",
+    neutral: "中性语境",
+    ambiguous: "待判断",
+  };
+  const contextSummary = Object.entries(hit.context_counts || {})
+    .filter(([, count]) => count > 0)
+    .map(([context, count]) => `${contextNames[context] || context} ${count} 处`)
+    .join("、");
   const contextLabel = hit.context_classification === "promotional"
     ? "营销风险语境"
     : hit.context_classification === "neutral"
       ? "中性语境，需复核"
-      : "语境不明确，需复核";
+      : hit.context_classification === "mixed"
+        ? `混合语境${contextSummary ? `（共 ${hit.occurrence_count || 1} 处：${contextSummary}）` : ""}`
+        : "语境不明确，需复核";
   const suggestions = hit.replacements || [];
-  const instructionOnly = suggestions.length > 0 && suggestions.every((item) => /删除|禁止|避免/.test(item));
+  const fallbackInstructions = suggestions.flatMap((item) =>
+    [...item.matchAll(/[（(]([^（）()]*)[）)]/g)].map((match) => match[1]).filter(Boolean)
+  );
+  const fallbackOptions = suggestions.flatMap((item) => {
+    const plain = item.replace(/[（(][^（）()]*[）)]/g, "").trim();
+    if (!plain || /^(删除|禁止使用|禁用|不得使用|避免使用)$/.test(plain)) return [];
+    return plain.split(/[/／、]/).map((part) => part.trim()).filter(Boolean);
+  });
+  const replacementOptions = hit.replacement_options ?? [...new Set(fallbackOptions)];
+  const replacementInstructions = hit.replacement_instructions ?? [...new Set(fallbackInstructions)];
+  const instructionOnly = replacementOptions.length === 0;
   const copySuggestion = async () => {
-    const text = suggestions.join("；") || "建议删除或整体改写该表达";
+    const text = [
+      replacementOptions.length ? `推荐表达：${replacementOptions.join("、")}` : "建议删除或整体改写该表达",
+      replacementInstructions.length ? `注意：${replacementInstructions.join("；")}` : "",
+    ].filter(Boolean).join("\n");
     alert((await copyText(text)) ? "替换建议已复制" : "复制失败");
   };
   return <div className="card" style={{
@@ -109,8 +137,9 @@ function BannedWordCard({ hit, selected }: { hit: BannedWordHit; selected: boole
         <b>{instructionOnly ? "删除/整体改写建议" : "推荐替代表达"}</b>
         <button className="btn" style={{ padding: "2px 8px", fontSize: 12 }} onClick={copySuggestion}>复制建议</button>
       </div>
-      <div style={{ marginTop: 4, color: "#374151" }}>{suggestions.join("；") || "建议删除或整体改写该表达"}</div>
-      {instructionOnly && <div style={{ color: "#9a3412", fontSize: 12, marginTop: 3 }}>这是操作说明，不应把括号内文字直接替换进原文。</div>}
+      <div style={{ marginTop: 4, color: "#374151" }}>{replacementOptions.join("、") || "建议删除或整体改写该表达"}</div>
+      {!!replacementInstructions.length && <div style={{ color: "#9a3412", fontSize: 12, marginTop: 3 }}>注意：{replacementInstructions.join("；")}</div>}
+      {instructionOnly && <div style={{ color: "#9a3412", fontSize: 12, marginTop: 3 }}>这是操作说明，不应把说明文字直接替换进原文。</div>}
     </div>
     {open && <div style={{ marginTop: 8, display: "grid", gap: 5, fontSize: 12, color: "#4b5563" }}>
       <div><span style={{ color: "#9ca3af" }}>风险原因：</span>{hit.reason || "—"}</div>

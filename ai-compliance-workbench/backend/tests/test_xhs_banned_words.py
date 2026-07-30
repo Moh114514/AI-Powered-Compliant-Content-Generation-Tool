@@ -99,6 +99,25 @@ def test_repeated_sensitive_term_is_grouped_but_keeps_all_spans():
     assert result["review_summary"].count("抗衰：") == 1
     assert result["stats"]["banned_word_unique_count"] == len(result["banned_word_hits"])
     assert result["stats"]["banned_word_occurrence_count"] >= 26
+    assert result["stats"]["unique_risk_count"] == len(result["matched_rules"]) + 1
+    assert result["stats"]["marked_occurrence_count"] == result["stats"]["matched_span_count"]
+    assert result["offset_encoding"] == "unicode_codepoint"
+
+
+def test_sensitive_term_keeps_per_occurrence_context_and_structured_replacement():
+    text = f"抗衰。{'普通文字段落' * 12}\n立即预约抗衰活动。"
+    result = check(text)
+    hit = next(item for item in result["banned_word_hits"] if "BW0031" in item["source_ids"])
+
+    assert hit["occurrence_count"] == 2
+    assert hit["context_classification"] == "mixed"
+    assert hit["context_counts"] == {"ambiguous": 1, "promotional": 1}
+    assert sum(hit["context_counts"].values()) == hit["occurrence_count"]
+    assert [span["context_classification"] for span in hit["spans"]] == [
+        "ambiguous", "promotional",
+    ]
+    assert hit["replacement_options"] == ["抗初老", "紧致"]
+    assert hit["replacement_instructions"] == ["避免医疗宣称"]
 
 
 def test_ordinary_ordinals_are_not_treated_as_rank_claims():
